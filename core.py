@@ -107,13 +107,17 @@ class CompoundCond:
         return "CCond%s" % str(self)
 
 
-def dump_bblocks(cfg):
+def dump_bblocks(cfg, stream=sys.stdout):
+    cnt = 0
     for addr, bblock in cfg.iter_sorted_nodes():
-        print("\n// Predecessors: %s" % cfg.pred(addr))
-        print("%s:" % addr)
+        if cnt > 0:
+            stream.write("\n")
+        print("// Predecessors: %s" % sorted(cfg.pred(addr)), file=stream)
+        print("%s:" % addr, file=stream)
         if bblock:
-            bblock.dump(sys.stdout)
+            bblock.dump(stream)
         else:
-            print("   ", bblock)
+            print("   ", bblock, file=stream)
         succ = cfg.succ(addr)
-        print("Exits:", [(cfg.edge(addr, x), x) for x in succ])
+        print("Exits:", [(cfg.edge(addr, x), x) for x in succ], file=stream)
+        cnt += 1
