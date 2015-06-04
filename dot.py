@@ -16,12 +16,12 @@ def dot(graph, out=sys.stdout, directed=None):
     out.write("%s G {\n" % header)
     for e in graph.entries():
         out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
-    for (fr, to), label in graph.iter_edges():
 
-        obj = graph.node(fr)
+    for addr, obj in graph.iter_sorted_nodes():
         typ = type(obj).__name__
-        out.write('"%s" [label="%s\\n%s"]\n' % (fr, typ, fr))
+        out.write('"%s" [label="%s\\n%s"]\n' % (addr, typ, addr))
 
+    for (fr, to), label in graph.iter_edges():
         succ = graph.succ(fr)
         if label is None and len(succ) == 2:
             label = "else"
