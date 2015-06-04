@@ -43,7 +43,10 @@ class Inst:
 
     def __repr__(self):
         if self.dest is None:
-            return "%s(%s)" % (self.op, self.args)
+            if self.op == "LIT":
+                return self.args[0]
+            else:
+                return "%s(%s)" % (self.op, self.args)
         else:
             return "%s = %s(%s)" % (self.dest, self.op, self.args)
 
