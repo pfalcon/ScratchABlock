@@ -21,7 +21,7 @@ def dot(graph, out=sys.stdout, directed=None):
         typ = type(obj).__name__
         out.write('"%s" [label="%s\\n%s"]\n' % (addr, typ, addr))
 
-    for (fr, to), label in graph.iter_edges():
+    for (fr, to), label in sorted(graph.iter_edges()):
         succ = graph.succ(fr)
         if label is None and len(succ) == 2:
             label = "else"
