@@ -1,0 +1,8 @@
+#xform: remove_jump_over_jump
+# First goto is not removed, even though superfluous - we keep it so
+# entry node keeps its original address.
+00 goto 10
+10 10:
+10 goto 20
+20 20:
+20 a = 1
