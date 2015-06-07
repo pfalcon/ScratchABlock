@@ -1,0 +1,7 @@
+#xform: remove_jump_over_jump
+00 if (a1 == 0) goto 20
+10 goto 30
+20 20:
+20 a2 = 1
+30 30:
+30 a3 = 5
