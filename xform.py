@@ -1,4 +1,5 @@
 from graph import Graph
+from core import *
 
 
 # Apply tranformation while it's possible
@@ -24,4 +25,38 @@ def remove_jump_over_jump(cfg):
             cfg.move_pred(v, cfg.succ(v)[0])
             cfg.remove_node(v)
             print("jump_over_jump: removed node:", v)
+            return True
+
+# If possible, make a single back-edge to a loop header, by introducing
+# intermediate jump landing nodes.
+def loop_single_entry(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_in(v) >= 2:
+            preds = cfg.pred(v)
+            back_preds = list(filter(lambda x: v <= x, preds))
+            if len(back_preds) < 2:
+                continue
+            print("loop_single_entry: node:", v)
+            print("back_preds:", back_preds)
+            back_jumps = list(filter(lambda x: cfg.degree_out(x) == 1, back_preds))
+            print("back_jumps:", back_jumps)
+            # find existing landing site
+            landing_site = None
+            for p in back_jumps:
+                b = cfg.node(p)
+                if not b.l:
+                    landing_site = p
+            if not landing_site:
+                farthest = max(back_jumps)
+                print("farthest", farthest)
+                newb = BBlock(farthest + "_1")
+                cfg.add_node(newb.addr, newb)
+                cfg.add_edge(newb.addr, v)
+                landing_site = newb.addr
+            print("landing_site:", landing_site)
+            for p in back_preds:
+                if p != landing_site:
+                    e = cfg.edge(p, v)
+                    cfg.remove_edge(p, v)
+                    cfg.add_edge(p, landing_site, e)
             return True
