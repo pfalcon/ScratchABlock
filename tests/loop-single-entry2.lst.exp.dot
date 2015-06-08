@@ -1,0 +1,12 @@
+digraph G {
+"ENTRY" -> "10"
+"10" [label="BBlock\n10"]
+"20" [label="BBlock\n20"]
+"30" [label="BBlock\n30"]
+"30_1" [label="BBlock\n30_1"]
+"10" -> "20" [label="else"]
+"10" -> "30" [label="(a1 != 0)"]
+"20" -> "30_1"
+"30" -> "30_1"
+"30_1" -> "10"
+}
