@@ -1,0 +1,7 @@
+# Jump-threaded if-inside-infloop
+#xform: loop_single_entry
+10 10:
+10  if (!a1) goto 10
+11  a2 = 1
+20 20:
+11  goto 10
