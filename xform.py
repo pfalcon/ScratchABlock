@@ -21,7 +21,7 @@ def apply_iterative(func, args):
 def remove_jump_over_jump(cfg):
     for v, b in cfg.iter_nodes():
         # If node is not entry, has a single exit and empty
-        if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v).l:
+        if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v).items:
             cfg.move_pred(v, cfg.succ(v)[0])
             cfg.remove_node(v)
             print("jump_over_jump: removed node:", v)
@@ -44,7 +44,7 @@ def loop_single_entry(cfg):
             landing_site = None
             for p in back_jumps:
                 b = cfg.node(p)
-                if not b.l:
+                if not b.items:
                     landing_site = p
             if not landing_site:
                 farthest = max(back_jumps)
