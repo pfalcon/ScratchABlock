@@ -5,10 +5,10 @@ from graph import Graph
 class BBlock:
     def __init__(self, addr):
         self.addr = addr
-        self.l = []
+        self.items = []
 
     def add(self, s):
-        self.l.append(s)
+        self.items.append(s)
 
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.addr)
@@ -18,7 +18,7 @@ class BBlock:
         stream.write(str(s) + "\n")
 
     def dump(self, stream, indent=0):
-        for s in self.l:
+        for s in self.items:
             self.write(stream, indent, s)
 
 
