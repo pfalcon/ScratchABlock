@@ -53,6 +53,15 @@ class Graph:
         "Return successors of a node."
         return self._succ[n]
 
+    def sorted_succ(self, n):
+        """Return successors ordered the way that successor with labeled
+        edge comes first. Assumes 2 succesors."""
+        succ = self.succ(n)
+        assert len(succ) == 2
+        if self.edge(n, succ[0]) is None:
+            succ = [succ[1], succ[0]]
+        return succ
+
     def pred(self, n):
         "Return predecessors of a node."
         return self._pred[n]
