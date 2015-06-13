@@ -1,0 +1,4 @@
+digraph G {
+"ENTRY" -> "10"
+"10" [label="Seq\n10"]
+}
