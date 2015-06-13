@@ -34,6 +34,10 @@ class Graph:
         self._succ[from_node].append(to_node)
         self._pred[to_node].append(from_node)
 
+    def set_edge(self, from_node, to_node, label=None):
+        "Update label for existing edge."
+        self._edges[(from_node, to_node)] = label
+
     def remove_edge(self, from_node, to_node):
         del self._edges[(from_node, to_node)]
         self._succ[from_node].remove(to_node)
