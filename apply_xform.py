@@ -3,6 +3,7 @@ import sys
 from parser import *
 import dot
 from xform import *
+from decomp import *
 
 
 p = Parser(sys.argv[1])
