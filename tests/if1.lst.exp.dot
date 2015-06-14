@@ -1,0 +1,6 @@
+digraph G {
+"ENTRY" -> "10"
+"10" [label="If\n10"]
+"20" [label="BBlock\n20"]
+"10" -> "20"
+}
