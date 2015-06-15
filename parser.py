@@ -200,7 +200,8 @@ class Parser:
                     block.add(inst)
 
             if last_block:
-                print("ERROR: function was not properly terminated")
+                print("Warning: function was not properly terminated")
+                self.cfg.add_edge(last_block.addr, block.addr)
 
     def parse_bblocks(self):
         try:
