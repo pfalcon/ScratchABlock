@@ -58,3 +58,56 @@ def match_if(cfg):
                     cfg.remove_node(b)
                     cfg.set_edge(v, a, None)
                     return True
+
+
+class IfElse(BBlock):
+    def __init__(self, header, t_block, f_block, false_cond):
+        self.addr = header.addr
+        self.cond = false_cond
+        self.l = [header, t_block, f_block]
+
+    def __repr__(self):
+        return "%s(%r, %r)" % (self.__class__.__name__, self.l[0], self.l[1])
+
+    def dump(self, stream, indent=0):
+        self.write(stream, indent, "if (!%s) {" % self.cond)
+        self.l[1].dump(stream, indent + 1)
+        self.write(stream, indent, "} else {")
+        self.l[2].dump(stream, indent + 1)
+        self.write(stream, indent, "}")
+
+
+# if (!(a > b)) goto false
+# {true}
+# goto out
+# false:
+# {false}
+# out:
+
+def match_ifelse(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_out(v) == 2:
+            succ = cfg.sorted_succ(v)
+            cond = cfg.edge(v, succ[0])
+            if cond:
+                f_v = succ[0]
+                t_v = succ[1]
+                f_v_s = cfg.succ(f_v)
+                t_v_s = cfg.succ(t_v)
+
+                if len(t_v_s) < 1: continue
+                if len(f_v_s) < 1: continue
+                common = list(set(t_v_s) & set(f_v_s))
+                if common:
+                    f_v_s = common
+
+                    print("ifelse:", v, t_v, f_v, f_v_s[0])
+                    if_header = cfg.node(v)
+                    t_block = cfg.node(t_v)
+                    f_block = cfg.node(f_v)
+                    newb = IfElse(if_header, t_block, f_block, cond)
+                    cfg.add_node(v, newb)
+                    cfg.remove_node(t_v)
+                    cfg.remove_node(f_v)
+                    cfg.add_edge(v, f_v_s[0])
+                    return True
