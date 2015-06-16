@@ -111,3 +111,32 @@ def match_ifelse(cfg):
                     cfg.remove_node(f_v)
                     cfg.add_edge(v, f_v_s[0])
                     return True
+
+
+class DoWhile(BBlock):
+    def __init__(self, b, cond):
+        self.addr = b.addr
+        self.cond = cond
+        self.items = [b]
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, self.items[0])
+
+    def dump(self, stream, indent=0):
+        self.write(stream, indent, "do {")
+        for b in self.items:
+            b.dump(stream, indent + 1)
+        self.write(stream, indent, "} while %s" % self.cond)
+
+
+def match_dowhile(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_out(v) == 2:
+            for s in cfg.succ(v):
+                if s == v:
+                    print("dowhile:", v)
+                    b = cfg.node(v)
+                    newb = DoWhile(b, cfg.edge(v, v))
+                    cfg.add_node(v, newb)
+                    cfg.remove_edge(v, v)
+                    return True
