@@ -1,0 +1,8 @@
+digraph G {
+"ENTRY" -> "00"
+"00" [label="BBlock\n00"]
+"30" [label="While\n30"]
+"50" [label="BBlock\n50"]
+"00" -> "30"
+"30" -> "50"
+}
