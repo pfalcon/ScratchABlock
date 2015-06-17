@@ -113,6 +113,34 @@ def match_ifelse(cfg):
                     return True
 
 
+class Loop(BBlock):
+    def __init__(self, b):
+        self.addr = b.addr
+        self.items = [b]
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, self.items[0])
+
+    def dump(self, stream, indent=0):
+        self.write(stream, indent, "while (1) {")
+        for b in self.items:
+            b.dump(stream, indent + 1)
+        self.write(stream, indent, "}")
+
+
+def match_infloop(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_out(v) == 1:
+            for s in cfg.succ(v):
+                if s == v:
+                    print("infloop:", v)
+                    b = cfg.node(v)
+                    newb = Loop(b)
+                    cfg.add_node(v, newb)
+                    cfg.remove_edge(v, v)
+                    return True
+
+
 class DoWhile(BBlock):
     def __init__(self, b, cond):
         self.addr = b.addr
