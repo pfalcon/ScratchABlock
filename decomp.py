@@ -140,3 +140,33 @@ def match_dowhile(cfg):
                     cfg.add_node(v, newb)
                     cfg.remove_edge(v, v)
                     return True
+
+
+class While(BBlock):
+    def __init__(self, b, cond):
+        self.addr = b.addr
+        self.cond = cond
+        self.items = [b]
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, self.items[0])
+
+    def dump(self, stream, indent=0):
+        self.write(stream, indent, "while %s {" % self.cond)
+        for b in self.items:
+            b.dump(stream, indent + 1)
+        self.write(stream, indent, "}")
+
+
+def match_while(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_out(v) == 2:
+            succ = cfg.sorted_succ(v)
+            back_cand = cfg.succ(succ[0])
+            if len(back_cand) == 1 and back_cand[0] == v:
+                print("while:", v, succ[0])
+                b = cfg.node(succ[0])
+                newb = While(b, cfg.edge(v, succ[0]))
+                cfg.add_node(v, newb)
+                cfg.remove_node(succ[0])
+                return True
