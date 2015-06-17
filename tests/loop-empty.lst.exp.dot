@@ -1,0 +1,4 @@
+digraph G {
+"ENTRY" -> "0"
+"0" [label="Loop\n0"]
+}
