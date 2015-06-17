@@ -1,0 +1,3 @@
+#xform: match_infloop
+0 0:
+0 goto 0
