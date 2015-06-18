@@ -99,3 +99,6 @@ class Graph:
         for p in self.succ(from_node):
             self.add_edge(to_node, p, self._edges[(from_node, p)])
             self.remove_edge(from_node, p)
+
+    def __repr__(self):
+        return "<Graph nodes=%r edges=%r pred=%r succ=%r>" % (self._nodes, self._edges, self._pred, self._succ)
