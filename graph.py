@@ -19,9 +19,9 @@ class Graph:
             self._entries.append(node)
 
     def remove_node(self, node):
-        for s in self._succ[node]:
+        for s in self._succ[node][:]:
             self.remove_edge(node, s)
-        for p in self._pred[node]:
+        for p in self._pred[node][:]:
             self.remove_edge(p, node)
         del self._nodes[node]
         del self._succ[node]
@@ -51,7 +51,7 @@ class Graph:
 
     def succ(self, n):
         "Return successors of a node."
-        return self._succ[n]
+        return self._succ[n][:]
 
     def sorted_succ(self, n):
         """Return successors ordered the way that successor with labeled
@@ -64,7 +64,7 @@ class Graph:
 
     def pred(self, n):
         "Return predecessors of a node."
-        return self._pred[n]
+        return self._pred[n][:]
 
     def degree_out(self, n):
         return len(self._succ[n])
