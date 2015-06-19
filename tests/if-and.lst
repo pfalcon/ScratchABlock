@@ -1,0 +1,7 @@
+#xform: match_control_and
+10     a1 = 1
+20     if (!a2) goto false
+30     if (a3) goto false
+40     a4 = 4
+50 false:
+50     a2 = 2
