@@ -198,3 +198,35 @@ def match_while(cfg):
                 cfg.add_node(v, newb)
                 cfg.remove_node(succ[0])
                 return True
+
+
+class ControlAnd(BBlock):
+    def __init__(self, addr, cond1, cond2):
+        #print((addr, cond1, cond2))
+        self.addr = addr
+        self.cond = CompoundCond(cond1.list() + ["||"] + cond2.list())
+        self.l = []
+
+    def __repr__(self):
+        return "%s(%s)" % (self.__class__.__name__, self.cond)
+
+    def dump(self, stream, indent=0):
+        self.write(stream, indent, "/* && */")
+
+
+def match_control_and(cfg):
+    for v, _ in cfg.iter_nodes():
+        if cfg.degree_out(v) == 2:
+            succ1 = cfg.sorted_succ(v)
+            v2 = succ1[1]
+            if cfg.degree_out(v2) == 2:
+                succ2 = cfg.sorted_succ(v2)
+                assert len(succ2) == 2
+                if succ1[0] == succ2[0]:
+                    print("and", v, v2)
+                    newb = ControlAnd(v, cfg.edge(v, succ1[0]), cfg.edge(v2, succ1[0]))
+                    cfg.add_node(v, newb)
+                    cfg.set_edge(v, succ1[0], newb.cond)
+                    cfg.remove_node(v2)
+                    cfg.add_edge(v, succ2[1])
+                    return True
