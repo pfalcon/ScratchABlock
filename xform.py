@@ -19,7 +19,7 @@ def apply_iterative(func, args):
 # http://en.wikipedia.org/wiki/Jump_threading
 #
 def remove_jump_over_jump(cfg):
-    for v, b in cfg.iter_nodes():
+    for v, _ in cfg.iter_nodes():
         # If node is not entry, has a single exit and empty
         if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v).items:
             cfg.move_pred(v, cfg.succ(v)[0])
