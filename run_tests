@@ -2,7 +2,7 @@
 
 for f in tests/*.lst; do
     echo $f
-    ./apply_xform.py $f
+    ./apply_xform.py $f || exit 1
     diff -u $f.exp.bb $f.out.bb || exit 1
     diff -u $f.exp.dot $f.out.dot || exit 1
 done
