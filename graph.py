@@ -27,6 +27,10 @@ class Graph:
         del self._succ[node]
         del self._pred[node]
 
+    def node(self, n):
+        return self._nodes[n]
+
+
     def add_edge(self, from_node, to_node, label=None):
         """Add edge between 2 nodes. If any of the nodes does not exist,
         it will be created."""
@@ -42,9 +46,6 @@ class Graph:
         del self._edges[(from_node, to_node)]
         self._succ[from_node].remove(to_node)
         self._pred[to_node].remove(from_node)
-
-    def node(self, n):
-        return self._nodes[n]
 
     def edge(self, from_node, to_node):
         return self._edges[(from_node, to_node)]
