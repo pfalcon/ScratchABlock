@@ -47,7 +47,7 @@ def loop_single_entry(cfg):
                 if not b.items:
                     landing_site = p
             if not landing_site:
-                farthest = max(back_jumps)
+                farthest = max(back_preds)
                 print("farthest", farthest)
                 newb = BBlock(farthest + "_1")
                 cfg.add_node(newb.addr, newb)
