@@ -14,7 +14,10 @@ class Graph:
 
     def add_node(self, node, value=None):
         "Add node to a graph. Node is an ID of a node. Value is an object associated with a node."
-        self._nodes[node] = value
+        if node in self._nodes:
+            self._nodes[node]["val"] = value
+        else:
+            self._nodes[node] = {"val": value}
         if not self._entries:
             self._entries.append(node)
 
@@ -28,7 +31,13 @@ class Graph:
         del self._pred[node]
 
     def node(self, n):
-        return self._nodes[n]
+        return self._nodes[n]["val"]
+
+    def set_node_attr(self, node, attr, val):
+        self._nodes[node][attr] = val
+
+    def get_node_attr(self, node, attr):
+        return self._nodes[node].get(attr)
 
 
     def add_edge(self, from_node, to_node, label=None):

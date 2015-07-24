@@ -17,7 +17,8 @@ def dot(graph, out=sys.stdout, directed=None):
     for e in graph.entries():
         out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
 
-    for addr, obj in graph.iter_sorted_nodes():
+    for addr, info in graph.iter_sorted_nodes():
+        obj = info["val"]
         typ = type(obj).__name__
         out.write('"%s" [label="%s\\n%s"]\n' % (addr, typ, addr))
 

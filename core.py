@@ -109,7 +109,8 @@ class CompoundCond:
 
 def dump_bblocks(cfg, stream=sys.stdout):
     cnt = 0
-    for addr, bblock in cfg.iter_sorted_nodes():
+    for addr, info in cfg.iter_sorted_nodes():
+        bblock = info["val"]
         if cnt > 0:
             stream.write("\n")
         print("// Predecessors: %s" % sorted(cfg.pred(addr)), file=stream)
