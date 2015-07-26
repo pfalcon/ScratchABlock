@@ -114,6 +114,8 @@ def dump_bblocks(cfg, stream=sys.stdout):
         if cnt > 0:
             stream.write("\n")
         print("// Predecessors: %s" % sorted(cfg.pred(addr)), file=stream)
+        if "dfsno" in info:
+            print("// DFS#: %d" % info["dfsno"], file=stream)
         print("%s:" % addr, file=stream)
         if bblock:
             bblock.dump(stream)
