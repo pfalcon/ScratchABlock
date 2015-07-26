@@ -112,3 +112,21 @@ class Graph:
 
     def __repr__(self):
         return "<Graph nodes=%r edges=%r pred=%r succ=%r>" % (self._nodes, self._edges, self._pred, self._succ)
+
+    def number_postorder(self, node=None, num=1):
+        "Number nodes in depth-first search post-order order."
+        if node is None:
+            assert len(self._entries) == 1
+            node = self._entries[0]
+        self.set_node_attr(node, "dfsno", True)
+        succ = self.succ(node)
+        # TODO: If not using reverse, numbering changes to less natural, but
+        # algos which depend on postorder should not?
+        succ.sort(reverse=True)
+        for n in succ:
+            if not self.get_node_attr(n, "dfsno"):
+                num = self.number_postorder(n, num)
+        self.set_node_attr(node, "dfsno", num)
+        #print("Setting %s to %s" % (node, num))
+        num += 1
+        return num
