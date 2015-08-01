@@ -141,7 +141,7 @@ class Parser:
 
 
     def _parse_bblocks(self):
-        with open(sys.argv[1]) as f:
+        with open(self.fname) as f:
             block = None
             last_block = None
             for i, l in enumerate(f):
