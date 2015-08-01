@@ -20,7 +20,10 @@ def dot(graph, out=sys.stdout, directed=None):
     for addr, info in graph.iter_sorted_nodes():
         obj = info["val"]
         typ = type(obj).__name__
-        out.write('"%s" [label="%s\\n%s"]\n' % (addr, typ, addr))
+        label = "%s\\n%s" % (typ, addr)
+        if "dfsno" in info:
+            label += "(#%s)" % info["dfsno"]
+        out.write('"%s" [label="%s"]\n' % (addr, label))
 
     for (fr, to), label in sorted(graph.iter_edges()):
         succ = graph.succ(fr)
