@@ -10,6 +10,18 @@ def apply_iterative(func, args):
     print("Ran %s %d times" % (func, cnt))
 
 
+def foreach_bblock(cfg, func):
+    """Apply basic-block level transformation to each block in CFG.
+    Return cumulative status (OR of each block's status).
+    """
+    res = False
+    for addr, info in cfg.iter_sorted_nodes():
+        bblock = info["val"]
+        r = func(bblock)
+        res = res or r
+    return res
+
+
 def remove_trailing_jumps(bblock):
     """Trailing jumps are encoded as out edges of basic block, and
     superfluous for most deeper transformations (but useful for
