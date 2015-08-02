@@ -191,6 +191,7 @@ class Parser:
                         last_block = block
                     else:
                         last_block = None
+                    block.add(inst)
                     block = None
                 elif inst.op == "return":
                     block.add(inst)
