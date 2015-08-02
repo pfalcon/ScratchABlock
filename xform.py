@@ -9,6 +9,24 @@ def apply_iterative(func, args):
         cnt += 1
     print("Ran %s %d times" % (func, cnt))
 
+
+def remove_trailing_jumps(bblock):
+    """Trailing jumps are encoded as out edges of basic block, and
+    superfluous for most deeper transformations (but useful for
+    surface transformations which should maintain instruction
+    correspondence to the original input). This pass removes them.
+    """
+    last_jump = None
+    for i in range(len(bblock.items) -1, -1, -1):
+        if bblock.items[i].op in ("goto", "if"):
+            last_jump = i
+        else:
+            break
+    if last_jump is not None:
+        #print("Removing: ", bblock.items[last_jump:])
+        del bblock.items[last_jump:]
+
+
 # Remove any jumps to jumps, replacing destination of first jump
 # to be destination of 2nd.
 # This "simplifies" graph, but makes it irregular. This is useful
