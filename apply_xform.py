@@ -8,6 +8,7 @@ from decomp import *
 
 p = Parser(sys.argv[1])
 cfg = p.parse()
+foreach_bblock(cfg, remove_trailing_jumps)
 
 with open(sys.argv[1] + ".0.bb", "w") as f:
     dump_bblocks(cfg, f)
