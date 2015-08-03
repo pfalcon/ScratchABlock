@@ -36,8 +36,11 @@ class Graph:
     def set_node_attr(self, node, attr, val):
         self._nodes[node][attr] = val
 
-    def get_node_attr(self, node, attr):
-        return self._nodes[node].get(attr)
+    def get_node_attr(self, node, attr, default=Ellipsis):
+        if default is Ellipsis:
+            return self._nodes[node][attr]
+        else:
+            return self._nodes[node].get(attr, default)
 
 
     def add_edge(self, from_node, to_node, label=None):
@@ -124,7 +127,7 @@ class Graph:
         # algos which depend on postorder should not?
         succ.sort(reverse=True)
         for n in succ:
-            if not self.get_node_attr(n, "dfsno"):
+            if not self.get_node_attr(n, "dfsno", None):
                 num = self.number_postorder(n, num)
         self.set_node_attr(node, "dfsno", num)
         #print("Setting %s to %s" % (node, num))
