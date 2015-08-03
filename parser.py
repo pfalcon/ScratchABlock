@@ -176,6 +176,7 @@ class Parser:
                     last_block = None
 
                 inst = self.parse_inst(l)
+                inst.addr = addr
 
                 if inst.op in ("goto", "if"):
                     cond = None
