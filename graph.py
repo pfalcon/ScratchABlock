@@ -120,11 +120,7 @@ class Graph:
         for n, info in self._nodes.items():
             info["dfsno"] = None
 
-    def number_postorder(self, node=None, num=1):
-        "Number nodes in depth-first search post-order order."
-        if node is None:
-            assert len(self._entries) == 1
-            node = self._entries[0]
+    def _number_postorder(self, node, num):
         self.set_node_attr(node, "dfsno", True)
         succ = self.succ(node)
         # TODO: If not using reverse, numbering changes to less natural, but
@@ -132,8 +128,15 @@ class Graph:
         succ.sort(reverse=True)
         for n in succ:
             if not self.get_node_attr(n, "dfsno", None):
-                num = self.number_postorder(n, num)
+                num = self._number_postorder(n, num)
         self.set_node_attr(node, "dfsno", num)
         #print("Setting %s to %s" % (node, num))
         num += 1
         return num
+
+    def number_postorder(self):
+        "Number nodes in depth-first search post-order order."
+        self.reset_numbering()
+        assert len(self._entries) == 1
+        node = self._entries[0]
+        return self._number_postorder(node, 1)
