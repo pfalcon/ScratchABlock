@@ -116,6 +116,10 @@ class Graph:
     def __repr__(self):
         return "<Graph nodes=%r edges=%r pred=%r succ=%r>" % (self._nodes, self._edges, self._pred, self._succ)
 
+    def reset_numbering(self):
+        for n, info in self._nodes.items():
+            info["dfsno"] = None
+
     def number_postorder(self, node=None, num=1):
         "Number nodes in depth-first search post-order order."
         if node is None:
