@@ -40,15 +40,20 @@ class Inst:
         self.op = op
         self.dest = dest
         self.args = args
+        self.addr = None
+        self.comments = {}
 
     def __repr__(self):
+        if self.addr is not None:
+            s = "/*%s*/ " % self.addr
         if self.dest is None:
             if self.op == "LIT":
-                return self.args[0]
+                s += self.args[0]
             else:
-                return "%s(%s)" % (self.op, self.args)
+                s += "%s(%s)" % (self.op, self.args)
         else:
-            return "%s = %s(%s)" % (self.dest, self.op, self.args)
+            s += "%s = %s(%s)" % (self.dest, self.op, self.args)
+        return s + " # " + repr(self.comments)
 
 
 class SimpleCond:
