@@ -22,6 +22,13 @@ def foreach_bblock(cfg, func):
     return res
 
 
+def foreach_inst(cfg, func):
+    def inst_handler(bblock):
+        for inst in bblock.items:
+            func(inst)
+    foreach_bblock(cfg, inst_handler)
+
+
 def remove_trailing_jumps(bblock):
     """Trailing jumps are encoded as out edges of basic block, and
     superfluous for most deeper transformations (but useful for
