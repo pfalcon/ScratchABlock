@@ -10,9 +10,9 @@ class Seq(BBlock):
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.items[0], self.items[1])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         for b in self.items:
-            b.dump(stream, indent)
+            b.dump(stream, indent, printer)
 
 
 def match_seq(cfg):
@@ -37,9 +37,9 @@ class If(BBlock):
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.items[0], self.items[1])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "if %s {" % self.cond.neg())
-        self.items[1].dump(stream, indent + 1)
+        self.items[1].dump(stream, indent + 1, printer)
         self.write(stream, indent, "}")
 
 
@@ -69,11 +69,11 @@ class IfElse(BBlock):
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.l[0], self.l[1])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "if (!%s) {" % self.cond)
-        self.l[1].dump(stream, indent + 1)
+        self.l[1].dump(stream, indent + 1, printer)
         self.write(stream, indent, "} else {")
-        self.l[2].dump(stream, indent + 1)
+        self.l[2].dump(stream, indent + 1, printer)
         self.write(stream, indent, "}")
 
 
@@ -121,10 +121,10 @@ class Loop(BBlock):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "while (1) {")
         for b in self.items:
-            b.dump(stream, indent + 1)
+            b.dump(stream, indent + 1, printer)
         self.write(stream, indent, "}")
 
 
@@ -150,10 +150,10 @@ class DoWhile(BBlock):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "do {")
         for b in self.items:
-            b.dump(stream, indent + 1)
+            b.dump(stream, indent + 1, printer)
         self.write(stream, indent, "} while %s" % self.cond)
 
 
@@ -179,10 +179,10 @@ class While(BBlock):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "while %s {" % self.cond)
         for b in self.items:
-            b.dump(stream, indent + 1)
+            b.dump(stream, indent + 1, printer)
         self.write(stream, indent, "}")
 
 
@@ -210,7 +210,7 @@ class ControlAnd(BBlock):
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.cond)
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         self.write(stream, indent, "/* && */")
 
 

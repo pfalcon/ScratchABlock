@@ -17,9 +17,9 @@ class BBlock:
         stream.write("  " * indent)
         stream.write(str(s) + "\n")
 
-    def dump(self, stream, indent=0):
+    def dump(self, stream, indent=0, printer=str):
         for s in self.items:
-            self.write(stream, indent, s)
+            self.write(stream, indent, printer(s))
 
 
 class MEM:
@@ -53,7 +53,22 @@ class Inst:
                 s += "%s(%s)" % (self.op, self.args)
         else:
             s += "%s = %s(%s)" % (self.dest, self.op, self.args)
-        return s + " # " + repr(self.comments)
+        if self.comments:
+            s += " # " + repr(self.comments)
+        return s
+
+    def __str__(self):
+        if self.dest is None:
+            if self.op == "LIT":
+                return self.args[0]
+            else:
+                if self.op in ("goto", "call"):
+                    return "%s %s" % (self.op, self.args[0])
+                return "%s(%s)" % (self.op, self.args)
+        else:
+            if self.op == "ASSIGN":
+                return "%s = %s" % (self.dest, self.args[0])
+            return "%s = %s(%s)" % (self.dest, self.op, self.args)
 
 
 class SimpleCond:
@@ -112,7 +127,7 @@ class CompoundCond:
         return "CCond%s" % str(self)
 
 
-def dump_bblocks(cfg, stream=sys.stdout):
+def dump_bblocks(cfg, stream=sys.stdout, printer=str):
     cnt = 0
     for addr, info in cfg.iter_sorted_nodes():
         bblock = info["val"]
@@ -123,7 +138,7 @@ def dump_bblocks(cfg, stream=sys.stdout):
             print("// DFS#: %d" % info["dfsno"], file=stream)
         print("%s:" % addr, file=stream)
         if bblock:
-            bblock.dump(stream)
+            bblock.dump(stream, 0, printer)
         else:
             print("   ", bblock, file=stream)
         succ = cfg.succ(addr)
