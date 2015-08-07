@@ -140,3 +140,6 @@ class Graph:
         assert len(self._entries) == 1
         node = self._entries[0]
         return self._number_postorder(node, 1)
+
+    def iter_postorder(self):
+        return sorted(self._nodes.items(), key=lambda x: x[1]["dfsno"])
