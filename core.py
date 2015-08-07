@@ -36,11 +36,11 @@ class MEM:
 
 
 class Inst:
-    def __init__(self, dest, op, args):
+    def __init__(self, dest, op, args, addr=None):
         self.op = op
         self.dest = dest
         self.args = args
-        self.addr = None
+        self.addr = addr
         self.comments = {}
 
     def __repr__(self):
