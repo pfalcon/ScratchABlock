@@ -1,10 +1,10 @@
 // Predecessors: ['20']
 10:
-Exits: [(None, '11'), (SCond(a1 == 0), '20')]
+Exits: [(None, '11'), (SCond($a1 == 0), '20')]
 
 // Predecessors: ['10']
 11:
-a2 = 1
+$a2 = 0x1
 Exits: [(None, '20')]
 
 // Predecessors: ['10', '11']

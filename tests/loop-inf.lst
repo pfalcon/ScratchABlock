@@ -1,4 +1,4 @@
 #xform: match_infloop
 10 10:
-11  a1 = 1
+11  $a1 = 1
 20  goto 10
