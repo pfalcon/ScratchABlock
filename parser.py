@@ -18,6 +18,9 @@ class Lexer:
         self.l = l
         self.ws()
 
+    def peek(self):
+        return self.l[0]
+
     def match(self, tok):
         if not self.l.startswith(tok):
             return False
@@ -47,6 +50,27 @@ class Lexer:
 
     def rest(self):
         return self.l.rstrip()
+
+    def word(self):
+        w = ""
+        while self.l and self.l[0] in (string.ascii_letters + string.digits):
+            w += self.l[0]
+            self.l = self.l[1:]
+        return w
+
+    def isident(self):
+        return self.l[0] in string.ascii_letters
+
+    def isdigit(self):
+        return self.l[0] in string.digits
+
+    def ident(self):
+        assert self.isident(), repr(self.l)
+        return self.word()
+
+    def num(self):
+        assert self.isdigit(), repr(self.l)
+        return int(self.word(), 0)
 
 
 class Parser:
@@ -100,6 +124,10 @@ class Parser:
                 if l[-1] == ":":
                     self.labels[l[:-1]] = addr
 
+    def parse_reg(self, lex):
+        lex.expect("$")
+        return REG(lex.ident())
+
     def parse_expr(self, lex):
         if lex.match("*"):
             lex.expect("(")
@@ -108,15 +136,21 @@ class Parser:
             lex.expect(")")
             offset = 0
             if lex.match("("):
-                base = lex.ident()
+                base = self.parse_reg(lex)
+                lex.ws()
                 lex.expect("+")
+                lex.ws()
                 offset = lex.num()
                 lex.expect(")")
             else:
-                base = lex.ident()
+                base = self.parse_reg(lex)
             return MEM(type, base, offset)
+        elif lex.peek() == "$":
+            return self.parse_reg(lex)
+        elif lex.isdigit():
+            return VALUE(lex.num())
         else:
-            assert False
+            assert False, "Cannot parse: " + repr(lex.l)
 
     def get_label(self, label):
         try:
@@ -136,8 +170,16 @@ class Parser:
             return Inst(None, "if", [c, self.get_label(lex.rest())])
         if lex.match("return"):
             return Inst(None, "return", [])
-        return Inst(None, "LIT", [l])
-#        dest = self.parse_expr(lex)
+        dest = self.parse_expr(lex)
+        lex.ws()
+        if lex.match("="):
+            lex.ws()
+            src = self.parse_expr(lex)
+            print(src)
+            return Inst(dest, "ASSIGN", [src])
+        else:
+            assert False
+#        return Inst(None, "LIT", [l])
 
 
     def _parse_bblocks(self):
