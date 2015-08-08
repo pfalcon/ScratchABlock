@@ -49,6 +49,17 @@ class VALUE:
     def __str__(self):
         return "0x%x" % self.val
 
+class ADDR:
+
+    def __init__(self, addr):
+        self.addr = addr
+
+    def __repr__(self):
+        return "ADDR(%s)" % self.addr
+
+    def __str__(self):
+        return self.addr
+
 class MEM:
     def __init__(self, type, base, offset=0):
         self.type = type
@@ -61,6 +72,16 @@ class MEM:
         else:
             return "*(%s*)(%s + %s)" % (self.type, self.base, self.offset)
 
+class SFUNC:
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "(SFUNC)%s" % (self.name)
+
+    def __str__(self):
+        return "%s" % self.name
 
 class Inst:
     def __init__(self, dest, op, args, addr=None):
