@@ -3,7 +3,7 @@ digraph G {
 "00" [label="BBlock\n00"]
 "20" [label="BBlock\n20"]
 "30" [label="BBlock\n30"]
-"00" -> "20" [label="(a1 == 0)"]
+"00" -> "20" [label="($a1 == 0)"]
 "00" -> "30" [label="else"]
 "20" -> "30"
 }
