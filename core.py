@@ -70,7 +70,7 @@ class MEM:
         if self.offset == 0:
             return "*(%s*)%s" % (self.type, self.base)
         else:
-            return "*(%s*)(%s + %s)" % (self.type, self.base, self.offset)
+            return "*(%s*)(%s + 0x%x)" % (self.type, self.base, self.offset)
 
 class SFUNC:
 
