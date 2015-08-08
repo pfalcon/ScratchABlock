@@ -29,6 +29,9 @@ class REG:
     def __repr__(self):
         return "REG(%s)" % self.name
 
+    def __str__(self):
+        return "$" + self.name
+
     def __eq__(self, other):
         return self.name == other.name
 
@@ -42,6 +45,9 @@ class VALUE:
 
     def __repr__(self):
         return "VALUE(0x%x)" % self.val
+
+    def __str__(self):
+        return "0x%x" % self.val
 
 class MEM:
     def __init__(self, type, base, offset=0):
