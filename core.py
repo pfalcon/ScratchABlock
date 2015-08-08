@@ -66,7 +66,7 @@ class MEM:
         self.base = base
         self.offset = offset
 
-    def __str__(self):
+    def __repr__(self):
         if self.offset == 0:
             return "*(%s*)%s" % (self.type, self.base)
         else:
