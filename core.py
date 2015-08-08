@@ -21,6 +21,27 @@ class BBlock:
         for s in self.items:
             self.write(stream, indent, printer(s))
 
+class REG:
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "REG(%s)" % self.name
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
+class VALUE:
+
+    def __init__(self, val):
+        self.val = val
+
+    def __repr__(self):
+        return "VALUE(0x%x)" % self.val
 
 class MEM:
     def __init__(self, type, base, offset=0):
