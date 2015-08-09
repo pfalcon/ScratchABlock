@@ -19,6 +19,8 @@ class Lexer:
         self.ws()
 
     def peek(self):
+        if not self.l:
+            return self.l
         return self.l[0]
 
     def match(self, tok):
