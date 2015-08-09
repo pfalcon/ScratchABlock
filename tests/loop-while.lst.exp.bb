@@ -11,5 +11,5 @@ Exits: [(None, '50')]
 
 // Predecessors: ['30']
 50:
-return([])
+return
 Exits: []
