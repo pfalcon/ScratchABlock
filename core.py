@@ -106,17 +106,27 @@ class Inst:
         return s
 
     def __str__(self):
-        if self.dest is None:
-            if self.op == "LIT":
-                return self.args[0]
-            else:
-                if self.op in ("goto", "call"):
-                    return "%s %s" % (self.op, self.args[0])
-                return "%s(%s)" % (self.op, self.args)
+        if self.op == "LIT":
+            return self.args[0]
+        if self.op in ("goto", "call"):
+            return "%s %s" % (self.op, self.args[0])
+        s = ""
+
+        if self.dest is not None:
+            s = "%s = " % self.dest
+
+        if self.op == "ASSIGN":
+            s += "%s" % self.args[0]
         else:
-            if self.op == "ASSIGN":
-                return "%s = %s" % (self.dest, self.args[0])
-            return "%s = %s(%s)" % (self.dest, self.op, self.args)
+            args = self.args
+            op = self.op
+            if op == "SFUNC":
+                op = args[0]
+                args = args[1:]
+            args = ", ".join([str(a) for a in args])
+            s += "%s(%s)" % (op, args)
+
+        return s
 
 
 class SimpleCond:
