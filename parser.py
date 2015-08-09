@@ -55,7 +55,7 @@ class Lexer:
 
     def word(self):
         w = ""
-        while self.l and self.l[0] in (string.ascii_letters + string.digits):
+        while self.l and self.l[0] in (string.ascii_letters + string.digits + "."):
             w += self.l[0]
             self.l = self.l[1:]
         return w
