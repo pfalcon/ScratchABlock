@@ -7,5 +7,5 @@ Exits: [(None, '40')]
 
 // Predecessors: ['10']
 40:
-return([])
+return
 Exits: []
