@@ -130,6 +130,22 @@ class Parser:
         lex.expect("$")
         return REG(lex.ident())
 
+    def parse_arglist(self, lex):
+        args = []
+        lex.expect("(")
+        while not lex.match(")"):
+            comm = ""
+            if lex.match("/*"):
+                comm = "/*" + lex.match_till("*/") + "*/"
+                lex.expect("*/")
+            a = self.parse_expr(lex)
+            assert a, (repr(a), repr(lex.l))
+            a.comment = comm
+            args.append(a)
+            if lex.match(","):
+                pass
+        return args
+
     def parse_expr(self, lex):
         if lex.match("*"):
             lex.expect("(")
@@ -151,7 +167,14 @@ class Parser:
             return self.parse_reg(lex)
         elif lex.isdigit():
             return VALUE(lex.num())
+        elif lex.isident():
+            id = lex.ident()
+            if lex.peek() == "(":
+                return SFUNC(id)
+            else:
+                return ADDR(id)
         else:
+            return None
             assert False, "Cannot parse: " + repr(lex.l)
 
     def get_label(self, label):
@@ -173,6 +196,12 @@ class Parser:
         if lex.match("return"):
             return Inst(None, "return", [])
         dest = self.parse_expr(lex)
+        if not dest:
+            return Inst(None, "LIT", [l])
+        if isinstance(dest, SFUNC):
+            args = self.parse_arglist(lex)
+            return Inst(None, "SFUNC", [dest.name] + args)
+
         lex.ws()
         if lex.match("&="):
             lex.ws()
@@ -193,11 +222,13 @@ class Parser:
         elif lex.match("="):
             lex.ws()
             src = self.parse_expr(lex)
-            print(src)
+            assert src
+            if isinstance(src, SFUNC):
+                args = self.parse_arglist(lex)
+                return Inst(dest, "SFUNC", [src.name] + args)
             return Inst(dest, "ASSIGN", [src])
         else:
-            assert False
-#        return Inst(None, "LIT", [l])
+            assert False, repr(lex.l)
 
 
     def _parse_bblocks(self):
