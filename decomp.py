@@ -4,7 +4,7 @@ from core import *
 
 class Seq(BBlock):
     def __init__(self, b1, b2):
-        self.addr = b1.addr
+        super().__init__(b1.addr)
         self.items = [b1, b2]
 
     def __repr__(self):
@@ -30,7 +30,7 @@ def match_seq(cfg):
 
 class If(BBlock):
     def __init__(self, header, t_block, false_cond):
-        self.addr = header.addr
+        super().__init__(header.addr)
         self.cond = false_cond
         self.items = [header, t_block]
 
@@ -62,7 +62,7 @@ def match_if(cfg):
 
 class IfElse(BBlock):
     def __init__(self, header, t_block, f_block, false_cond):
-        self.addr = header.addr
+        super().__init__(header.addr)
         self.cond = false_cond
         self.l = [header, t_block, f_block]
 
@@ -115,7 +115,7 @@ def match_ifelse(cfg):
 
 class Loop(BBlock):
     def __init__(self, b):
-        self.addr = b.addr
+        super().__init__(b.addr)
         self.items = [b]
 
     def __repr__(self):
@@ -143,7 +143,7 @@ def match_infloop(cfg):
 
 class DoWhile(BBlock):
     def __init__(self, b, cond):
-        self.addr = b.addr
+        super().__init__(b.addr)
         self.cond = cond
         self.items = [b]
 
@@ -172,7 +172,7 @@ def match_dowhile(cfg):
 
 class While(BBlock):
     def __init__(self, b, cond):
-        self.addr = b.addr
+        super().__init__(b.addr)
         self.cond = cond
         self.items = [b]
 
@@ -202,8 +202,8 @@ def match_while(cfg):
 
 class ControlAnd(BBlock):
     def __init__(self, addr, cond1, cond2):
+        super().__init__(addr)
         #print((addr, cond1, cond2))
-        self.addr = addr
         self.cond = CompoundCond(cond1.list() + ["||"] + cond2.list())
         self.l = []
 
