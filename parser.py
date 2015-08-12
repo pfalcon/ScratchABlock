@@ -287,8 +287,8 @@ class Parser:
                     block = None
                 elif inst.op == "return":
                     block.add(inst)
+                    block = None
                     last_block = None
-                    break
                 else:
                     block.add(inst)
 
