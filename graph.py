@@ -119,6 +119,11 @@ class Graph:
             return entries
         return [self.first_node]
 
+    def entry(self):
+        e = self.entries()
+        assert len(e) == 1
+        return e[0]
+
     def exits(self):
         # TODO: Will also return single disconnected nodes
         return [n for n in self._nodes if not self._succ[n]]
