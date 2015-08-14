@@ -10,7 +10,6 @@ class Graph:
         self._edges = {}
         self._succ = defaultdict(list)
         self._pred = defaultdict(list)
-        self._entries = []
 
     def add_node(self, node, **attrs):
         """Add node to a graph. node is an ID of a node (usually lightweight
@@ -21,8 +20,6 @@ class Graph:
             self._nodes[node].update(attrs)
         else:
             self._nodes[node] = attrs
-        if not self._entries:
-            self._entries.append(node)
 
     def remove_node(self, node):
         for s in self._succ[node][:]:
@@ -108,7 +105,12 @@ class Graph:
         return self._edges.items()
 
     def entries(self):
-        return self._entries
+        # TODO: Will also return single disconnected nodes
+        return [n for n in self._nodes if not self._pred[n]]
+
+    def exits(self):
+        # TODO: Will also return single disconnected nodes
+        return [n for n in self._nodes if not self._succ[n]]
 
     def move_pred(self, from_node, to_node):
         for p in self.pred(from_node):
@@ -144,8 +146,9 @@ class Graph:
     def number_postorder(self):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
-        assert len(self._entries) == 1
-        node = self._entries[0]
+        entries = self.entries()
+        assert len(entries) == 1
+        node = entries[0]
         return self._number_postorder(node, 1)
 
     def iter_postorder(self):
