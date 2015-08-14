@@ -12,12 +12,15 @@ class Graph:
         self._pred = defaultdict(list)
         self._entries = []
 
-    def add_node(self, node, value=None):
-        "Add node to a graph. Node is an ID of a node. Value is an object associated with a node."
+    def add_node(self, node, **attrs):
+        """Add node to a graph. node is an ID of a node (usually lightweight
+        scalar value, but can be any immutable value). Arbitrary attributes
+        can be associated with a node, e.g. "val" attribute for node's "value".
+        """
         if node in self._nodes:
-            self._nodes[node]["val"] = value
+            self._nodes[node].update(attrs)
         else:
-            self._nodes[node] = {"val": value}
+            self._nodes[node] = attrs
         if not self._entries:
             self._entries.append(node)
 
@@ -31,7 +34,7 @@ class Graph:
         del self._pred[node]
 
     def node(self, n):
-        return self._nodes[n]["val"]
+        return self._nodes[n]
 
     def set_node_attr(self, node, attr, val):
         self._nodes[node][attr] = val
