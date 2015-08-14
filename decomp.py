@@ -53,10 +53,10 @@ def match_if(cfg):
                     print("if:", v, b, c)
                     if_header = cfg.node(v)
                     t_block = cfg.node(b)
-                    newb = If(if_header, t_block, cfg.edge(v, a))
+                    newb = If(if_header, t_block, cfg.edge(v, a).get("cond"))
                     cfg.add_node(v, newb)
                     cfg.remove_node(b)
-                    cfg.set_edge(v, a, None)
+                    cfg.set_edge(v, a, cond=None)
                     return True
 
 
@@ -88,7 +88,7 @@ def match_ifelse(cfg):
     for v, _ in cfg.iter_nodes():
         if cfg.degree_out(v) == 2:
             succ = cfg.sorted_succ(v)
-            cond = cfg.edge(v, succ[0])
+            cond = cfg.edge(v, succ[0]).get("cond")
             if cond:
                 f_v = succ[0]
                 t_v = succ[1]
@@ -164,7 +164,7 @@ def match_dowhile(cfg):
                 if s == v:
                     print("dowhile:", v)
                     b = cfg.node(v)
-                    newb = DoWhile(b, cfg.edge(v, v))
+                    newb = DoWhile(b, cfg.edge(v, v).get("cond"))
                     cfg.add_node(v, newb)
                     cfg.remove_edge(v, v)
                     return True
@@ -194,7 +194,7 @@ def match_while(cfg):
             if len(back_cand) == 1 and back_cand[0] == v:
                 print("while:", v, succ[0])
                 b = cfg.node(succ[0])
-                newb = While(b, cfg.edge(v, succ[0]))
+                newb = While(b, cfg.edge(v, succ[0]).get("cond"))
                 cfg.add_node(v, newb)
                 cfg.remove_node(succ[0])
                 return True
@@ -224,9 +224,9 @@ def match_control_and(cfg):
                 assert len(succ2) == 2
                 if succ1[0] == succ2[0]:
                     print("and", v, v2)
-                    newb = ControlAnd(v, cfg.edge(v, succ1[0]), cfg.edge(v2, succ1[0]))
+                    newb = ControlAnd(v, cfg.edge(v, succ1[0]).get("cond"), cfg.edge(v2, succ1[0]).get("cond"))
                     cfg.add_node(v, newb)
-                    cfg.set_edge(v, succ1[0], newb.cond)
+                    cfg.set_edge(v, succ1[0], cond=newb.cond)
                     cfg.remove_node(v2)
                     cfg.add_edge(v, succ2[1])
                     return True

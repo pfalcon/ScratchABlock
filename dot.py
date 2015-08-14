@@ -25,7 +25,8 @@ def dot(graph, out=sys.stdout, directed=None):
             label += "(#%s)" % info["dfsno"]
         out.write('"%s" [label="%s"]\n' % (addr, label))
 
-    for (fr, to), label in sorted(graph.iter_edges()):
+    for (fr, to), data in sorted(graph.iter_edges()):
+        label = data.get("cond")
         succ = graph.succ(fr)
         if label is None and len(succ) == 2:
             label = "else"

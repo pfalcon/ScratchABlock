@@ -43,16 +43,17 @@ class Graph:
             return self._nodes[node].get(attr, default)
 
 
-    def add_edge(self, from_node, to_node, label=None):
+    def add_edge(self, from_node, to_node, **attrs):
         """Add edge between 2 nodes. If any of the nodes does not exist,
         it will be created."""
-        self._edges[(from_node, to_node)] = label
-        self._succ[from_node].append(to_node)
-        self._pred[to_node].append(from_node)
+        if (from_node, to_node) in self._edges:
+            self._edges[(from_node, to_node)].update(attrs)
+        else:
+            self._edges[(from_node, to_node)] = attrs
+            self._succ[from_node].append(to_node)
+            self._pred[to_node].append(from_node)
 
-    def set_edge(self, from_node, to_node, label=None):
-        "Update label for existing edge."
-        self._edges[(from_node, to_node)] = label
+    set_edge = add_edge
 
     def remove_edge(self, from_node, to_node):
         del self._edges[(from_node, to_node)]
@@ -71,7 +72,7 @@ class Graph:
         edge comes first. Assumes 2 succesors."""
         succ = self.succ(n)
         assert len(succ) == 2
-        if self.edge(n, succ[0]) is None:
+        if self.edge(n, succ[0]).get("cond") is None:
             succ = [succ[1], succ[0]]
         return succ
 
@@ -105,12 +106,12 @@ class Graph:
 
     def move_pred(self, from_node, to_node):
         for p in self.pred(from_node):
-            self.add_edge(p, to_node, self._edges[(p, from_node)])
+            self.add_edge(p, to_node, **self._edges[(p, from_node)])
             self.remove_edge(p, from_node)
 
     def move_succ(self, from_node, to_node):
         for p in self.succ(from_node):
-            self.add_edge(to_node, p, self._edges[(from_node, p)])
+            self.add_edge(to_node, p, **self._edges[(from_node, p)])
             self.remove_edge(from_node, p)
 
     def __repr__(self):

@@ -278,7 +278,7 @@ class Parser:
                     #print("!", (cond, addr))
                     if addr not in self.cfg:
                         self.cfg.add_node(addr)
-                    self.cfg.add_edge(block.addr, addr, cond)
+                    self.cfg.add_edge(block.addr, addr, cond=cond)
                     if cond:
                         last_block = block
                     else:
