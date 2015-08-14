@@ -172,3 +172,6 @@ class Graph:
 
     def iter_postorder(self):
         return sorted(self._nodes.items(), key=lambda x: x[1]["dfsno"])
+
+    def iter_rev_postorder(self):
+        return sorted(self._nodes.items(), key=lambda x: -x[1]["dfsno"])
