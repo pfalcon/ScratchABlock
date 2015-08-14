@@ -21,8 +21,8 @@ def match_seq(cfg):
             succ = cfg.succ(v)[0]
             if cfg.degree_in(succ) == 1:
                 print("seq:", v, succ)
-                newb = Seq(cfg.node(v), cfg.node(succ))
-                cfg.add_node(v, newb)
+                newb = Seq(cfg.node(v)["val"], cfg.node(succ)["val"])
+                cfg.add_node(v, val=newb)
                 cfg.move_succ(succ, v)
                 cfg.remove_node(succ)
                 return True
@@ -51,10 +51,10 @@ def match_if(cfg):
                 c = cfg.succ(b)[0]
                 if c == a:
                     print("if:", v, b, c)
-                    if_header = cfg.node(v)
-                    t_block = cfg.node(b)
+                    if_header = cfg.node(v)["val"]
+                    t_block = cfg.node(b)["val"]
                     newb = If(if_header, t_block, cfg.edge(v, a).get("cond"))
-                    cfg.add_node(v, newb)
+                    cfg.add_node(v, val=newb)
                     cfg.remove_node(b)
                     cfg.set_edge(v, a, cond=None)
                     return True
@@ -102,11 +102,11 @@ def match_ifelse(cfg):
                     f_v_s = common
 
                     print("ifelse:", v, t_v, f_v, f_v_s[0])
-                    if_header = cfg.node(v)
-                    t_block = cfg.node(t_v)
-                    f_block = cfg.node(f_v)
+                    if_header = cfg.node(v)["val"]
+                    t_block = cfg.node(t_v)["val"]
+                    f_block = cfg.node(f_v)["val"]
                     newb = IfElse(if_header, t_block, f_block, cond)
-                    cfg.add_node(v, newb)
+                    cfg.add_node(v, val=newb)
                     cfg.remove_node(t_v)
                     cfg.remove_node(f_v)
                     cfg.add_edge(v, f_v_s[0])
@@ -134,9 +134,9 @@ def match_infloop(cfg):
             for s in cfg.succ(v):
                 if s == v:
                     print("infloop:", v)
-                    b = cfg.node(v)
+                    b = cfg.node(v)["val"]
                     newb = Loop(b)
-                    cfg.add_node(v, newb)
+                    cfg.add_node(v, val=newb)
                     cfg.remove_edge(v, v)
                     return True
 
@@ -163,9 +163,9 @@ def match_dowhile(cfg):
             for s in cfg.succ(v):
                 if s == v:
                     print("dowhile:", v)
-                    b = cfg.node(v)
+                    b = cfg.node(v)["val"]
                     newb = DoWhile(b, cfg.edge(v, v).get("cond"))
-                    cfg.add_node(v, newb)
+                    cfg.add_node(v, val=newb)
                     cfg.remove_edge(v, v)
                     return True
 
@@ -193,9 +193,9 @@ def match_while(cfg):
             back_cand = cfg.succ(succ[0])
             if len(back_cand) == 1 and back_cand[0] == v:
                 print("while:", v, succ[0])
-                b = cfg.node(succ[0])
+                b = cfg.node(succ[0])["val"]
                 newb = While(b, cfg.edge(v, succ[0]).get("cond"))
-                cfg.add_node(v, newb)
+                cfg.add_node(v, val=newb)
                 cfg.remove_node(succ[0])
                 return True
 
@@ -225,7 +225,7 @@ def match_control_and(cfg):
                 if succ1[0] == succ2[0]:
                     print("and", v, v2)
                     newb = ControlAnd(v, cfg.edge(v, succ1[0]).get("cond"), cfg.edge(v2, succ1[0]).get("cond"))
-                    cfg.add_node(v, newb)
+                    cfg.add_node(v, val=newb)
                     cfg.set_edge(v, succ1[0], cond=newb.cond)
                     cfg.remove_node(v2)
                     cfg.add_edge(v, succ2[1])

@@ -254,11 +254,11 @@ class Parser:
                     if block:
                         last_block = block
                     block = BBlock(addr)
-                    self.cfg.add_node(addr, block)
+                    self.cfg.add_node(addr, val=block)
                     continue
                 elif not block:
                     block = BBlock(addr)
-                    self.cfg.add_node(addr, block)
+                    self.cfg.add_node(addr, val=block)
 
 
                 if last_block:

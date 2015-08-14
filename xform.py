@@ -58,7 +58,7 @@ def remove_trailing_jumps(bblock):
 def remove_jump_over_jump(cfg):
     for v, _ in cfg.iter_nodes():
         # If node is not entry, has a single exit and empty
-        if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v).items:
+        if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v)["val"].items:
             cfg.move_pred(v, cfg.succ(v)[0])
             cfg.remove_node(v)
             print("jump_over_jump: removed node:", v)
@@ -80,14 +80,14 @@ def loop_single_entry(cfg):
             # find existing landing site
             landing_site = None
             for p in back_jumps:
-                b = cfg.node(p)
+                b = cfg.node(p)["val"]
                 if not b.items:
                     landing_site = p
             if not landing_site:
                 farthest = max(back_preds)
                 print("farthest", farthest)
                 newb = BBlock(farthest + "_1")
-                cfg.add_node(newb.addr, newb)
+                cfg.add_node(newb.addr, val=newb)
                 cfg.add_edge(newb.addr, v)
                 landing_site = newb.addr
             print("landing_site:", landing_site)
