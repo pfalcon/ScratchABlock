@@ -36,6 +36,9 @@ class Graph:
     def node(self, n):
         return self._nodes[n]
 
+    # Allow to index graph to access node data
+    __getitem__ = node
+
     def set_node_attr(self, node, attr, val):
         self._nodes[node][attr] = val
 
