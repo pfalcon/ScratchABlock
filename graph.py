@@ -74,6 +74,9 @@ class Graph:
     def edge(self, from_node, to_node):
         return self._edges[(from_node, to_node)]
 
+    def is_back_edge(self, from_node, to_node):
+        return self[from_node]["dfsno"] < self[to_node]["dfsno"]
+
     def succ(self, n):
         "Return successors of a node."
         return self._succ[n][:]
