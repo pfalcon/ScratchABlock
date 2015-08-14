@@ -93,7 +93,7 @@ def loop_single_entry(cfg):
             print("landing_site:", landing_site)
             for p in back_preds:
                 if p != landing_site:
-                    e = cfg.edge(p, v)
+                    e = cfg.edge(p, v).get("cond")
                     cfg.remove_edge(p, v)
-                    cfg.add_edge(p, landing_site, e)
+                    cfg.add_edge(p, landing_site, cond=e)
             return True

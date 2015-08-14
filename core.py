@@ -202,5 +202,5 @@ def dump_bblocks(cfg, stream=sys.stdout, printer=str):
         else:
             print("   ", bblock, file=stream)
         succ = cfg.succ(addr)
-        print("Exits:", [(cfg.edge(addr, x), x) for x in succ], file=stream)
+        print("Exits:", [(cfg.edge(addr, x).get("cond"), x) for x in succ], file=stream)
         cnt += 1
