@@ -10,6 +10,7 @@ class Graph:
         self._edges = {}
         self._succ = defaultdict(list)
         self._pred = defaultdict(list)
+        self.first_node = None
 
     def add_node(self, node, **attrs):
         """Add node to a graph. node is an ID of a node (usually lightweight
@@ -20,6 +21,13 @@ class Graph:
             self._nodes[node].update(attrs)
         else:
             self._nodes[node] = attrs
+        # Many algos need proper-entry graph, and if graph is not
+        # (e.g., has a loop backedge to entry), it's not possible
+        # to detect such entry without explicit pointing or
+        # heuristics. We use the latter here - first node added is
+        # an entry.
+        if self.first_node is None:
+            self.first_node = node
 
     def remove_node(self, node):
         for s in self._succ[node][:]:
@@ -106,7 +114,10 @@ class Graph:
 
     def entries(self):
         # TODO: Will also return single disconnected nodes
-        return [n for n in self._nodes if not self._pred[n]]
+        entries = [n for n in self._nodes if not self._pred[n]]
+        if entries:
+            return entries
+        return [self.first_node]
 
     def exits(self):
         # TODO: Will also return single disconnected nodes
