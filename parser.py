@@ -43,6 +43,20 @@ class Lexer:
             self.l = self.l[1:]
         return res
 
+    def match_bracket(self, open_b, close_b):
+        self.expect(open_b)
+        level = 1
+        res = ""
+        while self.l and level:
+            if self.match(open_b):
+                level += 1
+            elif self.match(close_b):
+                level -= 1
+            else:
+                res += self.l[0]
+                self.l = self.l[1:]
+        return res
+
     def expect(self, tok):
         assert self.match(tok), "Expected: %s, buffer: %s" % (tok, self.l)
 
@@ -85,17 +99,15 @@ class Parser:
         self.script = []
 
     def parse_cond(self, lex):
-        lex.expect("(")
-        if lex.match("!"):
-            c = SimpleCond(lex.match_till(")"), "==", "0")
+        exp = lex.match_bracket("(", ")")
+        if exp[0] == "!":
+            c = SimpleCond(exp[1:], "==", "0")
         else:
-            exp = lex.match_till(")")
             arr = exp.split()
             if len(arr) == 1:
                 c = SimpleCond(exp, "!=", "0")
             else:
                 c = SimpleCond(*arr)
-        lex.expect(")")
         return c
 
     def parse_goto(self, s):
