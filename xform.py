@@ -10,7 +10,7 @@ def apply_iterative(func, args):
     print("Ran %s %d times" % (func, cnt))
 
 
-def foreach_bblock(cfg, func, join_func=bool.__or__):
+def foreach_bblock(cfg, func, join_func=lambda a, b: a or b):
     """Apply basic-block level transformation to each block in CFG.
     Return cumulative status (OR of each block's status).
     """
