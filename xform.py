@@ -10,15 +10,18 @@ def apply_iterative(func, args):
     print("Ran %s %d times" % (func, cnt))
 
 
-def foreach_bblock(cfg, func):
+def foreach_bblock(cfg, func, join_func=bool.__or__):
     """Apply basic-block level transformation to each block in CFG.
     Return cumulative status (OR of each block's status).
     """
-    res = False
+    res = Ellipsis
     for addr, info in cfg.iter_sorted_nodes():
         bblock = info["val"]
         r = func(bblock)
-        res = res or r
+        if res is Ellipsis:
+            res = r
+        else:
+            res = join_func(res, r)
     return res
 
 
