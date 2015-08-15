@@ -1,3 +1,4 @@
+import sys
 from collections import defaultdict
 
 
@@ -147,6 +148,11 @@ class Graph:
 
     def __repr__(self):
         return "<Graph nodes=%r edges=%r pred=%r succ=%r>" % (self._nodes, self._edges, self._pred, self._succ)
+
+    def print_nodes(self, stream=sys.stdout):
+        "Print nodes of a graph with all attributes. Useful for debugging."
+        for i, info in self.iter_sorted_nodes():
+            print("%s\t%s" % (i, info))
 
     def reset_numbering(self):
         for n, info in self._nodes.items():
