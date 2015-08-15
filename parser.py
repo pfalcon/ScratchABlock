@@ -99,16 +99,29 @@ class Parser:
         self.script = []
 
     def parse_cond(self, lex):
-        exp = lex.match_bracket("(", ")")
-        if exp[0] == "!":
-            c = SimpleCond(exp[1:], "==", "0")
+        lex.expect("(")
+        if lex.match("!"):
+            arg1 = self.parse_expr(lex)
+            cond = "=="
+            arg2 = VALUE(0)
         else:
-            arr = exp.split()
-            if len(arr) == 1:
-                c = SimpleCond(exp, "!=", "0")
+            arg1 = self.parse_expr(lex)
+            lex.ws()
+            if lex.peek() == ")":
+                cond = "!="
+                arg2 = VALUE(0)
             else:
-                c = SimpleCond(*arr)
-        return c
+                matched = False
+                for cond in ("==", "!=", ">=", "<=", ">", "<"):
+                    if lex.match(cond):
+                        matched = True
+                        break
+                if not matched:
+                    lex.error("Expected a comparison operator: " + lex.l)
+                arg2 = self.parse_expr(lex)
+        lex.expect(")")
+        return SimpleCond(arg1, cond, arg2)
+
 
     def parse_goto(self, s):
         # Return (condition, address)
