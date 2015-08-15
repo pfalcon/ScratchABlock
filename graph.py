@@ -106,6 +106,10 @@ class Graph:
         else:
             return val in self._nodes
 
+    def nodes(self):
+        "Return set of all nodes"
+        return self._nodes.keys()
+
     def iter_nodes(self):
         return self._nodes.items()
 
