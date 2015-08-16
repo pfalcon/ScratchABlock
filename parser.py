@@ -86,7 +86,10 @@ class Lexer:
 
     def num(self):
         assert self.isdigit(), repr(self.l)
-        return int(self.word(), 0)
+        base = 10
+        if self.l.startswith("0x"):
+            base = 16
+        return int(self.word(), 0), base
 
 
 class Parser:
@@ -103,13 +106,13 @@ class Parser:
         if lex.match("!"):
             arg1 = self.parse_expr(lex)
             cond = "=="
-            arg2 = VALUE(0)
+            arg2 = VALUE(0, 10)
         else:
             arg1 = self.parse_expr(lex)
             lex.ws()
             if lex.peek() == ")":
                 cond = "!="
-                arg2 = VALUE(0)
+                arg2 = VALUE(0, 10)
             else:
                 matched = False
                 for cond in ("==", "!=", ">=", "<=", ">", "<"):
@@ -183,7 +186,7 @@ class Parser:
                 lex.ws()
                 lex.expect("+")
                 lex.ws()
-                offset = lex.num()
+                offset = lex.num()[0]
                 lex.expect(")")
             else:
                 base = self.parse_reg(lex)
@@ -191,7 +194,7 @@ class Parser:
         elif lex.peek() == "$":
             return self.parse_reg(lex)
         elif lex.isdigit():
-            return VALUE(lex.num())
+            return VALUE(*lex.num())
         elif lex.isident():
             id = lex.ident()
             if lex.peek() == "(":
