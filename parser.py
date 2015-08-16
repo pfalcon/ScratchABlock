@@ -23,6 +23,9 @@ class Lexer:
             return self.l
         return self.l[0]
 
+    def eol(self):
+        return not self.l
+
     def match(self, tok):
         if not self.l.startswith(tok):
             return False
@@ -254,7 +257,13 @@ class Parser:
             if isinstance(src, SFUNC):
                 args = self.parse_arglist(lex)
                 return Inst(dest, "SFUNC", [src.name] + args)
-            return Inst(dest, "ASSIGN", [src])
+            lex.ws()
+            if lex.eol():
+                return Inst(dest, "ASSIGN", [src])
+            elif lex.match(">>"):
+                lex.ws()
+                src2 = self.parse_expr(lex)
+                return Inst(dest, "shift_r_l", [src, src2])
         else:
             assert False, repr(lex.l)
 
