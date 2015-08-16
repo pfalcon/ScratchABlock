@@ -45,14 +45,19 @@ class REG(SimpleExpr):
 
 class VALUE(SimpleExpr):
 
-    def __init__(self, val):
+    def __init__(self, val, base=16):
         self.val = val
+        self.base = base
 
     def __repr__(self):
         return self.comment + "VALUE(0x%x)" % self.val
 
     def __str__(self):
-        return self.comment + "0x%x" % self.val
+        if self.base == 16:
+            val = "0x%x" % self.val
+        else:
+            val = str(self.val)
+        return self.comment + val
 
 class ADDR(SimpleExpr):
 
