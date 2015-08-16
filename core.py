@@ -21,16 +21,21 @@ class BBlock:
         for s in self.items:
             self.write(stream, indent, printer(s))
 
-class REG:
+class SimpleExpr:
+    # Something which is a simple expression
+
+    comment = ""
+
+class REG(SimpleExpr):
 
     def __init__(self, name):
         self.name = name
 
     def __repr__(self):
-        return "REG(%s)" % self.name
+        return self.comment + "REG(%s)" % self.name
 
     def __str__(self):
-        return "$" + self.name
+        return self.comment + "$" + self.name
 
     def __eq__(self, other):
         return self.name == other.name
@@ -38,29 +43,29 @@ class REG:
     def __hash__(self):
         return hash(self.name)
 
-class VALUE:
+class VALUE(SimpleExpr):
 
     def __init__(self, val):
         self.val = val
 
     def __repr__(self):
-        return "VALUE(0x%x)" % self.val
+        return self.comment + "VALUE(0x%x)" % self.val
 
     def __str__(self):
-        return "0x%x" % self.val
+        return self.comment + "0x%x" % self.val
 
-class ADDR:
+class ADDR(SimpleExpr):
 
     def __init__(self, addr):
         self.addr = addr
 
     def __repr__(self):
-        return "ADDR(%s)" % self.addr
+        return self.comment + "ADDR(%s)" % self.addr
 
     def __str__(self):
-        return self.addr
+        return self.comment + self.addr
 
-class MEM:
+class MEM(SimpleExpr):
     def __init__(self, type, base, offset=0):
         self.type = type
         self.base = base
@@ -68,11 +73,11 @@ class MEM:
 
     def __repr__(self):
         if self.offset == 0:
-            return "*(%s*)%s" % (self.type, self.base)
+            return self.comment + "*(%s*)%s" % (self.type, self.base)
         else:
-            return "*(%s*)(%s + 0x%x)" % (self.type, self.base, self.offset)
+            return self.comment + "*(%s*)(%s + 0x%x)" % (self.type, self.base, self.offset)
 
-class SFUNC:
+class SFUNC(SimpleExpr):
 
     def __init__(self, name):
         self.name = name
