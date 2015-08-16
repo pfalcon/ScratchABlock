@@ -1,7 +1,7 @@
 // Predecessors: []
 10:
 do {
-  $a2 = 0x1
+  $a2 = 1
 } while ($a1 != 0)
 Exits: [(None, '40')]
 

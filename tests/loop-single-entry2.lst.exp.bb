@@ -4,12 +4,12 @@ Exits: [(SCond($a1 != 0), '30'), (None, '20')]
 
 // Predecessors: ['10']
 20:
-$a2 = 0x1
+$a2 = 1
 Exits: [(None, '30_1')]
 
 // Predecessors: ['10']
 30:
-$a2 = 0x2
+$a2 = 2
 Exits: [(None, '30_1')]
 
 // Predecessors: ['20', '30']
