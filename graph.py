@@ -86,6 +86,8 @@ class Graph:
         """Return successors ordered the way that successor with labeled
         edge comes first. Assumes 2 succesors."""
         succ = self.succ(n)
+        if len(succ) < 2:
+            return succ
         assert len(succ) == 2
         if self.edge(n, succ[0]).get("cond") is None:
             succ = [succ[1], succ[0]]
