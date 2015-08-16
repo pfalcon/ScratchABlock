@@ -5,7 +5,7 @@ Exits: [(None, '30')]
 // Predecessors: ['00']
 30:
 while ($a1 != 0) {
-  $a2 = 0x1
+  $a2 = 1
 }
 Exits: [(None, '50')]
 
