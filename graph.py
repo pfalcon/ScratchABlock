@@ -42,8 +42,13 @@ class Graph:
     def node(self, n):
         return self._nodes[n]
 
-    # Allow to index graph to access node data
-    __getitem__ = node
+    # Allow to index graph to access node or edge data
+    # graph[node], graph[from_n, to_n]
+    def __getitem__(self, idx):
+        if isinstance(idx, tuple):
+            return self.edge(*idx)
+        else:
+            return self.node(idx)
 
     def set_node_attr(self, node, attr, val):
         self._nodes[node][attr] = val
