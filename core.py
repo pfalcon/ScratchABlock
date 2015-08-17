@@ -102,8 +102,12 @@ class Inst:
         self.comments = {}
 
     def __repr__(self):
+        comments = self.comments.copy()
+        s = ""
+        if "org_inst" in comments:
+            s = "// " + str(comments.pop("org_inst")) + "\n"
         if self.addr is not None:
-            s = "/*%s*/ " % self.addr
+            s += "/*%s*/ " % self.addr
         if self.dest is None:
             if self.op == "LIT":
                 s += self.args[0]
@@ -111,8 +115,8 @@ class Inst:
                 s += "%s(%s)" % (self.op, self.args)
         else:
             s += "%s = %s(%s)" % (self.dest, self.op, self.args)
-        if self.comments:
-            s += " # " + repr(self.comments)
+        if comments:
+            s += " # " + repr(comments)
         return s
 
     def __str__(self):
@@ -122,10 +126,13 @@ class Inst:
             return self.op
         if self.op in ("goto", "call"):
             return "%s %s" % (self.op, self.args[0])
+
         s = ""
+        if "org_inst" in self.comments:
+            s = "// " + str(self.comments["org_inst"]) + "\n"
 
         if self.dest is not None:
-            s = "%s = " % self.dest
+            s += "%s = " % self.dest
 
         if self.op == "ASSIGN":
             s += "%s" % self.args[0]
