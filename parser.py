@@ -237,19 +237,19 @@ class Parser:
         if lex.match("&="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "and", [dest, src])
+            return Inst(dest, "&", [dest, src])
         elif lex.match("+="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "add", [dest, src])
+            return Inst(dest, "+", [dest, src])
         elif lex.match("-="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "sub", [dest, src])
+            return Inst(dest, "-", [dest, src])
         elif lex.match(">>="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "shift_r_l", [dest, src])
+            return Inst(dest, ">>", [dest, src])
         elif lex.match("="):
             lex.ws()
             src = self.parse_expr(lex)
@@ -263,7 +263,7 @@ class Parser:
             elif lex.match(">>"):
                 lex.ws()
                 src2 = self.parse_expr(lex)
-                return Inst(dest, "shift_r_l", [src, src2])
+                return Inst(dest, ">>", [src, src2])
         else:
             assert False, repr(lex.l)
 
