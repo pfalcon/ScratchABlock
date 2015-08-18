@@ -122,14 +122,15 @@ class Inst:
     def __str__(self):
         if self.op == "LIT":
             return self.args[0]
-        if self.op == "return":
-            return self.op
-        if self.op in ("goto", "call"):
-            return "%s %s" % (self.op, self.args[0])
 
         s = ""
         if "org_inst" in self.comments:
             s = "// " + str(self.comments["org_inst"]) + "\n"
+
+        if self.op == "return":
+            return s + self.op
+        if self.op in ("goto", "call"):
+            return s + "%s %s" % (self.op, self.args[0])
 
         if self.dest is not None:
             s += "%s = " % self.dest
