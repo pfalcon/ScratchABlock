@@ -132,19 +132,21 @@ class Inst:
         if self.op in ("goto", "call"):
             return s + "%s %s" % (self.op, self.args[0])
 
-        if self.dest is not None:
-            s += "%s = " % self.dest
-
         if self.op == "ASSIGN":
-            s += "%s" % self.args[0]
+            s += "%s = %s" % (self.dest, self.args[0])
         else:
             args = self.args
             op = self.op
             if not op[0].isalpha():
                 # Infix operator
                 assert len(args) == 2
-                s += "%s %s %s" % (args[0], op, args[1])
+                if self.dest == args[0]:
+                    s += "%s %s= %s" % (self.dest, op, args[1])
+                else:
+                    s += "%s = %s %s %s" % (self.dest, args[0], op, args[1])
             else:
+                if self.dest is not None:
+                    s += "%s = " % self.dest
                 if op == "SFUNC":
                     op = args[0]
                     args = args[1:]
