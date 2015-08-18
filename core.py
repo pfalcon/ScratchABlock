@@ -140,11 +140,16 @@ class Inst:
         else:
             args = self.args
             op = self.op
-            if op == "SFUNC":
-                op = args[0]
-                args = args[1:]
-            args = ", ".join([str(a) for a in args])
-            s += "%s(%s)" % (op, args)
+            if not op[0].isalpha():
+                # Infix operator
+                assert len(args) == 2
+                s += "%s %s %s" % (args[0], op, args[1])
+            else:
+                if op == "SFUNC":
+                    op = args[0]
+                    args = args[1:]
+                args = ", ".join([str(a) for a in args])
+                s += "%s(%s)" % (op, args)
 
         return s
 
