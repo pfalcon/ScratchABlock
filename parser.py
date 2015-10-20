@@ -78,7 +78,7 @@ class Lexer:
         return w
 
     def isident(self):
-        return self.l[0] in string.ascii_letters
+        return self.l[0] in string.ascii_letters + "_"
 
     def isdigit(self):
         return self.l[0] in string.digits
