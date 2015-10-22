@@ -129,19 +129,6 @@ class Parser:
         return SimpleCond(arg1, cond, arg2)
 
 
-    def parse_goto(self, s):
-        # Return (condition, address)
-        left, right = s.strip().split("goto")
-        label = right.split()[0]
-        try:
-            addr = self.labels[label]
-        except KeyError:
-            raise UndefinedLabel(label)
-        #addr = "%08x" % addr
-        if not left:
-            return (None, addr)
-        return (self.parse_cond(left[3:].strip()), addr)
-
     def parse_labels(self):
         with open(self.fname) as f:
             for i, l in enumerate(f):
