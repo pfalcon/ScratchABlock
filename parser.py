@@ -18,6 +18,9 @@ class Lexer:
         self.l = l
         self.ws()
 
+    def error(self, msg):
+        assert False, msg
+
     def peek(self):
         if not self.l:
             return self.l
@@ -61,7 +64,8 @@ class Lexer:
         return res
 
     def expect(self, tok):
-        assert self.match(tok), "Expected: %s, buffer: %s" % (tok, self.l)
+        if not self.match(tok):
+            self.error("Expected: %s, buffer: %s" % (tok, self.l))
 
     def ws(self):
         while self.l and self.l[0] == " ":
