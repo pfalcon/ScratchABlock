@@ -210,7 +210,7 @@ class Parser:
         if lex.match("goto"):
             return Inst(None, "goto", [self.get_label(lex.rest())])
         if lex.match("call"):
-            return Inst(None, "call", [lex.rest()])
+            return Inst(None, "call", [self.parse_expr(lex)])
         if lex.match("if"):
             c = self.parse_cond(lex)
             lex.expect("goto")
