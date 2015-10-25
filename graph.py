@@ -192,3 +192,39 @@ class Graph:
 
     def iter_rev_postorder(self):
         return sorted(self._nodes.items(), key=lambda x: -x[1]["dfsno"])
+
+
+def find_all_nodes_on_path(cfg, from_n, to_n):
+    """Find set of nodes which lie on all paths from from_n to to_n.
+    from_n and to_b can be a same node to process a loop. Result includes
+    from_n and excludes to_n, if they are different nodes (but node
+    looping to itself gives result of itself).
+    """
+    on_path = set()
+
+    stack = [(from_n, [from_n])]
+    while stack:
+        cur_n, path = stack.pop()
+        succ = cfg.succ(cur_n)
+        dfsno = cfg.get_node_attr(cur_n, "dfsno")
+        assert dfsno is not None
+        print("Considering %s, dfsno: %s, succ: %s, cur path: %s" % (cur_n, dfsno, succ, path))
+
+        if not succ:
+            print("Found sink path, pruning")
+
+        for s in succ:
+            if s == to_n:
+                on_path.update(path)
+                print("Found full path, joining all path nodes")
+            else:
+                no = cfg.get_node_attr(s, "dfsno", None)
+                if no is None:
+                    print("Unmarked node detected (edge %s->%s)" % (cur_n, s))
+                    assert False
+                if no < dfsno:
+                    stack.append((s, path + [s]))
+                else:
+                    # prune path
+                    print("Found far backedge (%s, %s), pruning this path" % (cur_n, s))
+    return on_path
