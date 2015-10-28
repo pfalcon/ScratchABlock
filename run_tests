@@ -1,5 +1,7 @@
 #!/bin/sh
 
+nosetests3 -v || exit 1
+
 for f in tests/*.lst; do
     echo $f
     ./apply_xform.py $f || exit 1
