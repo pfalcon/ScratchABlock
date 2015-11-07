@@ -59,6 +59,12 @@ class VALUE(SimpleExpr):
             val = str(self.val)
         return self.comment + val
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.val == other.val
+
+    def __hash__(self):
+        return hash(self.val)
+
 class ADDR(SimpleExpr):
 
     def __init__(self, addr):
@@ -69,6 +75,12 @@ class ADDR(SimpleExpr):
 
     def __str__(self):
         return self.comment + self.addr
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.addr == other.addr
+
+    def __hash__(self):
+        return hash(self.addr)
 
 class MEM(SimpleExpr):
     def __init__(self, type, base, offset=0):
@@ -81,6 +93,13 @@ class MEM(SimpleExpr):
             return self.comment + "*(%s*)%s" % (self.type, self.base)
         else:
             return self.comment + "*(%s*)(%s + 0x%x)" % (self.type, self.base, self.offset)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.type == other.type and \
+            self.base == other.base and self.offset == other.offset
+
+    def __hash__(self):
+        return hash(self.type) ^ hash(self.base) ^ hash(self.offset)
 
 class SFUNC(SimpleExpr):
 
@@ -154,6 +173,9 @@ class Inst:
                 s += "%s(%s)" % (op, args)
 
         return s
+
+    def __eq__(self, other):
+        return self.op == other.op and self.dest == other.dest and self.args == other.args
 
 
 class SimpleCond:
