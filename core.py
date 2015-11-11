@@ -38,7 +38,10 @@ class REG(SimpleExpr):
         return self.comment + "$" + self.name
 
     def __eq__(self, other):
-        return self.name == other.name
+        return type(self) == type(other) and self.name == other.name
+
+    def __lt__(self, other):
+        return self.name < other.name
 
     def __hash__(self):
         return hash(self.name)
