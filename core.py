@@ -41,7 +41,9 @@ class REG(SimpleExpr):
         return type(self) == type(other) and self.name == other.name
 
     def __lt__(self, other):
-        return self.name < other.name
+        if type(self) == type(other):
+            return self.name < other.name
+        return type(self).__name__ < type(other).__name__
 
     def __hash__(self):
         return hash(self.name)
