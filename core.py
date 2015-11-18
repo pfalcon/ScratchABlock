@@ -103,6 +103,11 @@ class MEM(SimpleExpr):
         return type(self) == type(other) and self.type == other.type and \
             self.base == other.base and self.offset == other.offset
 
+    def __lt__(self, other):
+        if type(self) == type(other):
+            return (self.base, self.offset) < (other.base, other.offset)
+        return type(self).__name__ < type(other).__name__
+
     def __hash__(self):
         return hash(self.type) ^ hash(self.base) ^ hash(self.offset)
 
