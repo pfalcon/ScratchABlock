@@ -1,6 +1,10 @@
 import sys
+import re
 from graph import Graph
 
+def natural_sort_key(s):
+    arr = re.split("([0-9]+)", s)
+    return [int(x) if x.isdigit() else x for x in arr]
 
 class BBlock:
     def __init__(self, addr):
@@ -41,9 +45,12 @@ class REG(SimpleExpr):
         return type(self) == type(other) and self.name == other.name
 
     def __lt__(self, other):
-        if type(self) == type(other):
-            return self.name < other.name
-        return type(self).__name__ < type(other).__name__
+        if type(self) != type(other):
+            return type(self).__name__ < type(other).__name__
+
+        n1 = natural_sort_key(self.name)
+        n2 = natural_sort_key(other.name)
+        return n1 < n2
 
     def __hash__(self):
         return hash(self.name)
