@@ -30,6 +30,10 @@ class SimpleExpr:
 
     comment = ""
 
+    def reg(self):
+        "Get register referenced by the expression"
+        return None
+
 class REG(SimpleExpr):
 
     def __init__(self, name):
@@ -54,6 +58,9 @@ class REG(SimpleExpr):
 
     def __hash__(self):
         return hash(self.name)
+
+    def reg(self):
+        return self
 
 class VALUE(SimpleExpr):
 
@@ -117,6 +124,11 @@ class MEM(SimpleExpr):
 
     def __hash__(self):
         return hash(self.type) ^ hash(self.base) ^ hash(self.offset)
+
+    def reg(self):
+        if isinstance(self.base, REG):
+            return self.base
+        return None
 
 class SFUNC(SimpleExpr):
 
