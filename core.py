@@ -6,6 +6,19 @@ def natural_sort_key(s):
     arr = re.split("([0-9]+)", s)
     return [int(x) if x.isdigit() else x for x in arr]
 
+
+class Singleton:
+
+    def __init__(self, n):
+        self.n = n
+
+    def __repr__(self):
+        return self.n
+
+UNK = Singleton("UNK")
+DYN = Singleton("DYN")
+
+
 class BBlock:
     def __init__(self, addr):
         self.addr = addr
