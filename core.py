@@ -42,6 +42,7 @@ class SimpleExpr:
     # Something which is a simple expression
 
     comment = ""
+    simple_repr = True
 
     def reg(self):
         "Get register referenced by the expression"
@@ -53,6 +54,8 @@ class REG(SimpleExpr):
         self.name = name
 
     def __repr__(self):
+        if self.simple_repr:
+            return self.__str__()
         return self.comment + "REG(%s)" % self.name
 
     def __str__(self):
@@ -82,6 +85,8 @@ class VALUE(SimpleExpr):
         self.base = base
 
     def __repr__(self):
+        if self.simple_repr:
+            return self.__str__()
         return self.comment + "VALUE(0x%x)" % self.val
 
     def __str__(self):
