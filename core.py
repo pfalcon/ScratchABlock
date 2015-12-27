@@ -251,7 +251,7 @@ class SimpleCond:
         return "(%s %s %s)" % (self.arg1, self.op, self.arg2)
 
     def __repr__(self):
-        return "SCond%s" % str(self)
+        return "SCond(%r %s %r)" % (self.arg1, self.op, self.arg2)
 
 
 class CompoundCond:
