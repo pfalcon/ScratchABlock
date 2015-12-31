@@ -253,6 +253,12 @@ class SimpleCond:
     def __repr__(self):
         return "SCond(%r %s %r)" % (self.arg1, self.op, self.arg2)
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.op == other.op and self.arg1 == other.arg1 and self.arg2 == other.arg2
+
+    def __hash__(self):
+        return hash(self.op) ^ hash(self.arg1) ^ hash(self.arg2)
+
 
 class CompoundCond:
 
