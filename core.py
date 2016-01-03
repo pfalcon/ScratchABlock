@@ -159,6 +159,22 @@ class SFUNC(SimpleExpr):
     def __str__(self):
         return "%s" % self.name
 
+class EXPR:
+    "A recursive expression."
+    def __init__(self, op, args):
+        self.op = op
+        self.args = tuple(args)
+
+    def __repr__(self):
+        return "EXPR(%s%s)" % (self.op, self.args)
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.op == other.op and self.args == other.args
+
+    def __hash__(self):
+        return hash(self.op) ^ hash(self.args)
+
+
 class Inst:
     def __init__(self, dest, op, args, addr=None):
         self.op = op
