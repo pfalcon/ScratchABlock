@@ -176,6 +176,9 @@ class EXPR:
 
 
 class Inst:
+
+    trail = ""
+
     def __init__(self, dest, op, args, addr=None):
         self.op = op
         self.dest = dest
@@ -210,9 +213,9 @@ class Inst:
             s = "// " + str(self.comments["org_inst"]) + "\n"
 
         if self.op == "return":
-            return s + self.op
+            return s + self.op + self.trail
         if self.op in ("goto", "call"):
-            return s + "%s %s" % (self.op, self.args[0])
+            return s + "%s %s" % (self.op, self.args[0]) + self.trail
 
         if self.op == "ASSIGN":
             s += "%s = %s" % (self.dest, self.args[0])
@@ -235,7 +238,7 @@ class Inst:
                 args = ", ".join([str(a) for a in args])
                 s += "%s(%s)" % (op, args)
 
-        return s
+        return s + self.trail
 
     def __eq__(self, other):
         return self.op == other.op and self.dest == other.dest and self.args == other.args
