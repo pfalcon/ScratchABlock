@@ -205,6 +205,9 @@ class Parser:
         except KeyError:
             raise UndefinedLabel(label)
 
+    def label_from_addr(self, addr):
+        return list(filter(lambda x: x[1] == addr, self.labels.items()))[0][0]
+
     def parse_inst(self, l):
         lex = Lexer(l)
         if lex.match("goto"):
@@ -284,6 +287,7 @@ class Parser:
                     if block:
                         last_block = block
                     block = BBlock(addr)
+                    block.label = l[:-1]
                     self.cfg.add_node(addr, val=block)
                     continue
                 elif not block:
