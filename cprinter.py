@@ -31,7 +31,7 @@ def dump_c(cfg):
             print("void %s()\n{" % cfg.parser.label_from_addr(bblock.addr))
             func_start = False
         if addr in labels:
-            print("l%s:" % addr)
+            print("\nl%s:" % addr)
         bblock.dump(sys.stdout, indent=1)
         for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
