@@ -143,7 +143,12 @@ class Parser:
                     if l.startswith("#xform: "):
                         self.script.append(l.split(None, 1)[1])
                     continue
-                addr, l = l.split(" ", 1)
+                if self.expect_line_addr is None:
+                    self.expect_line_addr = self.detect_addr_field(l)
+                if self.expect_line_addr:
+                    addr, l = l.split(" ", 1)
+                else:
+                    addr = i
                 #addr = int(addr, 16)
                 l = l.lstrip()
                 if l[-1] == ":":
@@ -288,8 +293,6 @@ class Parser:
                 l = l.rstrip()
                 if l[0] == "#":
                     continue
-                if self.expect_line_addr is None:
-                    self.expect_line_addr = self.detect_addr_field(l)
                 if self.expect_line_addr:
                     addr, l = l.split(" ", 1)
                 else:
