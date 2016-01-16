@@ -9,10 +9,10 @@ LLVM IR
 
 LLVM IR is by definition in SSA form, and converting normal code to SSA
 form (and back) is a task on its own. Also, LLVM IR has obfuscation
-features like implicit labels (TODO: ref ticket). Finally, LLVM IR
-is strictly typed, with high-level types. These are counter-productive
-for disassembly representation, where machine instruction deal with
-simple, dynamic types.
+features like implicit labels (https://llvm.org/bugs/show_bug.cgi?id=16043).
+Finally, LLVM IR is strictly typed, with high-level types. These are
+counter-productive for disassembly representation, where machine instruction
+deal with simple, dynamic types.
 
 BinNavi REIL, Valgrind VEX
 --------------------------
