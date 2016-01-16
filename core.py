@@ -217,7 +217,7 @@ class Inst:
         if self.op in ("goto", "call"):
             return s + "%s %s" % (self.op, self.args[0]) + self.trail
 
-        if self.op == "ASSIGN":
+        if self.op == "=":
             s += "%s = %s" % (self.dest, self.args[0])
         else:
             args = self.args

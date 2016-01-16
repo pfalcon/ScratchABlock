@@ -253,7 +253,7 @@ class Parser:
                 return Inst(dest, "SFUNC", [src.name] + args)
             lex.ws()
             if lex.eol():
-                return Inst(dest, "ASSIGN", [src])
+                return Inst(dest, "=", [src])
             else:
                 for op in ("+", "-", "*", "/", "&", "|", "^", "<<", ">>"):
                     if lex.match(op):
