@@ -199,7 +199,11 @@ class Inst:
             else:
                 s += "%s(%s)" % (self.op, self.args)
         else:
-            s += "%s = %s(%s)" % (self.dest, self.op, self.args)
+            if self.op == "=":
+                # Simplify repr for assignment
+                s += "%s = %s" % (self.dest, self.args)
+            else:
+                s += "%s = %s(%s)" % (self.dest, self.op, self.args)
         if comments:
             s += " # " + repr(comments)
         return s
