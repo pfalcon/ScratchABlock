@@ -103,6 +103,7 @@ class Parser:
 
     def __init__(self, fname):
         self.fname = fname
+        self.expect_line_addr = None
         self.cfg = Graph()
         self.labels = {}
         self.curline = -1
@@ -264,6 +265,20 @@ class Parser:
             assert False, repr(lex.l)
 
 
+    def detect_addr_field(self, l):
+        # Autodetect whether there's address as first field
+        # of line or not.
+        self.expect_line_addr = False
+        if l[0].isdigit():
+            # Can be either label or address
+            if l[-1] == ":":
+                if " " in l:
+                    return True
+            else:
+                return True
+        return False
+
+
     def _parse_bblocks(self):
         with open(self.fname) as f:
             block = None
@@ -273,7 +288,13 @@ class Parser:
                 l = l.rstrip()
                 if l[0] == "#":
                     continue
-                addr, l = l.split(" ", 1)
+                if self.expect_line_addr is None:
+                    self.expect_line_addr = self.detect_addr_field(l)
+                if self.expect_line_addr:
+                    addr, l = l.split(" ", 1)
+                else:
+                    # Use line number as "address"
+                    addr = i
                 #addr = int(addr, 16)
                 #print((hex(addr), l))
                 l = l.split(";", 1)[0]
