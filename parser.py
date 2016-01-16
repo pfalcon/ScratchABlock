@@ -225,6 +225,8 @@ class Parser:
             lex.expect("goto")
             return Inst(None, "if", [c, self.get_label(lex.rest())])
         if lex.match("return"):
+            if not lex.eol():
+                lex.error("return doesn't take arguments")
             return Inst(None, "return", [])
         dest = self.parse_expr(lex)
         if not dest:
