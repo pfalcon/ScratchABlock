@@ -109,6 +109,10 @@ class Parser:
         self.curline = -1
         self.script = []
 
+    def error(self, msg):
+        print("%s:%d: %s" % (self.fname, self.curline + 1, msg))
+        sys.exit(1)
+
     def parse_cond(self, lex):
         lex.expect("(")
         if lex.match("!"):
@@ -128,7 +132,7 @@ class Parser:
                         matched = True
                         break
                 if not matched:
-                    lex.error("Expected a comparison operator: " + lex.l)
+                    self.error("Expected a comparison operator: " + lex.l)
                 arg2 = self.parse_expr(lex)
         lex.expect(")")
         return SimpleCond(arg1, cond, arg2)
@@ -226,7 +230,7 @@ class Parser:
             return Inst(None, "if", [c, self.get_label(lex.rest())])
         if lex.match("return"):
             if not lex.eol():
-                lex.error("return doesn't take arguments")
+                self.error("'return' doesn't take arguments")
             return Inst(None, "return", [])
         dest = self.parse_expr(lex)
         if not dest:
