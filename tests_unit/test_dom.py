@@ -12,7 +12,8 @@ def test_cooper_9_2_1():
     #dot.dot(g)
 
     #g.print_nodes()
-    dataflow.solve(g, dataflow.DominatorAnalysis())
+    analysis = dataflow.DominatorAnalysis(g)
+    analysis.solve()
     #g.print_nodes()
 
     DOM = [
