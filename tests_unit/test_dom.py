@@ -9,6 +9,9 @@ def test_cooper_9_2_1():
     for e in [(0, 1), (1, 2), (1, 5), (2, 3), (3, 4), (3, 1), (5, 6), (5, 8), (6, 7), (7, 3), (8, 7)]:
         g.add_edge(*e)
 
+    # TODO: These of course don't belong here, find better place.
+    assert g.entries() == [0]
+    assert g.exits() == [4]
     #dot.dot(g)
 
     #g.print_nodes()
