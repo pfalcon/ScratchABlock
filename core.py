@@ -27,6 +27,18 @@ class BBlock:
     def add(self, s):
         self.items.append(s)
 
+    def def_addrs(self):
+        """Return all variable definitions for this basic block,
+        as set of (var, inst_addr) pairs. Note that this includes
+        multiple entries for the same var, if it is redefined
+        multiple times within the basic block.
+        """
+        defs = set()
+        for i in self.items:
+            if i.dest:
+                defs.add((i.dest, i.addr))
+        return defs
+
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.addr)
 
