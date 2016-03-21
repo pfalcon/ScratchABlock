@@ -1,3 +1,6 @@
+from xform import foreach_bblock
+
+
 class AnalysisBase:
 
     # Set to False for backward analysis
@@ -78,3 +81,45 @@ class DominatorAnalysis(AnalysisBase):
         else:
             state = set()
         return state | {node}
+
+
+class ReachDefAnalysis(AnalysisBase):
+    "Encapsulation of dataflow analysis for reaching definitions."
+    forward = True
+    node_prop_in = "reachdef_in"
+    node_prop_out = "reachdef_out"
+
+    def init(self):
+        "Entry node is set to itself, the rest - to graph's all nodes."
+        entry = self.g.entries()
+        assert len(entry) == 1
+        entry = entry[0]
+        all_defs = foreach_bblock(self.g, lambda b: b.def_addrs(), set.union)
+
+        for node, info in self.g.iter_nodes():
+            if node == entry:
+                # Entry's in set to all vars, with "undefined" definition location (None).
+                info[self.node_prop_in] = set(((v[0], None) for v in all_defs))
+            else:
+                info[self.node_prop_in] = set()
+            info[self.node_prop_out] = set()
+
+            bblock = info["val"]
+            kill = set()
+            gen = set()
+            for inst in bblock.items:
+                if inst.dest:
+                    kill |= set(filter(lambda x: x[0] == inst.dest, all_defs)) | {(inst.dest, None)}
+                    gen.add((inst.dest, inst.addr))
+            info["kill_rd"] = kill
+            info["gen_rd"] = gen
+
+    def transfer(self, node, src_state):
+        return (src_state - self.g.get_node_attr(node, "kill_rd")) | self.g.get_node_attr(node, "gen_rd")
+
+    def join(self, node, source_nodes):
+        if source_nodes:
+            state = set.union(*(self.g.get_node_attr(x, self.node_prop_out) for x in source_nodes))
+        else:
+            state = set()
+        return state
