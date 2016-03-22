@@ -16,8 +16,12 @@ class AnalysisBase:
     def solve(self):
         "Solve dataflow analysis."
         self.init()
-        prop_in = self.node_prop_in
-        prop_out = self.node_prop_out
+        if self.forward:
+            prop_src = self.node_prop_in
+            prop_dst = self.node_prop_out
+        else:
+            prop_src = self.node_prop_out
+            prop_dst = self.node_prop_in
 
         changed = True
         while changed:
@@ -29,15 +33,18 @@ class AnalysisBase:
                 else:
                     sources = self.g.succ(node)
 
-                if prop_out:
-                    info[prop_out] = self.transfer(node, info[prop_in])
+                if prop_dst:
+                    new = self.transfer(node, info[prop_src])
+                    if new != info[prop_dst]:
+                        info[prop_dst] = new
+                        changed = True
 
                 if sources:
                     # If there're no "sources" for this node, it's an initial node,
                     # and should keep it's "in" set (which may be non-empty).
                     new = self.join(node, sources)
-                    if new != info[prop_in]:
-                        info[prop_in] = new
+                    if new != info[prop_src]:
+                        info[prop_src] = new
                         changed = True
 
     def transfer(self, node, src_state):
