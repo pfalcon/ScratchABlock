@@ -171,6 +171,10 @@ class SFUNC(SimpleExpr):
     def __str__(self):
         return "%s" % self.name
 
+    def __eq__(self, other):
+        return type(self) == type(other) and self.name == other.name
+
+
 class EXPR:
     "A recursive expression."
     def __init__(self, op, args):
