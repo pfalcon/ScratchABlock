@@ -43,8 +43,9 @@ class BBlock:
         return "%s(%s)" % (self.__class__.__name__, self.addr)
 
     def write(self, stream, indent, s):
-        stream.write("  " * indent)
-        stream.write(str(s) + "\n")
+        for l in str(s).splitlines():
+            stream.write("  " * indent)
+            stream.write(l + "\n")
 
     def dump(self, stream, indent=0, printer=str):
         for s in self.items:
