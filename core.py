@@ -195,6 +195,7 @@ class EXPR:
 class Inst:
 
     trail = ""
+    show_comments = True
 
     def __init__(self, dest, op, args, addr=None):
         self.op = op
@@ -230,7 +231,7 @@ class Inst:
             return self.args[0]
 
         s = ""
-        if "org_inst" in self.comments:
+        if self.show_comments and "org_inst" in self.comments:
             s = "// " + str(self.comments["org_inst"]) + "\n"
 
         if self.op == "return":
