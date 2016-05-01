@@ -117,6 +117,8 @@ class VALUE(SimpleExpr):
 
 class ADDR(SimpleExpr):
 
+    resolver = staticmethod(lambda x: x)
+
     def __init__(self, addr):
         self.addr = addr
 
@@ -124,7 +126,7 @@ class ADDR(SimpleExpr):
         return self.comment + "ADDR(%s)" % self.addr
 
     def __str__(self):
-        return self.comment + self.addr
+        return self.comment + self.resolver(self.addr)
 
     def __eq__(self, other):
         return type(self) == type(other) and self.addr == other.addr
