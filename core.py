@@ -329,6 +329,18 @@ class CompoundCond:
     def __repr__(self):
         return "CCond%s" % str(self)
 
+def repr_state(state):
+    res = []
+    unk = []
+    for k, v in sorted(state.items()):
+        if v == UNK:
+            unk.append(str(k))
+        else:
+            res.append("%s=%s" % (k, v))
+    res = " ".join(res)
+    if unk:
+        res += " UNK: " + ",".join(unk)
+    return res
 
 def dump_bblocks(cfg, stream=sys.stdout, printer=str):
     cnt = 0
@@ -343,8 +355,10 @@ def dump_bblocks(cfg, stream=sys.stdout, printer=str):
             print("// Uses: %s" % sorted(bblock.uses.items()), file=stream)
         if hasattr(bblock, "defs"):
             print("// Defs: %s" % sorted(bblock.defs.items()), file=stream)
-        if hasattr(bblock, "state"):
-            print("// State: %s" % sorted(bblock.state.items()), file=stream)
+        if hasattr(bblock, "in_state"):
+            print("// InState : %s" % repr_state(bblock.in_state), file=stream)
+        if hasattr(bblock, "out_state"):
+            print("// OutState: %s" % repr_state(bblock.out_state), file=stream)
         print("%s:" % addr, file=stream)
         if bblock:
             bblock.dump(stream, 0, printer)
