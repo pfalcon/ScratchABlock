@@ -216,7 +216,10 @@ class Parser:
             raise UndefinedLabel(label)
 
     def label_from_addr(self, addr):
-        return list(filter(lambda x: x[1] == addr, self.labels.items()))[0][0]
+        labels = list(filter(lambda x: x[1] == addr, self.labels.items()))
+        if not labels:
+            return "l_%s" % addr
+        return labels[0][0]
 
     def parse_inst(self, l):
         lex = Lexer(l)
