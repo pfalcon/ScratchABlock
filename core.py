@@ -343,31 +343,76 @@ def repr_state(state):
         res += " UNK: " + ",".join(unk)
     return res
 
+
+class CFGPrinter:
+    """Print BBlocks in a CFG. Various printing params can be overriden
+    via methods."""
+
+    def __init__(self, cfg, stream=sys.stdout):
+        self.cfg = cfg
+        self.stream = stream
+        # Current bblock addr
+        self.addr = 0
+        # Current CFG node properties
+        self.info = None
+        # Current BBlock
+        self.bblock = None
+        self.inst_printer = str
+
+    def bblock_order(self):
+        "Return iterator over bblocks to be printed."
+        return self.cfg.iter_sorted_nodes()
+
+    def print_header(self):
+        print("// Predecessors: %s" % sorted(self.cfg.pred(self.addr)), file=self.stream)
+
+        if "dfsno" in self.info:
+            print("// DFS#: %d" % self.info.pop("dfsno"), file=self.stream)
+
+        if "uses" in self.bblock.props:
+            print("// Uses: %s" % sorted(self.bblock.props["uses"].items()), file=self.stream)
+        if "defs" in self.bblock.props:
+            print("// Defs: %s" % sorted(self.bblock.props["defs"].items()), file=self.stream)
+        if "in_state" in self.bblock.props:
+            print("// InState : %s" % repr_state(self.bblock.props["in_state"]), file=self.stream)
+        if "out_state" in self.bblock.props:
+            print("// OutState: %s" % repr_state(self.bblock.props["out_state"]), file=self.stream)
+
+        if self.info:
+            print("// " + repr(sorted(self.info.items())), file=self.stream)
+
+
+    def print_trailer(self):
+        succ = self.cfg.succ(self.addr)
+        print("Exits:", [(self.cfg.edge(self.addr, x).get("cond"), x) for x in succ], file=self.stream)
+
+
+    def print_label(self):
+        print("%s:" % self.addr, file=self.stream)
+
+
+    def print_separator(self):
+        self.stream.write("\n")
+
+
+    def print(self):
+        cnt = 0
+        for self.addr, info in self.bblock_order():
+            self.info = info.copy()
+            self.bblock = self.info.pop("val")
+            if cnt > 0:
+                self.print_separator()
+            self.print_header()
+            self.print_label()
+            if self.bblock:
+                self.bblock.dump(self.stream, 0, self.inst_printer)
+            else:
+                print("   ", self.bblock, file=self.stream)
+            self.print_trailer()
+            cnt += 1
+
+
 def dump_bblocks(cfg, stream=sys.stdout, printer=str):
-    cnt = 0
-    for addr, info in cfg.iter_sorted_nodes():
-        info = info.copy()
-        bblock = info.pop("val")
-        if cnt > 0:
-            stream.write("\n")
-        print("// Predecessors: %s" % sorted(cfg.pred(addr)), file=stream)
-        if "dfsno" in info:
-            print("// DFS#: %d" % info.pop("dfsno"), file=stream)
-        if "uses" in bblock.props:
-            print("// Uses: %s" % sorted(bblock.props["uses"].items()), file=stream)
-        if "defs" in bblock.props:
-            print("// Defs: %s" % sorted(bblock.props["defs"].items()), file=stream)
-        if "in_state" in bblock.props:
-            print("// InState : %s" % repr_state(bblock.props["in_state"]), file=stream)
-        if "out_state" in bblock.props:
-            print("// OutState: %s" % repr_state(bblock.props["out_state"]), file=stream)
-        if info:
-            print("// " + repr(sorted(info.items())), file=stream)
-        print("%s:" % addr, file=stream)
-        if bblock:
-            bblock.dump(stream, 0, printer)
-        else:
-            print("   ", bblock, file=stream)
-        succ = cfg.succ(addr)
-        print("Exits:", [(cfg.edge(addr, x).get("cond"), x) for x in succ], file=stream)
-        cnt += 1
+    p = CFGPrinter(cfg, stream)
+    p.inst_printer = printer
+    p.print()
