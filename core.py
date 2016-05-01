@@ -346,12 +346,13 @@ def repr_state(state):
 def dump_bblocks(cfg, stream=sys.stdout, printer=str):
     cnt = 0
     for addr, info in cfg.iter_sorted_nodes():
-        bblock = info["val"]
+        info = info.copy()
+        bblock = info.pop("val")
         if cnt > 0:
             stream.write("\n")
         print("// Predecessors: %s" % sorted(cfg.pred(addr)), file=stream)
         if "dfsno" in info:
-            print("// DFS#: %d" % info["dfsno"], file=stream)
+            print("// DFS#: %d" % info.pop("dfsno"), file=stream)
         if "uses" in bblock.props:
             print("// Uses: %s" % sorted(bblock.props["uses"].items()), file=stream)
         if "defs" in bblock.props:
@@ -360,6 +361,8 @@ def dump_bblocks(cfg, stream=sys.stdout, printer=str):
             print("// InState : %s" % repr_state(bblock.props["in_state"]), file=stream)
         if "out_state" in bblock.props:
             print("// OutState: %s" % repr_state(bblock.props["out_state"]), file=stream)
+        if info:
+            print("// " + repr(sorted(info.items())), file=stream)
         print("%s:" % addr, file=stream)
         if bblock:
             bblock.dump(stream, 0, printer)
