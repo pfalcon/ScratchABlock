@@ -343,6 +343,8 @@ def dump_bblocks(cfg, stream=sys.stdout, printer=str):
             print("// Uses: %s" % sorted(bblock.uses.items()), file=stream)
         if hasattr(bblock, "defs"):
             print("// Defs: %s" % sorted(bblock.defs.items()), file=stream)
+        if hasattr(bblock, "state"):
+            print("// State: %s" % sorted(bblock.state.items()), file=stream)
         print("%s:" % addr, file=stream)
         if bblock:
             bblock.dump(stream, 0, printer)
