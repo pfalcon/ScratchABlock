@@ -7,6 +7,13 @@ failed() {
     exit 1
 }
 
+for f in tests/pseudoc-roundtrip/*.lst; do
+    echo $f
+    ./parse_asm.py --roundtrip $f > $f.out || failed
+    diff -u $f.exp $f.out || failed
+done
+echo
+
 for f in tests/*.lst; do
     echo $f
     ./apply_xform.py $f || failed
