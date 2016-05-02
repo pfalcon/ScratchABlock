@@ -241,6 +241,8 @@ class Inst:
             return s + self.op + self.trail
         if self.op in ("goto", "call"):
             return s + "%s %s" % (self.op, self.args[0]) + self.trail
+        if self.op == "if":
+            return s + "if %s goto %s" % (self.args[0], self.args[1]) + self.trail
 
         if self.op == "=":
             s += "%s = %s" % (self.dest, self.args[0])
