@@ -1,0 +1,8 @@
+#xform: match_ifelse
+10  if (!$a1) goto 30
+20  $a2 = 1
+21  goto 40
+30 30:
+20  $a2 = 2
+40 40:
+40  $a3 = 0
