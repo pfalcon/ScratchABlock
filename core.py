@@ -207,6 +207,16 @@ class Inst:
         self.addr = addr
         self.comments = {}
 
+    def jump_addr(self):
+        "If instruction may transfer control, return jump address, otherwise return None."
+        if self.op in ("call", "goto"):
+            assert isinstance(self.args[0], ADDR)
+            return self.args[0].addr
+        if self.op == "if":
+            assert isinstance(self.args[1], ADDR)
+            return self.args[1].addr
+        return None
+
     def __repr__(self):
         comments = self.comments.copy()
         s = ""
