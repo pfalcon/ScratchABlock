@@ -218,7 +218,7 @@ class Parser:
     def label_from_addr(self, addr):
         labels = list(filter(lambda x: x[1] == addr, self.labels.items()))
         if not labels:
-            return "l_%s" % addr
+            return addr
         return labels[0][0]
 
     def parse_inst(self, l):
