@@ -224,13 +224,13 @@ class Parser:
     def parse_inst(self, l):
         lex = Lexer(l)
         if lex.match("goto"):
-            return Inst(None, "goto", [self.get_label(lex.rest())])
+            return Inst(None, "goto", [ADDR(self.get_label(lex.rest()))])
         if lex.match("call"):
             return Inst(None, "call", [self.parse_expr(lex)])
         if lex.match("if"):
             c = self.parse_cond(lex)
             lex.expect("goto")
-            return Inst(None, "if", [c, self.get_label(lex.rest())])
+            return Inst(None, "if", [c, ADDR(self.get_label(lex.rest()))])
         if lex.match("return"):
             if not lex.eol():
                 self.error("'return' doesn't take arguments")
@@ -342,6 +342,7 @@ class Parser:
                         addr = inst.args[0]
                     else:
                         cond, addr = inst.args
+                    addr = addr.addr
                     #print("!", (cond, addr))
                     if addr not in self.cfg:
                         self.cfg.add_node(addr)
