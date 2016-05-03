@@ -11,6 +11,8 @@ argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
 argp.add_argument("file", help="Input file in PseudoC format")
 argp.add_argument("--repr", action="store_true", help="Dump __repr__ format of instructions")
 argp.add_argument("--roundtrip", action="store_true", help="Dump PseudoC asm")
+argp.add_argument("--addr-width", type=int, default=8, help="Width of address field (%(default)d)")
+argp.add_argument("--inst-indent", type=int, default=4, help="Indent of instructions (%(default)d)")
 args = argp.parse_args()
 
 p = Parser(args.file)
@@ -21,9 +23,14 @@ class RoundtripPrinter(CFGPrinter):
 
     def __init__(self, cfg):
         super().__init__(cfg)
+        self.addr_width = 8
+        self.inst_indent = 4
         self.inst_printer = self.print_with_addr
         self.referenced_labels = set()
         self.get_jump_labels()
+
+    def format_addr(self, addr, extra=0):
+        return addr.ljust(self.addr_width + extra)
 
     def get_jump_labels(self):
         def collect_labels(inst):
@@ -32,9 +39,8 @@ class RoundtripPrinter(CFGPrinter):
                 self.referenced_labels.add(addr)
         foreach_inst(self.cfg, collect_labels)
 
-    @staticmethod
-    def print_with_addr(inst):
-        return "%-12s " % inst.addr + str(inst)
+    def print_with_addr(self, inst):
+        return self.format_addr(inst.addr, self.inst_indent) + " " + str(inst)
 
     def resolve_label(self, addr):
         return self.cfg.parser.label_from_addr(addr)
@@ -47,7 +53,7 @@ class RoundtripPrinter(CFGPrinter):
         if label == self.addr:
             if self.addr not in self.referenced_labels:
                 return
-        print("%-8s %s:" % (self.addr, label), file=self.stream)
+        print("%s %s:" % (self.format_addr(self.addr), label), file=self.stream)
 
     def print_header(self):
         pass
@@ -63,6 +69,8 @@ class RoundtripPrinter(CFGPrinter):
 
 if args.roundtrip:
     p = RoundtripPrinter(cfg)
+    p.addr_width = args.addr_width
+    p.inst_indent = args.inst_indent
     p.print()
     sys.exit()
 
