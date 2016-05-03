@@ -28,7 +28,10 @@ def dump_c(cfg):
     for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
         bblock = info["val"]
         if func_start:
-            print("void %s()\n{" % cfg.parser.label_from_addr(bblock.addr))
+            label = cfg.parser.label_from_addr(bblock.addr)
+            if label[0].isdigit():
+                label = "fun_" + label
+            print("void %s()\n{" % label)
             func_start = False
         if addr in labels:
             print("\nl%s:" % addr)
