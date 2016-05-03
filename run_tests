@@ -1,5 +1,6 @@
 #!/bin/sh
 
+echo "=== test_unit ==="
 nosetests3 -v || exit 1
 
 failed() {
@@ -7,16 +8,25 @@ failed() {
     exit 1
 }
 
-for f in tests/pseudoc-roundtrip/*.lst; do
-    echo $f
-    ./parse_asm.py --roundtrip --addr-width=2 --inst-indent=1 $f > $f.out || failed
-    diff -u $f.exp $f.out || failed
-done
-echo
+test_roundtrip() {
+    echo "=== test_roundtrip ==="
+    for f in tests/pseudoc-roundtrip/*.lst; do
+        echo $f
+        ./parse_asm.py --roundtrip --addr-width=2 --inst-indent=1 $f > $f.out || failed
+        diff -u $f.exp $f.out || failed
+    done
+}
 
-for f in tests/*.lst; do
-    echo $f
-    ./apply_xform.py $f || failed
-    diff -u $f.exp.bb $f.out.bb || failed
-    diff -u $f.exp.dot $f.out.dot || failed
-done
+test_xform() {
+    echo "=== test_xform ==="
+    for f in tests/*.lst; do
+        echo $f
+        ./apply_xform.py $f || failed
+        diff -u $f.exp.bb $f.out.bb || failed
+        diff -u $f.exp.dot $f.out.dot || failed
+    done
+}
+
+test_roundtrip
+test_xform
+echo "TESTS PASSED"
