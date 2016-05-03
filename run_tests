@@ -9,7 +9,7 @@ failed() {
 
 for f in tests/pseudoc-roundtrip/*.lst; do
     echo $f
-    ./parse_asm.py --roundtrip $f > $f.out || failed
+    ./parse_asm.py --roundtrip --addr-width=2 --inst-indent=1 $f > $f.out || failed
     diff -u $f.exp $f.out || failed
 done
 echo
