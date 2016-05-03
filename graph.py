@@ -3,6 +3,24 @@ from collections import defaultdict
 
 
 class Graph:
+    """Nodes in a graph are identified by IDs and contain property dictionaries.
+    A graph maps node ID to node properties:
+
+    node_props = G[node_id]
+
+    A specific node property thus can be accessed as:
+
+    prop_val = G[node_id][prop_name]
+
+    The "default" property, a "value" of node, is by convention in a property named
+    "val".
+
+    Edges in a graph are identified by a pair of node IDs. They also have associated
+    property dictionary:
+
+    edge_props = G[(node_id1, node_id2)]
+
+    """
 
     directed = True
 
