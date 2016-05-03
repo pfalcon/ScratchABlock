@@ -1,13 +1,6 @@
 import sys
 
-
-def pairwise(iterable):
-    prev = Ellipsis
-    for it in iterable:
-        if prev is not Ellipsis:
-            yield (prev, it)
-        prev = it
-    yield (it, None)
+from utils import pairwise
 
 
 def find_used_labels(cfg):
