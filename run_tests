@@ -17,6 +17,15 @@ test_roundtrip() {
     done
 }
 
+test_dump_c() {
+    echo "=== test_dump_c ==="
+    for f in tests/dump-c/*.lst; do
+        echo $f
+        ./dump_c.py $f > $f.out || failed
+        diff -u $f.exp $f.out || failed
+    done
+}
+
 test_xform() {
     echo "=== test_xform ==="
     for f in tests/*.lst; do
@@ -30,5 +39,6 @@ test_xform() {
 }
 
 test_roundtrip
+test_dump_c
 test_xform
 echo "TESTS PASSED"
