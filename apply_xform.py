@@ -10,6 +10,7 @@ from decomp import *
 
 argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
 argp.add_argument("file", help="Input file in PseudoC format")
+argp.add_argument("--format", default="bblocks", help="Output format (none, bblocks)")
 argp.add_argument("--debug", action="store_true", help="Produce debug files")
 args = argp.parse_args()
 
@@ -27,7 +28,8 @@ if hasattr(p, "script"):
     for xform in p.script:
         globals()[xform](cfg)
 
-dump_bblocks(cfg)
+if args.format == "bblocks":
+    dump_bblocks(cfg)
 
 if args.debug:
     with open(args.file + ".out.bb", "w") as f:
