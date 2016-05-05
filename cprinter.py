@@ -1,14 +1,7 @@
 import sys
 
 from utils import pairwise
-
-
-def swap_if_branches(cfg, n):
-    succ = cfg.sorted_succ(n)
-    print(succ, cfg[n, succ[0]])
-    cond = cfg[n, succ[0]]["cond"]
-    cfg[n, succ[0]]["cond"] = None
-    cfg[n, succ[1]]["cond"] = cond.neg()
+from cfgutils import swap_if_branches
 
 
 def find_used_labels(cfg):
