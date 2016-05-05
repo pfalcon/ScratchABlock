@@ -3,11 +3,23 @@ import sys
 from utils import pairwise
 
 
+def swap_if_branches(cfg, n):
+    succ = cfg.sorted_succ(n)
+    print(succ, cfg[n, succ[0]])
+    cond = cfg[n, succ[0]]["cond"]
+    cfg[n, succ[0]]["cond"] = None
+    cfg[n, succ[1]]["cond"] = cond.neg()
+
+
 def find_used_labels(cfg):
     labels = set()
     for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
         bblock = info["val"]
-        for succ in cfg.succ(addr):
+        succs = cfg.sorted_succ(addr)
+        if len(succs) > 1 and nxt[0] == succs[0]:
+            swap_if_branches(cfg, addr)
+            succs = cfg.sorted_succ(addr)
+        for succ in succs:
             cond = cfg.edge(addr, succ).get("cond")
             if not cond and nxt and succ == nxt[0]:
                 continue
