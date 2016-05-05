@@ -1,5 +1,6 @@
 from graph import Graph
 from core import *
+from cfgutils import *
 
 
 # Apply tranformation while it's possible
@@ -8,21 +9,6 @@ def apply_iterative(func, args):
     while func(*args):
         cnt += 1
     print("Ran %s %d times" % (func, cnt))
-
-
-def foreach_bblock(cfg, func, join_func=lambda a, b: a or b):
-    """Apply basic-block level transformation to each block in CFG.
-    Return cumulative status (OR of each block's status).
-    """
-    res = Ellipsis
-    for addr, info in cfg.iter_sorted_nodes():
-        bblock = info["val"]
-        r = func(bblock)
-        if res is Ellipsis:
-            res = r
-        else:
-            res = join_func(res, r)
-    return res
 
 
 def foreach_inst(cfg, func):
