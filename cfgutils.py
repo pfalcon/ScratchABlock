@@ -20,3 +20,10 @@ def foreach_bblock(cfg, func, join_func=lambda a, b: a or b):
         else:
             res = join_func(res, r)
     return res
+
+
+def foreach_inst(cfg, func):
+    def inst_handler(bblock):
+        for inst in bblock.items:
+            func(inst)
+    foreach_bblock(cfg, inst_handler)
