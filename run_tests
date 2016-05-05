@@ -38,6 +38,7 @@ test_xform() {
     done
 }
 
+find tests -name '*.out*' -exec rm {} \;
 test_roundtrip
 test_dump_c
 test_xform
