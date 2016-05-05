@@ -25,8 +25,14 @@ if args.debug:
         dot.dot(cfg, f)
 
 if hasattr(p, "script"):
-    for xform in p.script:
-        globals()[xform](cfg)
+    for (type, xform) in p.script:
+        func = globals()[xform]
+        if type == "xform:":
+            func(cfg)
+        elif type == "xform_bblock:":
+            foreach_bblock(cfg, func)
+        else:
+            assert 0
 
 if args.format == "bblocks":
     dump_bblocks(cfg)
