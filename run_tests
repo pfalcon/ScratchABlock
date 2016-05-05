@@ -30,7 +30,7 @@ test_xform() {
     echo "=== test_xform ==="
     for f in tests/*.lst; do
         echo $f
-        ./apply_xform.py $f || failed
+        ./apply_xform.py --debug --format=none $f || failed
         diff -u $f.exp.bb $f.out.bb || failed
         if [ -f $f.exp.dot ]; then
             diff -u $f.exp.dot $f.out.dot || failed
