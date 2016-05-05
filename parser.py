@@ -143,6 +143,8 @@ class Parser:
             for i, l in enumerate(f):
                 self.curline = i
                 l = l.rstrip()
+                if not l:
+                    continue
                 if l[0] == "#":
                     if l.startswith("#xform: "):
                         self.script.append(l.split(None, 1)[1])
@@ -300,7 +302,7 @@ class Parser:
             for i, l in enumerate(f):
                 self.curline = i
                 l = l.rstrip()
-                if l[0] == "#":
+                if not l or l[0] == "#":
                     continue
                 if self.expect_line_addr:
                     addr, l = l.split(" ", 1)
