@@ -146,8 +146,11 @@ class Parser:
                 if not l:
                     continue
                 if l[0] == "#":
-                    if l.startswith("#xform: "):
-                        self.script.append(l.split(None, 1)[1])
+                    l = l[1:]
+                    if l.startswith("xform: "):
+                        self.script.append(l.split(None, 1))
+                    elif l.startswith("xform_bblock: "):
+                        self.script.append(l.split(None, 1))
                     continue
                 if self.expect_line_addr is None:
                     self.expect_line_addr = self.detect_addr_field(l)
