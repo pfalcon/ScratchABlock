@@ -366,7 +366,7 @@ class CFGPrinter:
         # Current bblock addr
         self.addr = 0
         # Current CFG node properties
-        self.info = None
+        self.node_props = None
         # Current BBlock
         self.bblock = None
         self.inst_printer = str
@@ -378,8 +378,8 @@ class CFGPrinter:
     def print_header(self):
         print("// Predecessors: %s" % sorted(self.cfg.pred(self.addr)), file=self.stream)
 
-        if "dfsno" in self.info:
-            print("// DFS#: %d" % self.info.pop("dfsno"), file=self.stream)
+        if "dfsno" in self.node_props:
+            print("// DFS#: %d" % self.node_props.pop("dfsno"), file=self.stream)
 
         if "uses" in self.bblock.props:
             print("// Uses: %s" % sorted(self.bblock.props["uses"].items()), file=self.stream)
@@ -390,8 +390,8 @@ class CFGPrinter:
         if "out_state" in self.bblock.props:
             print("// OutState: %s" % repr_state(self.bblock.props["out_state"]), file=self.stream)
 
-        if self.info:
-            print("// " + repr(sorted(self.info.items())), file=self.stream)
+        if self.node_props:
+            print("// " + repr(sorted(self.node_props.items())), file=self.stream)
 
 
     def print_trailer(self):
@@ -410,8 +410,8 @@ class CFGPrinter:
     def print(self):
         cnt = 0
         for self.addr, info in self.bblock_order():
-            self.info = info.copy()
-            self.bblock = self.info.pop("val")
+            self.node_props = info.copy()
+            self.bblock = self.node_props.pop("val")
             if cnt > 0:
                 self.print_separator()
             self.print_header()
