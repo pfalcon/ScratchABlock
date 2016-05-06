@@ -11,6 +11,7 @@ from asmprinter import dump_asm
 
 argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
 argp.add_argument("file", help="Input file in PseudoC format")
+argp.add_argument("--script", help="Apply script from file")
 argp.add_argument("--format", default="bblocks", help="Output format (none, bblocks, asm)")
 argp.add_argument("--debug", action="store_true", help="Produce debug files")
 args = argp.parse_args()
@@ -32,7 +33,10 @@ if args.debug:
     with open(args.file + ".0.dot", "w") as f:
         dot.dot(cfg, f)
 
-if hasattr(p, "script"):
+if args.script:
+    mod = __import__(args.script)
+    mod.apply(cfg)
+elif hasattr(p, "script"):
     for (type, xform) in p.script:
         func = globals()[xform]
         if type == "xform:":
