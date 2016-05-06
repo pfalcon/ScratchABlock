@@ -6,7 +6,7 @@ import dot
 from xform import foreach_inst
 
 
-class RoundtripPrinter(CFGPrinter):
+class AsmPrinter(CFGPrinter):
 
     def __init__(self, cfg):
         super().__init__(cfg)
@@ -55,5 +55,5 @@ class RoundtripPrinter(CFGPrinter):
 
 
 def dump_asm(cfg):
-    p = RoundtripPrinter(cfg)
+    p = AsmPrinter(cfg)
     p.print()
