@@ -18,7 +18,13 @@ args = argp.parse_args()
 p = Parser(args.file)
 cfg = p.parse()
 cfg.parser = p
-foreach_bblock(cfg, remove_trailing_jumps)
+
+# If we want to get asm back, i.e. stay close to the input, don't remove
+# trailing jumps. This will work OK for data flow algos, but will produce
+# broken or confusing output for control flow algos (for which asm output
+# shouldn't be used of course).
+if args.format != "asm":
+    foreach_bblock(cfg, remove_trailing_jumps)
 
 if args.debug:
     with open(args.file + ".0.bb", "w") as f:
