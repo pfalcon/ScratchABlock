@@ -52,6 +52,15 @@ class BBlock:
         for s in self.items:
             self.write(stream, indent, printer(s))
 
+# Helper predicates for types below
+
+def is_value(e):
+    return isinstance(e, VALUE)
+
+def is_expr(e):
+    return isinstance(e, EXPR)
+
+
 class SimpleExpr:
     # Something which is a simple expression
 
