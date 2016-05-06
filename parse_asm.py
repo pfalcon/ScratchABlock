@@ -5,7 +5,7 @@ from parser import *
 import core
 import dot
 from xform import foreach_inst
-from asmprinter import RoundtripPrinter
+from asmprinter import AsmPrinter
 
 
 argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
@@ -21,7 +21,7 @@ cfg = p.parse()
 cfg.parser = p
 
 if args.roundtrip:
-    p = RoundtripPrinter(cfg)
+    p = AsmPrinter(cfg)
     p.addr_width = args.addr_width
     p.inst_indent = args.inst_indent
     p.print()
