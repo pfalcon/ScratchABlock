@@ -325,11 +325,13 @@ class Parser:
                     if block:
                         last_block = block
                     block = BBlock(addr)
+                    block.cfg = self.cfg
                     block.label = l[:-1]
                     self.cfg.add_node(addr, val=block)
                     continue
                 elif not block:
                     block = BBlock(addr)
+                    block.cfg = self.cfg
                     self.cfg.add_node(addr, val=block)
 
 
