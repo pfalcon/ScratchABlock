@@ -101,6 +101,10 @@ class REG(SimpleExpr):
     def reg(self):
         return self
 
+    def regs(self):
+        return [self]
+
+
 class VALUE(SimpleExpr):
 
     def __init__(self, val, base=16):
@@ -124,6 +128,10 @@ class VALUE(SimpleExpr):
 
     def __hash__(self):
         return hash(self.val)
+
+    def regs(self):
+        return []
+
 
 class ADDR(SimpleExpr):
 
@@ -323,6 +331,9 @@ class SimpleCond:
 
     def __hash__(self):
         return hash(self.op) ^ hash(self.arg1) ^ hash(self.arg2)
+
+    def regs(self):
+        return [x for x in (self.arg1, self.arg2) if isinstance(x, REG)]
 
 
 class CompoundCond:
