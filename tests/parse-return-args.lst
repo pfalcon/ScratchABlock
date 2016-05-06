@@ -1,0 +1,6 @@
+# Normal assembler return
+return
+# Extension allowing to specify arguments
+# Expected usage is to allow to mark function live-out registers, but
+# parser should support arbitrary expressions (like constants).
+return $b, 10
