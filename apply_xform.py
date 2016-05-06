@@ -2,6 +2,7 @@
 import sys
 import argparse
 
+import core
 from parser import *
 import dot
 from xform import *
@@ -13,8 +14,12 @@ argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
 argp.add_argument("file", help="Input file in PseudoC format")
 argp.add_argument("--script", help="Apply script from file")
 argp.add_argument("--format", default="bblocks", help="Output format (none, bblocks, asm)")
+argp.add_argument("--repr", action="store_true", help="Dump __repr__ format of instructions")
 argp.add_argument("--debug", action="store_true", help="Produce debug files")
 args = argp.parse_args()
+
+if args.repr:
+    core.SimpleExpr.simple_repr = False
 
 p = Parser(args.file)
 cfg = p.parse()
@@ -47,7 +52,7 @@ elif hasattr(p, "script"):
             assert 0
 
 if args.format == "bblocks":
-    dump_bblocks(cfg)
+    dump_bblocks(cfg, printer=repr if args.repr else str)
 elif args.format == "asm":
     dump_asm(cfg)
 
