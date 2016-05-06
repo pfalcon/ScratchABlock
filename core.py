@@ -265,7 +265,10 @@ class Inst:
             s = "// " + str(self.comments["org_inst"]) + "\n"
 
         if self.op == "return":
-            return s + self.op + self.trail
+            args = ", ".join([str(a) for a in self.args])
+            if args:
+                args = " " + args
+            return s + self.op + args + self.trail
         if self.op in ("goto", "call"):
             return s + "%s %s" % (self.op, self.args[0]) + self.trail
         if self.op == "if":
