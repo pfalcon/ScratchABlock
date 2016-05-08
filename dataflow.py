@@ -130,3 +130,35 @@ class ReachDefAnalysis(AnalysisBase):
         else:
             state = set()
         return state
+
+
+class LiveVarAnalysis(AnalysisBase):
+    forward = False
+    node_prop_in = "live_in"
+    node_prop_out = "live_out"
+
+    def init(self):
+        "Entry node is set to itself, the rest - to graph's all nodes."
+        exits = self.g.exits()
+        assert len(exits) == 1
+        exit = exits[0]
+
+        for node, info in self.g.iter_nodes():
+            info[self.node_prop_in] = set()
+            info[self.node_prop_out] = set()
+
+            bblock = info["val"]
+            kill = bblock.defs()
+            gen = bblock.uses()
+            info["kill_lv"] = kill
+            info["gen_lv"] = gen
+
+    def transfer(self, node, src_state):
+        return (src_state - self.g.get_node_attr(node, "kill_lv")) | self.g.get_node_attr(node, "gen_lv")
+
+    def join(self, node, source_nodes):
+        if source_nodes:
+            state = set.union(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
+        else:
+            state = set()
+        return state
