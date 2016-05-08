@@ -40,6 +40,23 @@ class BBlock:
                 defs.add((i.dest, i.addr))
         return defs
 
+    def defs(self):
+        """Return set of all variable defined in this basic block."""
+        defs = set()
+        for i in self.items:
+            if i.dest:
+                defs.add(i.dest)
+        return defs
+
+    def uses(self):
+        """Return set of all variables used in this basic block."""
+        uses = set()
+        for i in self.items:
+            for a in i.args:
+                for r in a.regs():
+                    uses.add(r)
+        return uses
+
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.addr)
 
