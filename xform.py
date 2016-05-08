@@ -79,3 +79,18 @@ def loop_single_entry(cfg):
                     cfg.remove_edge(p, v)
                     cfg.add_edge(p, landing_site, cond=e)
             return True
+
+
+def dead_code_elimination(bblock):
+    vars = bblock.defs()
+    for v in vars:
+        last = None
+        for i, inst in enumerate(bblock.items):
+            if inst.dest == v:
+                if last is not None:
+                    org_inst = bblock.items[last]
+                    bblock.items[last] = Inst(None, "DEAD", [])
+                    bblock.items[last].comments["org_inst"] = org_inst
+                last = i
+            elif v in inst.args:
+                last = None
