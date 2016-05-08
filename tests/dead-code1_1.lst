@@ -1,0 +1,5 @@
+#xform_bblock: dead_code_elimination
+10     $a = 1
+20     $a = 2
+25     $a = $a + 1
+30     $a = 4

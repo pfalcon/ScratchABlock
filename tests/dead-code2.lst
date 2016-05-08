@@ -1,0 +1,7 @@
+# This requires 2 passes to eliminate 2 var dead interdependency
+#xform_bblock: dead_code_elimination
+10     $a = 1
+11     $b = 2
+25     $a = $a + $b
+20     $b = 3
+30     $a = 4
