@@ -133,3 +133,9 @@ def bblock_const_propagation(bblock):
 
         if inst.op == "=" and isinstance(inst.args[0], (VALUE, ADDR)):
             subst[inst.dest] = inst.args[0]
+
+
+import dataflow
+def analyze_live_vars(cfg):
+    ana = dataflow.LiveVarAnalysis(cfg)
+    ana.solve()
