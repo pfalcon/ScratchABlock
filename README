@@ -17,7 +17,7 @@ assembler to this IR should be well decoupled from a decompiler, or
 otherwise it takes extraordinary effort to add support for another
 architecture (which in turn limits userbase of a decompiler).
 
-Decompilation is complex task, so there should be easy insight into the
+Decompilation is a complex task, so there should be easy insight into the
 process. This means that IR used by a decompiler should be human-friendly,
 for example use a syntax familiar to programmers, map as directly as
 possible to a typical machine assembler, etc.
