@@ -114,12 +114,14 @@ def bblock_const_propagation(bblock):
 
         if all_args_const:
             res = None
+            base = 10
             if inst.op == "+":
                 res = (inst.args[0].val + inst.args[1].val) % 2**arch.BITNESS
+                base = max([a.base for a in inst.args])
 
             if res is not None:
                 inst.op = "="
-                inst.args = [VALUE(res)]
+                inst.args = [VALUE(res, base)]
 
         if inst.op == "=" and isinstance(inst.args[0], (VALUE, ADDR)):
             subst[inst.dest] = inst.args[0]
