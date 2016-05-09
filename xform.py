@@ -1,6 +1,7 @@
 from graph import Graph
 from core import *
 from cfgutils import *
+import arch
 
 
 # Apply tranformation while it's possible
@@ -97,3 +98,28 @@ def dead_code_elimination(bblock):
                 last = i
             elif v in inst.args:
                 last = None
+
+
+def bblock_const_propagation(bblock):
+    subst = {}
+    for i, inst in enumerate(bblock.items):
+
+        all_args_const = True
+        for arg_no, arg in enumerate(inst.args):
+            if arg in subst:
+                arg = subst[arg]
+                inst.args[arg_no] = arg
+            if not isinstance(inst.args[arg_no], VALUE):
+                all_args_const = False
+
+        if all_args_const:
+            res = None
+            if inst.op == "+":
+                res = (inst.args[0].val + inst.args[1].val) % 2**arch.BITNESS
+
+            if res is not None:
+                inst.op = "="
+                inst.args = [VALUE(res)]
+
+        if inst.op == "=" and isinstance(inst.args[0], (VALUE, ADDR)):
+            subst[inst.dest] = inst.args[0]
