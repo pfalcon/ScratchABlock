@@ -251,6 +251,13 @@ class Inst:
             return self.args[1].addr
         return None
 
+    def side_effect(self):
+        if self.op == "call":
+            return True
+        if self.op == "SFUNC":
+            return self.args[0] not in ("bitfield",)
+        return False
+
     def __repr__(self):
         comments = self.comments.copy()
         s = ""

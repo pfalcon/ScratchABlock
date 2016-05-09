@@ -89,8 +89,11 @@ def dead_code_elimination(bblock):
             if inst.dest == v:
                 if last is not None:
                     org_inst = bblock.items[last]
-                    bblock.items[last] = Inst(None, "DEAD", [])
-                    bblock.items[last].comments["org_inst"] = org_inst
+                    if org_inst.side_effect():
+                        org_inst.dest = None
+                    else:
+                        bblock.items[last] = Inst(None, "DEAD", [])
+                        bblock.items[last].comments["org_inst"] = org_inst
                 last = i
             elif v in inst.args:
                 last = None
