@@ -1,0 +1,6 @@
+# Dead code elimination with help of live analysis
+#xform: analyze_live_vars
+#xform_bblock: dead_code_elimination
+10     $a = 1
+20     $a = 2
+25     $a = $a + 1
