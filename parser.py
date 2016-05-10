@@ -249,7 +249,7 @@ class Parser:
             return Inst(None, "LIT", [l])
         if isinstance(dest, SFUNC):
             args = self.parse_arglist(lex)
-            return Inst(None, "SFUNC", [dest.name] + args)
+            return Inst(None, "SFUNC", [dest] + args)
 
         lex.ws()
         if lex.match("&="):
@@ -274,7 +274,7 @@ class Parser:
             assert src
             if isinstance(src, SFUNC):
                 args = self.parse_arglist(lex)
-                return Inst(dest, "SFUNC", [src.name] + args)
+                return Inst(dest, "SFUNC", [src] + args)
             lex.ws()
             if lex.eol():
                 return Inst(dest, "=", [src])
