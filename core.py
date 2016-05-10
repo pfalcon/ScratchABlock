@@ -255,7 +255,7 @@ class Inst:
         if self.op == "call":
             return True
         if self.op == "SFUNC":
-            return self.args[0] not in ("bitfield",)
+            return self.args[0].name not in ("bitfield",)
         return False
 
     def __repr__(self):
