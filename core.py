@@ -431,8 +431,13 @@ class CFGPrinter:
     def print_header(self):
         print("// Predecessors: %s" % sorted(self.cfg.pred(self.addr)), file=self.stream)
 
-        if "dfsno" in self.node_props:
-            print("// DFS#: %d" % self.node_props.pop("dfsno"), file=self.stream)
+        if self.node_props:
+            print("// Node props:", file=self.stream)
+            # Treat DFS# specially
+            if "dfsno" in self.node_props:
+                print("//  DFS#: %d" % self.node_props.pop("dfsno"), file=self.stream)
+            if self.node_props:
+                print("//  Other: " + self.repr_stable_dict(self.node_props), file=self.stream)
 
         if "uses" in self.bblock.props:
             print("// Uses: %s" % sorted(self.bblock.props["uses"].items()), file=self.stream)
@@ -442,9 +447,6 @@ class CFGPrinter:
             print("// InState : %s" % repr_state(self.bblock.props["in_state"]), file=self.stream)
         if "out_state" in self.bblock.props:
             print("// OutState: %s" % repr_state(self.bblock.props["out_state"]), file=self.stream)
-
-        if self.node_props:
-            print("// " + repr(sorted(self.node_props.items())), file=self.stream)
 
 
     def print_trailer(self):
@@ -459,6 +461,17 @@ class CFGPrinter:
     def print_separator(self):
         self.stream.write("\n")
 
+    @staticmethod
+    def repr_stable_dict(d):
+        res = "{"
+        comma = False
+        for k, v in sorted(d.items()):
+            if comma:
+                res += ", "
+            res += "%r: %r" % (k, v)
+            comma = True
+        res += "}"
+        return res
 
     def print(self):
         cnt = 0
