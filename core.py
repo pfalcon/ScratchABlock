@@ -406,7 +406,7 @@ def repr_state(state):
     res = " ".join(res)
     if unk:
         res += " UNK: " + ",".join(unk)
-    return res
+    return "{" + res + "}"
 
 
 class CFGPrinter:
@@ -422,6 +422,8 @@ class CFGPrinter:
         self.node_props = None
         # Current BBlock
         self.bblock = None
+        # Current BBlock properties
+        self.bblock_props = None
         self.inst_printer = str
 
     def bblock_order(self):
@@ -439,14 +441,19 @@ class CFGPrinter:
             if self.node_props:
                 print("//  Other: " + self.repr_stable_dict(self.node_props), file=self.stream)
 
-        if "uses" in self.bblock.props:
-            print("// Uses: %s" % sorted(self.bblock.props["uses"].items()), file=self.stream)
-        if "defs" in self.bblock.props:
-            print("// Defs: %s" % sorted(self.bblock.props["defs"].items()), file=self.stream)
-        if "in_state" in self.bblock.props:
-            print("// InState : %s" % repr_state(self.bblock.props["in_state"]), file=self.stream)
-        if "out_state" in self.bblock.props:
-            print("// OutState: %s" % repr_state(self.bblock.props["out_state"]), file=self.stream)
+        if self.bblock_props:
+            print("// BBlock props:", file=self.stream)
+        if "uses" in self.bblock_props:
+            print("//  Uses: %s" % sorted(self.bblock_props.pop("uses").items()), file=self.stream)
+        if "defs" in self.bblock_props:
+            print("//  Defs: %s" % sorted(self.bblock_props.pop("defs").items()), file=self.stream)
+        if "in_state" in self.bblock_props:
+            print("//  InState : %s" % repr_state(self.bblock_props.pop("in_state")), file=self.stream)
+        if "out_state" in self.bblock_props:
+            print("//  OutState: %s" % repr_state(self.bblock_props.pop("out_state")), file=self.stream)
+
+        if self.bblock_props:
+            print("//  Other: " + self.repr_stable_dict(self.bblock_props), file=self.stream)
 
 
     def print_trailer(self):
@@ -478,6 +485,7 @@ class CFGPrinter:
         for self.addr, info in self.bblock_order():
             self.node_props = info.copy()
             self.bblock = self.node_props.pop("val")
+            self.bblock_props = self.bblock.props
             if cnt > 0:
                 self.print_separator()
             self.print_header()
