@@ -169,6 +169,10 @@ class ADDR(SimpleExpr):
     def __hash__(self):
         return hash(self.addr)
 
+    def regs(self):
+        return []
+
+
 class MEM(SimpleExpr):
     def __init__(self, type, base, offset=0):
         self.type = type
@@ -197,6 +201,13 @@ class MEM(SimpleExpr):
         if isinstance(self.base, REG):
             return self.base
         return None
+
+    def regs(self):
+        r = self.reg()
+        if not r:
+            return []
+        return [r]
+
 
 class SFUNC(SimpleExpr):
 
