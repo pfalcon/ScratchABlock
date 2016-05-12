@@ -118,11 +118,11 @@ class ReachDefAnalysis(AnalysisBase):
                 if inst.dest:
                     kill |= set(filter(lambda x: x[0] == inst.dest, all_defs)) | {(inst.dest, None)}
                     gen.add((inst.dest, inst.addr))
-            info["kill_rd"] = kill
-            info["gen_rd"] = gen
+            info["reachdef_kill"] = kill
+            info["reachdef_gen"] = gen
 
     def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, "kill_rd")) | self.g.get_node_attr(node, "gen_rd")
+        return (src_state - self.g.get_node_attr(node, "reachdef_kill")) | self.g.get_node_attr(node, "reachdef_gen")
 
     def join(self, node, source_nodes):
         if source_nodes:
