@@ -150,11 +150,11 @@ class LiveVarAnalysis(AnalysisBase):
             bblock = info["val"]
             kill = bblock.defs()
             gen = bblock.uses()
-            info["kill_lv"] = kill
-            info["gen_lv"] = gen
+            info["live_kill"] = kill
+            info["live_gen"] = gen
 
     def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, "kill_lv")) | self.g.get_node_attr(node, "gen_lv")
+        return (src_state - self.g.get_node_attr(node, "live_kill")) | self.g.get_node_attr(node, "live_gen")
 
     def join(self, node, source_nodes):
         if source_nodes:
