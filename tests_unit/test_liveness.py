@@ -87,7 +87,7 @@ def test_nielson_2_1_4():
     }
 
     for i, info in g.iter_sorted_nodes():
-        assert info["gen_lv"] == GEN_LV[i]
-        assert info["kill_lv"] == KILL_LV[i]
+        assert info["live_gen"] == GEN_LV[i]
+        assert info["live_kill"] == KILL_LV[i]
         assert info["live_in"] == LV_entry[i], (info["live_in"], LV_entry[i])
         assert info["live_out"] == LV_exit[i]
