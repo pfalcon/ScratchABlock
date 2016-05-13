@@ -11,12 +11,16 @@ class AnalysisBase:
     node_prop_in = None
     # Set to name of node "out" state
     node_prop_out = None
+    node_prop_gen = None
+    node_prop_kill = None
 
     def __init__(self, graph):
         self.g = graph
         if self.prop_prefix:
             self.node_prop_in = self.prop_prefix + "_in"
             self.node_prop_out = self.prop_prefix + "_out"
+            self.node_prop_gen = self.prop_prefix + "_gen"
+            self.node_prop_kill = self.prop_prefix + "_kill"
 
     def solve(self):
         "Solve dataflow analysis."
@@ -122,11 +126,11 @@ class ReachDefAnalysis(AnalysisBase):
                 if inst.dest:
                     kill |= set(filter(lambda x: x[0] == inst.dest, all_defs)) | {(inst.dest, None)}
                     gen.add((inst.dest, inst.addr))
-            info["reachdef_kill"] = kill
-            info["reachdef_gen"] = gen
+            info[self.node_prop_kill] = kill
+            info[self.node_prop_gen] = gen
 
     def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, "reachdef_kill")) | self.g.get_node_attr(node, "reachdef_gen")
+        return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
 
     def join(self, node, source_nodes):
         if source_nodes:
@@ -153,11 +157,11 @@ class LiveVarAnalysis(AnalysisBase):
             bblock = info["val"]
             kill = bblock.defs()
             gen = bblock.uses()
-            info["live_kill"] = kill
-            info["live_gen"] = gen
+            info[self.node_prop_kill] = kill
+            info[self.node_prop_gen] = gen
 
     def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, "live_kill")) | self.g.get_node_attr(node, "live_gen")
+        return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
 
     def join(self, node, source_nodes):
         if source_nodes:
