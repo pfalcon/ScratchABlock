@@ -99,7 +99,13 @@ class DominatorAnalysis(AnalysisBase):
         return state | {node}
 
 
-class ReachDefAnalysis(AnalysisBase):
+class GenKillAnalysis(AnalysisBase):
+
+    def transfer(self, node, src_state):
+        return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
+
+
+class ReachDefAnalysis(GenKillAnalysis):
     "Encapsulation of dataflow analysis for reaching definitions."
     forward = True
     prop_prefix = "reachdef"
@@ -129,8 +135,6 @@ class ReachDefAnalysis(AnalysisBase):
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
 
-    def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
 
     def join(self, node, source_nodes):
         if source_nodes:
@@ -140,7 +144,7 @@ class ReachDefAnalysis(AnalysisBase):
         return state
 
 
-class LiveVarAnalysis(AnalysisBase):
+class LiveVarAnalysis(GenKillAnalysis):
     forward = False
     prop_prefix = "live"
 
@@ -159,9 +163,6 @@ class LiveVarAnalysis(AnalysisBase):
             gen = bblock.uses()
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
-
-    def transfer(self, node, src_state):
-        return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
 
     def join(self, node, source_nodes):
         if source_nodes:
