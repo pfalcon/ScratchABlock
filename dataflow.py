@@ -5,6 +5,8 @@ class AnalysisBase:
 
     # Set to False for backward analysis
     forward = True
+    # property prefix to use
+    prop_prefix = None
     # Set to name of node "in" state
     node_prop_in = None
     # Set to name of node "out" state
@@ -12,6 +14,9 @@ class AnalysisBase:
 
     def __init__(self, graph):
         self.g = graph
+        if self.prop_prefix:
+            self.node_prop_in = self.prop_prefix + "_in"
+            self.node_prop_out = self.prop_prefix + "_out"
 
     def solve(self):
         "Solve dataflow analysis."
@@ -93,8 +98,7 @@ class DominatorAnalysis(AnalysisBase):
 class ReachDefAnalysis(AnalysisBase):
     "Encapsulation of dataflow analysis for reaching definitions."
     forward = True
-    node_prop_in = "reachdef_in"
-    node_prop_out = "reachdef_out"
+    prop_prefix = "reachdef"
 
     def init(self):
         "Entry node is set to itself, the rest - to graph's all nodes."
@@ -134,8 +138,7 @@ class ReachDefAnalysis(AnalysisBase):
 
 class LiveVarAnalysis(AnalysisBase):
     forward = False
-    node_prop_in = "live_in"
-    node_prop_out = "live_out"
+    prop_prefix = "live"
 
     def init(self):
         "Entry node is set to itself, the rest - to graph's all nodes."
