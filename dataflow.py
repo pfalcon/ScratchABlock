@@ -1,3 +1,4 @@
+from utils import set_union, set_intersection
 from xform import foreach_bblock
 
 
@@ -92,10 +93,7 @@ class DominatorAnalysis(AnalysisBase):
                 info[self.node_prop_in] = all_nodes
 
     def join(self, node, source_nodes):
-        if source_nodes:
-            state = set.intersection(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
-        else:
-            state = set()
+        state = set_intersection(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
         return state | {node}
 
 
@@ -137,11 +135,7 @@ class ReachDefAnalysis(GenKillAnalysis):
 
 
     def join(self, node, source_nodes):
-        if source_nodes:
-            state = set.union(*(self.g.get_node_attr(x, self.node_prop_out) for x in source_nodes))
-        else:
-            state = set()
-        return state
+        return set_union(*(self.g.get_node_attr(x, self.node_prop_out) for x in source_nodes))
 
 
 class LiveVarAnalysis(GenKillAnalysis):
@@ -165,8 +159,4 @@ class LiveVarAnalysis(GenKillAnalysis):
             info[self.node_prop_gen] = gen
 
     def join(self, node, source_nodes):
-        if source_nodes:
-            state = set.union(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
-        else:
-            state = set()
-        return state
+        return set_union(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
