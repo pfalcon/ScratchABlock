@@ -99,6 +99,22 @@ def expr_subst(expr, subst_dict):
             return MEM(expr.type, new, expr.offset)
 
 
+def const_expr_simplify(expr):
+    """Calculate numeric value of expression, if it's constant expression.
+    expr can be an instruction too.
+    """
+    res = None
+    base = 10
+    if expr.op == "+":
+        res = (expr.args[0].val + expr.args[1].val) % 2**arch.BITNESS
+        base = max([a.base for a in expr.args])
+
+    if res is not None:
+        return VALUE(res, base)
+    else:
+        return None
+
+
 def bblock_const_propagation(bblock):
     subst = {}
     for i, inst in enumerate(bblock.items):
@@ -112,15 +128,10 @@ def bblock_const_propagation(bblock):
                 all_args_const = False
 
         if all_args_const:
-            res = None
-            base = 10
-            if inst.op == "+":
-                res = (inst.args[0].val + inst.args[1].val) % 2**arch.BITNESS
-                base = max([a.base for a in inst.args])
-
-            if res is not None:
+            val = const_expr_simplify(inst)
+            if val is not None:
                 inst.op = "="
-                inst.args = [VALUE(res, base)]
+                inst.args = [val]
 
         if inst.op == "=" and isinstance(inst.args[0], (VALUE, ADDR)):
             subst[inst.dest] = inst.args[0]
