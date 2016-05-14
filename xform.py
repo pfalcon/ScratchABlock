@@ -115,7 +115,7 @@ def const_expr_simplify(expr):
         return None
 
 
-def bblock_const_propagation(bblock):
+def bblock_propagation(bblock, propagated_types):
     subst = {}
     for i, inst in enumerate(bblock.items):
 
@@ -133,8 +133,17 @@ def bblock_const_propagation(bblock):
                 inst.op = "="
                 inst.args = [val]
 
-        if inst.op == "=" and isinstance(inst.args[0], (VALUE, ADDR)):
+        if inst.op == "=" and isinstance(inst.args[0], propagated_types):
             subst[inst.dest] = inst.args[0]
+
+
+def bblock_const_propagation(bblock):
+    "Propagate only constant values"
+    bblock_propagation(bblock, (VALUE, ADDR))
+
+def bblock_copy_propagation(bblock):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG))
 
 
 import dataflow
