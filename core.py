@@ -131,11 +131,11 @@ class VALUE(SimpleExpr):
     def __repr__(self):
         if self.simple_repr:
             return self.__str__()
-        return self.comment + "VALUE(0x%x)" % self.val
+        return self.comment + "VALUE(%#x)" % self.val
 
     def __str__(self):
         if self.base == 16:
-            val = "0x%x" % self.val
+            val = "%#x" % self.val
         else:
             val = str(self.val)
         return self.comment + val
