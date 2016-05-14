@@ -1,0 +1,5 @@
+#xform_bblock: bblock_const_propagation
+# Const propagation can't do anything here, no constants
+20     $b = $a
+30     $c = $b
+40     $d = $c + $b
