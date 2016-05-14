@@ -23,15 +23,17 @@ class AnalysisBase:
             self.node_prop_gen = self.prop_prefix + "_gen"
             self.node_prop_kill = self.prop_prefix + "_kill"
 
+        if self.forward:
+            self.node_prop_src = self.node_prop_in
+            self.node_prop_dst = self.node_prop_out
+        else:
+            self.node_prop_src = self.node_prop_out
+            self.node_prop_dst = self.node_prop_in
+
+
     def solve(self):
         "Solve dataflow analysis."
         self.init()
-        if self.forward:
-            prop_src = self.node_prop_in
-            prop_dst = self.node_prop_out
-        else:
-            prop_src = self.node_prop_out
-            prop_dst = self.node_prop_in
 
         changed = True
         while changed:
@@ -43,18 +45,18 @@ class AnalysisBase:
                 else:
                     sources = self.g.succ(node)
 
-                if prop_dst:
-                    new = self.transfer(node, info[prop_src])
-                    if new != info[prop_dst]:
-                        info[prop_dst] = new
+                if self.node_prop_dst:
+                    new = self.transfer(node, info[self.node_prop_src])
+                    if new != info[self.node_prop_dst]:
+                        info[self.node_prop_dst] = new
                         changed = True
 
                 if sources:
                     # If there're no "sources" for this node, it's an initial node,
                     # and should keep it's "in" set (which may be non-empty).
                     new = self.join(node, sources)
-                    if new != info[prop_src]:
-                        info[prop_src] = new
+                    if new != info[self.node_prop_src]:
+                        info[self.node_prop_src] = new
                         changed = True
 
     def transfer(self, node, src_state):
@@ -135,7 +137,10 @@ class ReachDefAnalysis(GenKillAnalysis):
 
 
     def join(self, node, source_nodes):
-        return set_union(*(self.g.get_node_attr(x, self.node_prop_out) for x in source_nodes))
+        # node_prop_dst is named from the point of view of intra-node transfer function.
+        # inter-node join function takes source nodes dst set to compute current node
+        # src set
+        return set_union(*(self.g.get_node_attr(x, self.node_prop_dst) for x in source_nodes))
 
 
 class LiveVarAnalysis(GenKillAnalysis):
@@ -159,4 +164,4 @@ class LiveVarAnalysis(GenKillAnalysis):
             info[self.node_prop_gen] = gen
 
     def join(self, node, source_nodes):
-        return set_union(*(self.g.get_node_attr(x, self.node_prop_in) for x in source_nodes))
+        return set_union(*(self.g.get_node_attr(x, self.node_prop_dst) for x in source_nodes))
