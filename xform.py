@@ -115,6 +115,17 @@ def const_expr_simplify(expr):
         return None
 
 
+def kill_subst_uses(subst, kill_var):
+    "Remove from subst dict any expressions involving kill_var"
+    def not_used(var, expr):
+        # Here we assume that expression can be at most reference to a var,
+        # which is true for at most copy propagation, but to handle expr
+        # propagation, need to do better
+        return var != expr
+    subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
+    return subst
+
+
 def bblock_propagation(bblock, propagated_types):
     subst = {}
     for i, inst in enumerate(bblock.items):
@@ -134,6 +145,10 @@ def bblock_propagation(bblock, propagated_types):
                 inst.args = [val]
 
         if inst.op == "=" and isinstance(inst.args[0], propagated_types):
+            # Calling kill_subst_uses isn't really needed for const propagation
+            # (as variables aren't propagated), but needed for copy propagation
+            # and higher.
+            subst = kill_subst_uses(subst, inst.dest)
             subst[inst.dest] = inst.args[0]
 
 
