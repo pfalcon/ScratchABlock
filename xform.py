@@ -83,15 +83,31 @@ def loop_single_entry(cfg):
             return True
 
 
+def expr_subst(expr, subst_dict):
+
+    if isinstance(expr, REG):
+        new = subst_dict.get(expr, expr)
+        return new
+
+    if isinstance(expr, MEM):
+        if expr.base not in subst_dict:
+            return
+        new = subst_dict[expr.base]
+        if isinstance(new, VALUE):
+            return MEM(expr.type, VALUE(new.val + expr.offset))
+        else:
+            return MEM(expr.type, new, expr.offset)
+
+
 def bblock_const_propagation(bblock):
     subst = {}
     for i, inst in enumerate(bblock.items):
 
         all_args_const = True
         for arg_no, arg in enumerate(inst.args):
-            if arg in subst:
-                arg = subst[arg]
-                inst.args[arg_no] = arg
+            repl = expr_subst(arg, subst)
+            if repl:
+                inst.args[arg_no] = repl
             if not isinstance(inst.args[arg_no], VALUE):
                 all_args_const = False
 
