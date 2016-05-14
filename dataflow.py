@@ -101,13 +101,25 @@ class DominatorAnalysis(AnalysisBase):
 
 class GenKillAnalysis(AnalysisBase):
 
+    # Should be staticmethod(set_union) or staticmethod(set_intersection)
+    # staticmethod() is required to work around Python's magic handling
+    # of functions references within classes.
+    join_op = None
+
     def transfer(self, node, src_state):
         return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
+
+    def join(self, node, source_nodes):
+        # node_prop_dst is named from the point of view of intra-node transfer function.
+        # inter-node join function takes source nodes dst set to compute current node
+        # src set
+        return self.join_op(*(self.g.get_node_attr(x, self.node_prop_dst) for x in source_nodes))
 
 
 class ReachDefAnalysis(GenKillAnalysis):
     "Encapsulation of dataflow analysis for reaching definitions."
     forward = True
+    join_op = staticmethod(set_union)
     prop_prefix = "reachdef"
 
     def init(self):
@@ -136,15 +148,9 @@ class ReachDefAnalysis(GenKillAnalysis):
             info[self.node_prop_gen] = gen
 
 
-    def join(self, node, source_nodes):
-        # node_prop_dst is named from the point of view of intra-node transfer function.
-        # inter-node join function takes source nodes dst set to compute current node
-        # src set
-        return set_union(*(self.g.get_node_attr(x, self.node_prop_dst) for x in source_nodes))
-
-
 class LiveVarAnalysis(GenKillAnalysis):
     forward = False
+    join_op = staticmethod(set_union)
     prop_prefix = "live"
 
     def init(self):
@@ -162,6 +168,3 @@ class LiveVarAnalysis(GenKillAnalysis):
             gen = bblock.uses()
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
-
-    def join(self, node, source_nodes):
-        return set_union(*(self.g.get_node_attr(x, self.node_prop_dst) for x in source_nodes))
