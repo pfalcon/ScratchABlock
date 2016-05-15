@@ -1,0 +1,6 @@
+#xform_bblock: bblock_copy_propagation
+# Copy of const-propagate3.lst, but copy propagation used instead of
+# const propagation.
+20     $b = $a
+30     $c = $b
+40     $d = $c + $b
