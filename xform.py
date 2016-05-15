@@ -127,12 +127,12 @@ def kill_subst_uses(subst, kill_var):
 
 
 def bblock_propagation(bblock, propagated_types):
-    subst = {}
+    state = {}
     for i, inst in enumerate(bblock.items):
 
         all_args_const = True
         for arg_no, arg in enumerate(inst.args):
-            repl = expr_subst(arg, subst)
+            repl = expr_subst(arg, state)
             if repl:
                 inst.args[arg_no] = repl
             if not isinstance(inst.args[arg_no], VALUE):
@@ -148,8 +148,8 @@ def bblock_propagation(bblock, propagated_types):
             # Calling kill_subst_uses isn't really needed for const propagation
             # (as variables aren't propagated), but needed for copy propagation
             # and higher.
-            subst = kill_subst_uses(subst, inst.dest)
-            subst[inst.dest] = inst.args[0]
+            state = kill_subst_uses(state, inst.dest)
+            state[inst.dest] = inst.args[0]
 
 
 def bblock_const_propagation(bblock):
