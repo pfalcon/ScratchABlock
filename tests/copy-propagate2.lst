@@ -1,0 +1,5 @@
+#xform_bblock: bblock_copy_propagation
+20     $b = $a
+25     $a = 1
+30     $c = $b
+35     $d = $c
