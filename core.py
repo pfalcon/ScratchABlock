@@ -454,17 +454,14 @@ class CFGPrinter:
 
         if self.bblock_props:
             print("// BBlock props:", file=self.stream)
-        if "uses" in self.bblock_props:
-            print("//  Uses: %s" % sorted(self.bblock_props.pop("uses").items()), file=self.stream)
-        if "defs" in self.bblock_props:
-            print("//  Defs: %s" % sorted(self.bblock_props.pop("defs").items()), file=self.stream)
-        if "state_in" in self.bblock_props:
-            print("//  StateIn : %s" % repr_state(self.bblock_props.pop("state_in")), file=self.stream)
-        if "state_out" in self.bblock_props:
-            print("//  StateOut: %s" % repr_state(self.bblock_props.pop("state_out")), file=self.stream)
 
-        if self.bblock_props:
-            print("//  Other: " + self.repr_stable_dict(self.bblock_props), file=self.stream)
+            for k in sorted(self.bblock_props.keys()):
+                v = self.bblock_props[k]
+                if k.startswith("state_"):
+                    v = repr_state(v)
+                elif isinstance(v, dict):
+                    v = self.repr_stable_dict(v)
+                print("//  %s: %s" % (k, v), file=self.stream)
 
 
     def print_trailer(self):
