@@ -458,10 +458,10 @@ class CFGPrinter:
             print("//  Uses: %s" % sorted(self.bblock_props.pop("uses").items()), file=self.stream)
         if "defs" in self.bblock_props:
             print("//  Defs: %s" % sorted(self.bblock_props.pop("defs").items()), file=self.stream)
-        if "in_state" in self.bblock_props:
-            print("//  InState : %s" % repr_state(self.bblock_props.pop("in_state")), file=self.stream)
-        if "out_state" in self.bblock_props:
-            print("//  OutState: %s" % repr_state(self.bblock_props.pop("out_state")), file=self.stream)
+        if "state_in" in self.bblock_props:
+            print("//  StateIn : %s" % repr_state(self.bblock_props.pop("state_in")), file=self.stream)
+        if "state_out" in self.bblock_props:
+            print("//  StateOut: %s" % repr_state(self.bblock_props.pop("state_out")), file=self.stream)
 
         if self.bblock_props:
             print("//  Other: " + self.repr_stable_dict(self.bblock_props), file=self.stream)
