@@ -1,6 +1,6 @@
 // Predecessors: []
 // BBlock props:
-//  StateOut: {$b=$a $c=$a}
+//  state_out: {$b=$a $c=$a}
 20:
 $b = $a
 $c = $a
