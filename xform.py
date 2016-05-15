@@ -151,6 +151,8 @@ def bblock_propagation(bblock, propagated_types):
             state = kill_subst_uses(state, inst.dest)
             state[inst.dest] = inst.args[0]
 
+    bblock.props["state_out"] = state
+
 
 def bblock_const_propagation(bblock):
     "Propagate only constant values"
