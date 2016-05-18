@@ -459,11 +459,11 @@ class CFGPrinter:
 
         if self.node_props:
             print("// Node props:", file=self.stream)
-            # Treat DFS# specially
-            if "dfsno" in self.node_props:
-                print("//  DFS#: %d" % self.node_props.pop("dfsno"), file=self.stream)
-            if self.node_props:
-                print("//  Other: " + self.repr_stable_dict(self.node_props), file=self.stream)
+            for k in sorted(self.node_props.keys()):
+                v = self.node_props[k]
+                if isinstance(v, dict):
+                    v = self.repr_stable_dict(v)
+                print("//  %s: %s" % (k, v), file=self.stream)
 
         if self.bblock_props:
             print("// BBlock props:", file=self.stream)
