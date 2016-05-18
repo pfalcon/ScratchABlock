@@ -52,9 +52,7 @@ class BBlock:
         """Return set of all variables used in this basic block."""
         uses = set()
         for i in self.items:
-            for a in i.args:
-                for r in a.regs():
-                    uses.add(r)
+            uses |= i.uses()
         return uses
 
     def __repr__(self):
@@ -274,6 +272,21 @@ class Inst:
         if self.op == "SFUNC":
             return self.args[0].name not in ("bitfield",)
         return False
+
+
+    def uses(self):
+        # Avoid circular import. TODO: fix properly
+        import arch
+        """Return set of all registers used by this instruction. Function
+        calls (and maybe SFUNCs) require special treatment."""
+        if self.op == "call":
+            return arch.call_uses(self.args[0])
+        uses = set()
+        for a in self.args:
+            for r in a.regs():
+                uses.add(r)
+        return uses
+
 
     def __repr__(self):
         comments = self.comments.copy()

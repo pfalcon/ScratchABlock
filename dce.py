@@ -56,8 +56,7 @@ def dead_code_elimination_backward(bblock):
                 make_dead(bblock.items, i)
                 changes = True
                 inst = bblock.items[i]
-        for a in inst.args:
-            live.update(a.regs())
+        live |= inst.uses()
 
     return changes
 
