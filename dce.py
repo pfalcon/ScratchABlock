@@ -12,7 +12,9 @@ def make_dead(insts, idx):
     if org_inst.side_effect():
         org_inst.dest = None
     else:
-        insts[idx] = Inst(None, "DEAD", [])
+        dead = Inst(None, "DEAD", [])
+        dead.addr = org_inst.addr
+        insts[idx] = dead
         insts[idx].comments["org_inst"] = org_inst
 
 
