@@ -49,14 +49,15 @@ def dead_code_elimination_backward(bblock):
     changes = False
     for i in range(len(bblock.items) - 1,  -1, -1):
         inst = bblock.items[i]
-        if inst.dest in live:
-            live.remove(inst.dest)
-        else:
-            make_dead(bblock.items, i)
-            changes = True
-        inst = bblock.items[i]
+        if isinstance(inst.dest, REG):
+            if inst.dest in live:
+                live.remove(inst.dest)
+            else:
+                make_dead(bblock.items, i)
+                changes = True
+                inst = bblock.items[i]
         for a in inst.args:
-            live.add(a)
+            live.update(a.regs())
 
     return changes
 
