@@ -1,6 +1,6 @@
 // Predecessors: []
 // Node props:
-//  Other: {'live_gen': {$a}, 'live_in': {$a}, 'live_kill': {$a}, 'live_out': set()}
+//  Other: {'live_gen': set(), 'live_in': set(), 'live_kill': {$a}, 'live_out': set()}
 10:
 // $a = 1
 DEAD()
