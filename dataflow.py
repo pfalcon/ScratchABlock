@@ -164,7 +164,15 @@ class LiveVarAnalysis(GenKillAnalysis):
             info[self.node_prop_out] = set()
 
             bblock = info["val"]
-            kill = bblock.defs()
-            gen = bblock.uses()
+
+            kill = set()
+            gen = set()
+            for inst in bblock.items:
+                for r in inst.uses():
+                    if r not in kill:
+                        gen.add(r)
+                if inst.dest:
+                    kill.add(inst.dest)
+
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
