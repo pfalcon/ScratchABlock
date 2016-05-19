@@ -65,7 +65,9 @@ class BBlock:
 
     def dump(self, stream, indent=0, printer=str):
         for s in self.items:
-            self.write(stream, indent, printer(s))
+            out = printer(s)
+            if out is not None:
+                self.write(stream, indent, out)
 
 # Helper predicates for types below
 
