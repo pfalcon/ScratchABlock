@@ -12,6 +12,8 @@ class AsmPrinter(CFGPrinter):
         super().__init__(cfg)
         self.addr_width = 8
         self.inst_indent = 4
+        self.no_dead = False
+
         self.inst_printer = self.print_with_addr
         self.referenced_labels = set()
         self.get_jump_labels()
@@ -27,6 +29,8 @@ class AsmPrinter(CFGPrinter):
         foreach_inst(self.cfg, collect_labels)
 
     def print_with_addr(self, inst):
+        if inst.op == "DEAD" and self.no_dead:
+            return
         return self.format_addr(inst.addr, self.inst_indent) + " " + str(inst)
 
     def resolve_label(self, addr):
