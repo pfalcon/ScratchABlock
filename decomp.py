@@ -70,7 +70,7 @@ class IfElse(BBlock):
         return "%s(%r, %r)" % (self.__class__.__name__, self.l[0], self.l[1])
 
     def dump(self, stream, indent=0, printer=str):
-        self.write(stream, indent, "if (!%s) {" % self.cond)
+        self.write(stream, indent, "if %s {" % self.cond.neg())
         self.l[1].dump(stream, indent + 1, printer)
         self.write(stream, indent, "} else {")
         self.l[2].dump(stream, indent + 1, printer)
