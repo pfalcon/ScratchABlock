@@ -1,0 +1,5 @@
+# Handling side-effect statements with DCE
+#xform_bblock: dead_code_elimination
+10     $a = 1
+20     $b = *(u32*)$a
+30     $a = 2
