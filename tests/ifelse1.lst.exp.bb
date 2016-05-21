@@ -1,6 +1,6 @@
 // Predecessors: []
 10:
-if (!($a1 == 0)) {
+if ($a1 != 0) {
   $a2 = 1
 } else {
   $a2 = 2
