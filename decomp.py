@@ -170,7 +170,7 @@ class DoWhile(BBlock):
         self.write(stream, indent, "do {")
         for b in self.items:
             b.dump(stream, indent + 1, printer)
-        self.write(stream, indent, "} while %s" % self.cond)
+        self.write(stream, indent, "} while %s;" % self.cond)
 
 
 def match_dowhile(cfg):
