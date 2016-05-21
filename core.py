@@ -465,6 +465,8 @@ class CFGPrinter:
                 v = self.node_props[k]
                 if isinstance(v, dict):
                     v = self.repr_stable_dict(v)
+                elif isinstance(v, set):
+                    v = self.repr_stable_set(v)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
         if self.bblock_props:
@@ -499,6 +501,20 @@ class CFGPrinter:
             if comma:
                 res += ", "
             res += "%r: %r" % (k, v)
+            comma = True
+        res += "}"
+        return res
+
+    @staticmethod
+    def repr_stable_set(d):
+        if not d:
+            return "set()"
+        res = "{"
+        comma = False
+        for k in sorted(list(d), key=repr):
+            if comma:
+                res += ", "
+            res += "%r" % (k,)
             comma = True
         res += "}"
         return res
