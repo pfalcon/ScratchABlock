@@ -2,6 +2,20 @@ from graph import Graph
 from core import *
 
 
+def split_bblock(cfg, n):
+    # If a node is non-empty bblock, splits it in two, with 2nd one being
+    # empty, and having all out edges, and returns this 2nd one. If bblock
+    # is already empty, returns it directly.
+    if not cfg[n]["val"].items:
+        return n
+    addr = n + ".if"
+    pre = BBlock(addr)
+    cfg.add_node(addr, val=pre)
+    cfg.move_succ(n, addr)
+    cfg.add_edge(n, addr)
+    return addr
+
+
 class Seq(BBlock):
     def __init__(self, b1, b2):
         super().__init__(b1.addr)
@@ -51,6 +65,7 @@ def match_if(cfg):
                 c = cfg.succ(b)[0]
                 if c == a:
                     print("if:", v, b, c)
+                    v = split_bblock(cfg, v)
                     if_header = cfg.node(v)["val"]
                     t_block = cfg.node(b)["val"]
                     newb = If(if_header, t_block, cfg.edge(v, a).get("cond"))
