@@ -167,3 +167,7 @@ import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
     ana.solve()
+
+def analyze_reach_defs(cfg):
+    ana = dataflow.ReachDefAnalysis(cfg)
+    ana.solve()
