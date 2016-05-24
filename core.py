@@ -239,6 +239,11 @@ class EXPR:
     def __repr__(self):
         return "EXPR(%s%s)" % (self.op, self.args)
 
+    def __str__(self):
+        if not SimpleExpr.simple_repr:
+            return self.__repr__()
+        return "(" + (" %s " % self.op).join([str(a) for a in self.args]) + ")"
+
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.args == other.args
 
