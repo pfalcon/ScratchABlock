@@ -245,6 +245,12 @@ class EXPR:
     def __hash__(self):
         return hash(self.op) ^ hash(self.args)
 
+    def regs(self):
+        r = set()
+        for a in self.args:
+            r |= set(a.regs())
+        return r
+
 
 class Inst:
 
