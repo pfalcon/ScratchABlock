@@ -3,6 +3,7 @@ import sys
 from utils import pairwise
 from cfgutils import swap_if_branches
 
+no_dead = False
 
 def find_used_labels(cfg):
     labels = set()
@@ -20,6 +21,11 @@ def find_used_labels(cfg):
     return labels
 
 
+def print_inst(inst):
+    if inst.op == "DEAD" and no_dead:
+        return
+    return str(inst)
+
 def dump_c(cfg):
     labels = find_used_labels(cfg)
     func_start = True
@@ -33,7 +39,7 @@ def dump_c(cfg):
             func_start = False
         if addr in labels:
             print("\nl%s:" % addr)
-        bblock.dump(sys.stdout, indent=1)
+        bblock.dump(sys.stdout, indent=1, printer=print_inst)
         for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
             if not cond and nxt and succ == nxt[0]:
