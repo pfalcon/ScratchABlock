@@ -8,6 +8,7 @@ import dot
 from xform import *
 from decomp import *
 from asmprinter import AsmPrinter
+import cprinter
 
 
 argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
@@ -58,6 +59,12 @@ elif args.format == "asm":
     p = AsmPrinter(cfg)
     p.no_dead = args.no_dead
     p.print()
+elif args.format == "c":
+    #foreach_bblock(cfg, remove_trailing_jumps)
+    Inst.trail = ";"
+    cprinter.no_dead = args.no_dead
+    cprinter.dump_c(cfg)
+
 
 if args.debug:
     with open(args.file + ".out.bb", "w") as f:
