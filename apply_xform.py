@@ -61,6 +61,7 @@ elif args.format == "asm":
     p.print()
 elif args.format == "c":
     #foreach_bblock(cfg, remove_trailing_jumps)
+    cfg.number_postorder()
     Inst.trail = ";"
     cprinter.no_dead = args.no_dead
     cprinter.dump_c(cfg)
