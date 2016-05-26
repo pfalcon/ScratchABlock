@@ -53,6 +53,12 @@ elif hasattr(p, "script"):
         else:
             assert 0
 
+if args.debug:
+    with open(args.file + ".out.bb", "w") as f:
+        dump_bblocks(cfg, f)
+    with open(args.file + ".out.dot", "w") as f:
+        dot.dot(cfg, f)
+
 if args.format == "bblocks":
     dump_bblocks(cfg, printer=repr if args.repr else str)
 elif args.format == "asm":
@@ -67,8 +73,3 @@ elif args.format == "c":
     cprinter.dump_c(cfg)
 
 
-if args.debug:
-    with open(args.file + ".out.bb", "w") as f:
-        dump_bblocks(cfg, f)
-    with open(args.file + ".out.dot", "w") as f:
-        dot.dot(cfg, f)
