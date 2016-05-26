@@ -162,11 +162,15 @@ class Graph:
         return [n for n in self._nodes if not self._succ[n]]
 
     def move_pred(self, from_node, to_node):
+        """Move all predecessor edges from one node to another. Useful in
+        graph transformations involving node folding."""
         for p in self.pred(from_node):
             self.add_edge(p, to_node, **self._edges[(p, from_node)])
             self.remove_edge(p, from_node)
 
     def move_succ(self, from_node, to_node):
+        """Move all succesor edges from one node to another. Useful in
+        graph transformations involving node folding."""
         for p in self.succ(from_node):
             self.add_edge(to_node, p, **self._edges[(from_node, p)])
             self.remove_edge(from_node, p)
