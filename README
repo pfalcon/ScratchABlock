@@ -42,3 +42,14 @@ ScratchABlock can be considered learning/research project, and beyond
 good intentions and criticism of other projects, may not offer too much
 to a casual user - currently, or possibly at all. It can certainly be
 criticised in many aspects too.
+
+--------- Down to Earth part ---------
+
+ScratchABlock is written in Python3 language, and tested with version 3.3
+and up, though may work with 3.2 or lower too (won't work with legacy
+Python2 versions). For unit testing, "nose" package is required:
+https://pypi.python.org/pypi/nose (expected executable name is nosetests3).
+
+At this time, you can run regression testsuite using "./run_tests" command
+and study how framework works with various simple (unit-test style) cases
+present in tests/ subdirectory.
