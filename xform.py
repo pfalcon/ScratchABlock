@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 from graph import Graph
 from core import *
 from cfgutils import *
@@ -164,6 +166,39 @@ def bblock_const_propagation(bblock):
 def bblock_copy_propagation(bblock):
     "Propagate constants and register copies"
     bblock_propagation(bblock, (VALUE, ADDR, REG))
+
+
+def collect_state_in(cfg):
+    # This is pretty backwards actually. It uses ReachDef information,
+    # but post-processes it pretty heavily, and instead should be done
+    # as a dataflow analysis itself.
+    changed = False
+    for bblock_addr, node_props in cfg.iter_sorted_nodes():
+        org_state = node_props["val"].props.get("state_in", {})
+        state = org_state.copy()
+        by_var = defaultdict(set)
+        for reg, from_bblock in node_props["reachdef_in"]:
+            by_var[reg].add(from_bblock)
+        #print(bblock_addr, by_var)
+        for var, from_bblocks in by_var.items():
+            val_set = set()
+            for bb in from_bblocks:
+                val = None
+                if bb is not None:
+                    val = cfg[bb]["val"].props["state_out"].get(var)
+                if val is None:
+                    val_set = set()
+                    break
+                val_set.add(val)
+            if len(val_set) == 1:
+                state[var] = val_set.pop()
+            elif len(val_set) > 1:
+                print("Warning: %s in value set for %s is %s" % (bblock_addr, var, val_set))
+        if state != org_state:
+            node_props["val"].props["state_in"] = state
+            changed = True
+
+    return changed
 
 
 import dataflow
