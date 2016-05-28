@@ -1,0 +1,6 @@
+#xform_bblock: bblock_const_propagation
+10     $a = 1
+20     $b = $a
+25     $a = $d + $e
+30     $c = $a + 1
+40     $d = $c + $a
