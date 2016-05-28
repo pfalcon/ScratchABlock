@@ -123,6 +123,8 @@ def kill_subst_uses(subst, kill_var):
         # propagation, need to do better
         return var != expr
     subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
+    # We of course should kill state for var itself
+    subst.pop(kill_var, None)
     return subst
 
 
@@ -144,12 +146,13 @@ def bblock_propagation(bblock, propagated_types):
                 inst.op = "="
                 inst.args = [val]
 
-        if inst.op == "=" and isinstance(inst.args[0], propagated_types):
+        if inst.dest:
             # Calling kill_subst_uses isn't really needed for const propagation
             # (as variables aren't propagated), but needed for copy propagation
             # and higher.
             state = kill_subst_uses(state, inst.dest)
-            state[inst.dest] = inst.args[0]
+            if inst.op == "=" and isinstance(inst.args[0], propagated_types):
+                state[inst.dest] = inst.args[0]
 
     bblock.props["state_out"] = state
 
