@@ -134,6 +134,11 @@ def bblock_propagation(bblock, propagated_types):
     state = bblock.props.get("state_in", {})
     for i, inst in enumerate(bblock.items):
 
+        if isinstance(inst.dest, MEM):
+            new = expr_subst(inst.dest, state)
+            if new:
+                inst.dest = new
+
         all_args_const = True
         for arg_no, arg in enumerate(inst.args):
             repl = expr_subst(arg, state)
