@@ -206,6 +206,17 @@ def collect_state_in(cfg):
     return changed
 
 
+def propagate(cfg, bblock_propagator):
+    while True:
+        foreach_bblock(cfg, bblock_propagator)
+        if not collect_state_in(cfg):
+            break
+
+
+def const_propagation(cfg):
+    propagate(cfg, bblock_const_propagation)
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
