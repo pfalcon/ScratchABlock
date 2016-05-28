@@ -31,8 +31,9 @@ cfg.parser = p
 # trailing jumps. This will work OK for data flow algos, but will produce
 # broken or confusing output for control flow algos (for which asm output
 # shouldn't be used of course).
-if args.format != "asm":
-    foreach_bblock(cfg, remove_trailing_jumps)
+# Update: it's unsafe to use this during dataflow analysis
+#if args.format != "asm":
+#    foreach_bblock(cfg, remove_trailing_jumps)
 
 if args.debug:
     with open(args.file + ".0.bb", "w") as f:

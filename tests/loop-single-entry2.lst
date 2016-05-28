@@ -1,4 +1,5 @@
 # Jump-threaded ifelse-inside-infloop
+#xform_bblock: remove_trailing_jumps
 #xform: loop_single_entry
 10 10:
 10  if ($a1) goto 30
