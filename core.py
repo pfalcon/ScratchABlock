@@ -368,7 +368,7 @@ class Inst:
         return self.op == other.op and self.dest == other.dest and self.args == other.args
 
 
-class SimpleCond:
+class COND:
 
     NEG = {
         "==": "!=",

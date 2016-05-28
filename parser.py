@@ -135,7 +135,7 @@ class Parser:
                     self.error("Expected a comparison operator: " + lex.l)
                 arg2 = self.parse_expr(lex)
         lex.expect(")")
-        return SimpleCond(arg1, cond, arg2)
+        return COND(arg1, cond, arg2)
 
 
     def parse_labels(self):
