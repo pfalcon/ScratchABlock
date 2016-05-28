@@ -131,7 +131,7 @@ def kill_subst_uses(subst, kill_var):
 
 
 def bblock_propagation(bblock, propagated_types):
-    state = {}
+    state = bblock.props.get("state_in", {})
     for i, inst in enumerate(bblock.items):
 
         all_args_const = True
