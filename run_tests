@@ -23,7 +23,9 @@ test_xform() {
         echo $f
         ./apply_xform.py $f || failed
         diff -u $f.exp.bb $f.out.bb || failed
-        diff -u $f.exp.dot $f.out.dot || failed
+        if [ -f $f.exp.dot ]; then
+            diff -u $f.exp.dot $f.out.dot || failed
+        fi
     done
 }
 
