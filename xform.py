@@ -216,6 +216,9 @@ def propagate(cfg, bblock_propagator):
 def const_propagation(cfg):
     propagate(cfg, bblock_const_propagation)
 
+def copy_propagation(cfg):
+    propagate(cfg, bblock_copy_propagation)
+
 
 import dataflow
 def analyze_live_vars(cfg):
