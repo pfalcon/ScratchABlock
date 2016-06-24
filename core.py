@@ -28,7 +28,7 @@ class BBlock:
     def add(self, s):
         self.items.append(s)
 
-    def def_addrs(self):
+    def def_addrs(self, regs_only=True):
         """Return all variable definitions for this basic block,
         as set of (var, inst_addr) pairs. Note that this includes
         multiple entries for the same var, if it is redefined
@@ -37,15 +37,17 @@ class BBlock:
         defs = set()
         for i in self.items:
             if i.dest:
-                defs.add((i.dest, i.addr))
+                if not regs_only or isinstance(i.dest, REG):
+                    defs.add((i.dest, i.addr))
         return defs
 
-    def defs(self):
+    def defs(self, regs_only=True):
         """Return set of all variable defined in this basic block."""
         defs = set()
         for i in self.items:
             if i.dest:
-                defs.add(i.dest)
+                if not regs_only or isinstance(i.dest, REG):
+                    defs.add(i.dest)
         return defs
 
     def uses(self):
