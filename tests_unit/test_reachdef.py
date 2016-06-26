@@ -33,7 +33,7 @@ def test_nielson_2_1_2():
     #g.print_nodes()
     #print("===")
 
-    ana = dataflow.ReachDefAnalysis(g)
+    ana = dataflow.ReachDefAnalysis(g, regs_only=False, inst_level=True)
     ana.solve()
     #g.print_nodes()
 
