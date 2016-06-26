@@ -1,3 +1,4 @@
+import core
 from utils import set_union, set_intersection
 from xform import foreach_bblock
 
@@ -122,12 +123,25 @@ class ReachDefAnalysis(GenKillAnalysis):
     join_op = staticmethod(set_union)
     prop_prefix = "reachdef"
 
+
+    def __init__(self, cfg, regs_only=True, inst_level=False):
+        """If inst_level is True, perform instruction-level analysis, i.e.
+        result will be as a set of (var, inst_addr) pairs. Otherwise, it
+        will be (var, bblock_addr). inst_level=True is useful mostly for
+        unittests/adhoc cases."""
+        super().__init__(cfg)
+        self.inst_level = inst_level
+        self.regs_only = regs_only
+
     def init(self):
         "Entry node is set to itself, the rest - to graph's all nodes."
         entry = self.g.entries()
         assert len(entry) == 1
         entry = entry[0]
-        all_defs = foreach_bblock(self.g, lambda b: b.def_addrs(), set.union)
+        if self.inst_level:
+            all_defs = foreach_bblock(self.g, lambda b: b.def_addrs(self.regs_only), set.union)
+        else:
+            all_defs = foreach_bblock(self.g, lambda b: set((v, b.addr) for v in b.defs(self.regs_only)), set.union)
 
         for node, info in self.g.iter_nodes():
             if node == entry:
@@ -141,9 +155,13 @@ class ReachDefAnalysis(GenKillAnalysis):
             kill = set()
             gen = set()
             for inst in bblock.items:
-                if inst.dest:
+                if inst.dest and (not self.regs_only or isinstance(inst.dest, core.REG)):
                     kill |= set(filter(lambda x: x[0] == inst.dest, all_defs)) | {(inst.dest, None)}
-                    gen.add((inst.dest, inst.addr))
+                    if self.inst_level:
+                        addr = inst.addr
+                    else:
+                        addr = bblock.addr
+                    gen.add((inst.dest, addr))
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
 
