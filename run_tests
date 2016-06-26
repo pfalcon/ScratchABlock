@@ -1,12 +1,15 @@
 #!/bin/sh
 
-echo "=== test_unit ==="
-nosetests3 -v || nose_missing=1
-
 failed() {
     echo "TESTS FAILED!"
     exit 1
 }
+
+echo "=== test_unit ==="
+nosetests3 --version || nose_missing=1
+if [ -z "$nose_missing" ]; then
+    nosetests3 -v || failed
+fi
 
 test_roundtrip() {
     echo "=== test_roundtrip ==="
