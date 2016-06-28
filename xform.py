@@ -160,6 +160,8 @@ def bblock_propagation(bblock, propagated_types):
             state = kill_subst_uses(state, inst.dest)
             if inst.op == "=" and isinstance(inst.args[0], propagated_types):
                 state[inst.dest] = inst.args[0]
+            elif EXPR in propagated_types:
+                state[inst.dest] = EXPR(inst.op, inst.args.copy())
 
     bblock.props["state_out"] = state
 
@@ -171,6 +173,14 @@ def bblock_const_propagation(bblock):
 def bblock_copy_propagation(bblock):
     "Propagate constants and register copies"
     bblock_propagation(bblock, (VALUE, ADDR, REG))
+
+def bblock_mem_propagation(bblock):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM))
+
+def bblock_expr_propagation(bblock):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR))
 
 
 def collect_state_in(cfg):
@@ -218,6 +228,12 @@ def const_propagation(cfg):
 
 def copy_propagation(cfg):
     propagate(cfg, bblock_copy_propagation)
+
+def mem_propagation(cfg):
+    propagate(cfg, bblock_mem_propagation)
+
+def expr_propagation(cfg):
+    propagate(cfg, bblock_expr_propagation)
 
 
 import dataflow
