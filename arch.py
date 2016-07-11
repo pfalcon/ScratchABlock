@@ -24,3 +24,9 @@ def call_uses(addr):
 
 def call_defs(addr):
     return call_ret(addr) | (ALL_REGS - call_save(addr))
+
+
+def ret_uses():
+    # a0 contains return address, and sp should be preserved across
+    # call, so depend on it also.
+    return {REG("a0"), REG("sp")}

@@ -296,6 +296,8 @@ class Inst:
         calls (and maybe SFUNCs) require special treatment."""
         if self.op == "call":
             return arch.call_uses(self.args[0])
+        if self.op == "return":
+            return arch.ret_uses()
         uses = set()
         for a in self.args:
             for r in a.regs():
