@@ -244,3 +244,12 @@ def analyze_live_vars(cfg):
 def analyze_reach_defs(cfg):
     ana = dataflow.ReachDefAnalysis(cfg)
     ana.solve()
+
+
+def estimate_args(cfg):
+    ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
+    ana.solve()
+    func_addr = cfg.entry()
+    e = cfg[func_addr]
+    import arch
+    e["estimated_args"] = e["live_in"] & arch.call_args(func_addr)
