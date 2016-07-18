@@ -171,6 +171,14 @@ class LiveVarAnalysis(GenKillAnalysis):
     join_op = staticmethod(set_union)
     prop_prefix = "live"
 
+    def __init__(self, cfg, skip_calls=False):
+        """If skip_calls is True, skill call instructions. This is useful
+        to estimate current function's argument registers (using unspecific
+        call-conventions driven .uses() for a call instruction may/will make
+        all call-conventions arg registers live for function entry)."""
+        super().__init__(cfg)
+        self.skip_calls = skip_calls
+
     def init(self):
         "Entry node is set to itself, the rest - to graph's all nodes."
         exits = self.g.exits()
@@ -186,6 +194,8 @@ class LiveVarAnalysis(GenKillAnalysis):
             kill = set()
             gen = set()
             for inst in bblock.items:
+                if inst.op == "call" and self.skip_calls:
+                    continue
                 for r in inst.uses():
                     if r not in kill:
                         gen.add(r)
