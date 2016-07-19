@@ -326,20 +326,20 @@ class Parser:
 
                 if l[-1] == ":":
                     # label
-                    if block:
+                    if block is not None:
                         last_block = block
                     block = BBlock(addr)
                     block.cfg = self.cfg
                     block.label = l[:-1]
                     self.cfg.add_node(addr, val=block)
                     continue
-                elif not block:
+                elif block is None:
                     block = BBlock(addr)
                     block.cfg = self.cfg
                     self.cfg.add_node(addr, val=block)
 
 
-                if last_block:
+                if last_block is not None:
                     self.cfg.add_edge(last_block.addr, block.addr)
                     #last_block.end.append(addr)
                     last_block = None
