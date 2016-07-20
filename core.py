@@ -544,7 +544,7 @@ class CFGPrinter:
                 self.print_separator()
             self.print_header()
             self.print_label()
-            if self.bblock:
+            if self.bblock is not None:
                 self.bblock.dump(self.stream, 0, self.inst_printer)
             else:
                 print("   ", self.bblock, file=self.stream)
