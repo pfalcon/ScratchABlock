@@ -204,6 +204,10 @@ class Parser:
             return self.parse_reg(lex)
         elif lex.isdigit():
             return VALUE(*lex.num())
+        elif lex.match("-"):
+            assert lex.isdigit()
+            n, base = lex.num()
+            return VALUE(-n, base)
         elif lex.isident():
             id = lex.ident()
             if lex.peek() == "(":
