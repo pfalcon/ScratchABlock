@@ -255,23 +255,26 @@ class Parser:
             args = self.parse_arglist(lex)
             return Inst(None, "SFUNC", [dest] + args)
 
+        def make_assign_inst(dest, op, args):
+            return Inst(dest, op, args)
+
         lex.ws()
         if lex.match("&="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "&", [dest, src])
+            return make_assign_inst(dest, "&", [dest, src])
         elif lex.match("+="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "+", [dest, src])
+            return make_assign_inst(dest, "+", [dest, src])
         elif lex.match("-="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, "-", [dest, src])
+            return make_assign_inst(dest, "-", [dest, src])
         elif lex.match(">>="):
             lex.ws()
             src = self.parse_expr(lex)
-            return Inst(dest, ">>", [dest, src])
+            return make_assign_inst(dest, ">>", [dest, src])
         elif lex.match("="):
             lex.ws()
             src = self.parse_expr(lex)
@@ -286,7 +289,7 @@ class Parser:
                 for op in ("+", "-", "*", "/", "&", "|", "^", "<<", ">>"):
                     if lex.match(op):
                         src2 = self.parse_expr(lex)
-                        return Inst(dest, op, [src, src2])
+                        return make_assign_inst(dest, op, [src, src2])
                 assert 0
         else:
             assert False, repr(lex.l)
