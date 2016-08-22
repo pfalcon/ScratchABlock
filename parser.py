@@ -279,6 +279,18 @@ class Parser:
             lex.ws()
             src = self.parse_expr(lex)
             return make_assign_inst(dest, "-", [dest, src])
+        elif lex.match("*="):
+            lex.ws()
+            src = self.parse_expr(lex)
+            return make_assign_inst(dest, "*", [dest, src])
+        elif lex.match("/="):
+            lex.ws()
+            src = self.parse_expr(lex)
+            return make_assign_inst(dest, "/", [dest, src])
+        elif lex.match("%="):
+            lex.ws()
+            src = self.parse_expr(lex)
+            return make_assign_inst(dest, "%", [dest, src])
         elif lex.match(">>="):
             lex.ws()
             src = self.parse_expr(lex)
