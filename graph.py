@@ -1,4 +1,5 @@
 import sys
+import copy
 from collections import defaultdict
 
 
@@ -217,6 +218,10 @@ class Graph:
 
     def iter_rev_postorder(self):
         return sorted(self._nodes.items(), key=lambda x: -x[1]["dfsno"])
+
+    def copy(self):
+        # TODO: not optimal
+        return copy.deepcopy(self)
 
 
 def find_all_nodes_on_path(cfg, from_n, to_n):
