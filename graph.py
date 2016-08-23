@@ -98,6 +98,9 @@ class Graph:
     def edge(self, from_node, to_node):
         return self._edges[(from_node, to_node)]
 
+    def has_edge(self, from_node, to_node):
+        return (from_node, to_node) in self._edges
+
     def is_back_edge(self, from_node, to_node):
         return self[from_node]["dfsno"] < self[to_node]["dfsno"]
 
