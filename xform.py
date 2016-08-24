@@ -170,8 +170,6 @@ def bblock_propagation(bblock, propagated_types):
             state = kill_subst_uses(state, inst.dest)
             if inst.op == "=" and isinstance(inst.args[0], propagated_types):
                 state[inst.dest] = inst.args[0]
-            elif EXPR in propagated_types:
-                state[inst.dest] = EXPR(inst.op, inst.args.copy())
 
     bblock.props["state_out"] = state
 
