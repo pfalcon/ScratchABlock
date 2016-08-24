@@ -345,11 +345,17 @@ class Inst:
         if self.op == "if":
             return s + "if %s goto %s" % (self.args[0], self.args[1]) + self.trail
 
-        if self.op == "=":
+        if self.op == "=" and not isinstance(self.args[0], EXPR):
+            assert len(self.args) == 1
             s += "%s = %s" % (self.dest, self.args[0])
         else:
-            args = self.args
-            op = self.op
+            if self.args and isinstance(self.args[0], EXPR):
+                assert len(self.args) == 1
+                args = self.args[0].args
+                op = self.args[0].op
+            else:
+                args = self.args
+                op = self.op
             if not op[0].isalpha():
                 # Infix operator
                 assert len(args) == 2
