@@ -236,7 +236,7 @@ class EXPR:
     "A recursive expression."
     def __init__(self, op, args):
         self.op = op
-        self.args = tuple(args)
+        self.args = args
 
     def __repr__(self):
         return "EXPR(%s%s)" % (self.op, self.args)
@@ -250,7 +250,7 @@ class EXPR:
         return type(self) == type(other) and self.op == other.op and self.args == other.args
 
     def __hash__(self):
-        return hash(self.op) ^ hash(self.args)
+        return hash(self.op) ^ hash(tuple(self.args))
 
     def regs(self):
         r = set()
