@@ -139,16 +139,26 @@ def bblock_propagation(bblock, propagated_types):
             if new:
                 inst.dest = new
 
+        if inst.op == "=":
+            assert len(inst.args) == 1
+            if isinstance(inst.args[0], EXPR):
+                args = inst.args[0].args
+            else:
+                args = inst.args
+        else:
+            args = inst.args
+
         all_args_const = True
-        for arg_no, arg in enumerate(inst.args):
+        for arg_no, arg in enumerate(args):
             repl = expr_subst(arg, state)
             if repl:
-                inst.args[arg_no] = repl
-            if not isinstance(inst.args[arg_no], VALUE):
+                args[arg_no] = repl
+            if not isinstance(args[arg_no], VALUE):
                 all_args_const = False
 
-        if all_args_const:
-            val = const_expr_simplify(inst)
+        if all_args_const and inst.args and isinstance(inst.args[0], EXPR):
+            assert len(inst.args) == 1
+            val = const_expr_simplify(inst.args[0])
             if val is not None:
                 inst.op = "="
                 inst.args = [val]
