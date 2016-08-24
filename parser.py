@@ -256,7 +256,8 @@ class Parser:
             return Inst(None, "SFUNC", [dest] + args)
 
         def make_assign_inst(dest, op, args):
-            return Inst(dest, op, args)
+            #return Inst(dest, op, args)
+            return Inst(dest, "=", [EXPR(op, args)])
 
         lex.ws()
         if lex.match("&="):
