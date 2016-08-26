@@ -92,13 +92,23 @@ def expr_subst(expr, subst_dict):
         return new
 
     if isinstance(expr, MEM):
-        if expr.base not in subst_dict:
-            return
-        new = subst_dict[expr.base]
-        if isinstance(new, VALUE):
-            return MEM(expr.type, VALUE(new.val + expr.offset))
-        else:
-            return MEM(expr.type, new, expr.offset)
+        new = expr_subst(expr.expr, subst_dict)
+        if new:
+            return MEM(expr.type, new)
+        return
+
+    if isinstance(expr, EXPR):
+        new_args = []
+        was_new = False
+        for a in expr.args:
+            new = expr_subst(a, subst_dict)
+            if new is None:
+                new = a
+            else:
+                was_new = True
+            new_args.append(new)
+        if was_new:
+            return EXPR(expr.op, new_args)
 
 
 def const_expr_simplify(expr):
