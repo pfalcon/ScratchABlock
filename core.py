@@ -176,39 +176,33 @@ class ADDR(SimpleExpr):
 
 
 class MEM(SimpleExpr):
-    def __init__(self, type, base, offset=0):
+    def __init__(self, type, expr):
         self.type = type
-        self.base = base
-        self.offset = offset
+        self.expr = expr
 
     def __repr__(self):
-        if self.offset == 0:
-            return self.comment + "*(%s*)%s" % (self.type, self.base)
+        return self.comment + "*(%s*)%r" % (self.type, self.expr)
+
+    def __str__(self):
+        if isinstance(self.expr, EXPR):
+            return self.comment + "*(%s*)%s" % (self.type, self.expr)
         else:
-            return self.comment + "*(%s*)(%s + 0x%x)" % (self.type, self.base, self.offset)
+            return self.comment + "*(%s*)%s" % (self.type, self.expr)
 
     def __eq__(self, other):
         return type(self) == type(other) and self.type == other.type and \
-            self.base == other.base and self.offset == other.offset
+            self.expr == other.expr
 
     def __lt__(self, other):
         if type(self) == type(other):
-            return (self.base, self.offset) < (other.base, other.offset)
+            return self.expr < other.expr
         return type(self).__name__ < type(other).__name__
 
     def __hash__(self):
-        return hash(self.type) ^ hash(self.base) ^ hash(self.offset)
-
-    def reg(self):
-        if isinstance(self.base, REG):
-            return self.base
-        return None
+        return hash(self.type) ^ hash(self.expr)
 
     def regs(self):
-        r = self.reg()
-        if not r:
-            return []
-        return [r]
+        return self.expr.regs()
 
 
 class SFUNC(SimpleExpr):
