@@ -199,7 +199,9 @@ class Parser:
                 lex.expect(")")
             else:
                 base = self.parse_reg(lex)
-            return MEM(type, base, offset)
+            if offset == 0:
+                return MEM(type, base)
+            return MEM(type, EXPR("+", [base, VALUE(offset)]))
         elif lex.peek() == "$":
             return self.parse_reg(lex)
         elif lex.isdigit():
