@@ -107,8 +107,11 @@ def expr_subst(expr, subst_dict):
             else:
                 was_new = True
             new_args.append(new)
-        if was_new:
-            return EXPR(expr.op, new_args)
+        if not was_new:
+            return None
+        new_expr = EXPR(expr.op, new_args)
+        new_simple_expr = const_expr_simplify(new_expr)
+        return new_simple_expr or new_expr
 
 
 def const_expr_simplify(expr):
