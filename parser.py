@@ -335,7 +335,7 @@ class Parser:
         elif lex.match("="):
             lex.ws()
             src = self.parse_expr(lex)
-            assert src
+            assert src, repr(lex.l)
             if isinstance(src, SFUNC):
                 args = self.parse_arglist(lex)
                 return Inst(dest, "SFUNC", [src] + args)
