@@ -1,0 +1,3 @@
+# Test parsing of conditional instruction
+01  if ($a0 == 1) $a1 = $a2
+02  return
