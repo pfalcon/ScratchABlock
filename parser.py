@@ -356,70 +356,65 @@ class Parser:
         with open(self.fname) as f:
             block = None
             last_block = None
-            for i, l in enumerate(f):
-                self.curline = i
-                l = l.rstrip()
-                if not l or l[0] == "#":
-                    continue
-                if self.expect_line_addr:
-                    addr, l = l.split(" ", 1)
-                else:
-                    # Use line number as "address"
-                    addr = i
-                #addr = int(addr, 16)
-                #print((hex(addr), l))
-                l = l.split(";", 1)[0]
-                l = l.strip()
-                if not l:
-#                if l[0] == ";":
-                    continue
 
-                if l[-1] == ":":
-                    # label
-                    if block is not None:
-                        last_block = block
-                    block = BBlock(addr)
-                    block.cfg = self.cfg
-                    block.label = l[:-1]
-                    self.cfg.add_node(addr, val=block)
-                    continue
-                elif block is None:
-                    block = BBlock(addr)
-                    block.cfg = self.cfg
-                    self.cfg.add_node(addr, val=block)
+            l = ""
+            while l is not None:
+                for addr, l in self.get_expand_line(f):
+                    if l is None:
+                        break
+
+                    #print((hex(addr), l))
+                    l = l.split(";", 1)[0]
+                    l = l.strip()
+                    if not l:
+                        continue
+
+                    if l[-1] == ":":
+                        # label
+                        if block is not None:
+                            last_block = block
+                        block = BBlock(addr)
+                        block.cfg = self.cfg
+                        block.label = l[:-1]
+                        self.cfg.add_node(addr, val=block)
+                        continue
+                    elif block is None:
+                        block = BBlock(addr)
+                        block.cfg = self.cfg
+                        self.cfg.add_node(addr, val=block)
 
 
-                if last_block is not None:
-                    self.cfg.add_edge(last_block.addr, block.addr)
-                    #last_block.end.append(addr)
-                    last_block = None
-
-                inst = self.parse_inst(l)
-                inst.addr = addr
-
-                if inst.op in ("goto", "if"):
-                    cond = None
-                    if inst.op == "goto":
-                        addr = inst.args[0]
-                    else:
-                        cond, addr = inst.args
-                    addr = addr.addr
-                    #print("!", (cond, addr))
-                    if addr not in self.cfg:
-                        self.cfg.add_node(addr)
-                    self.cfg.add_edge(block.addr, addr, cond=cond)
-                    if cond:
-                        last_block = block
-                    else:
+                    if last_block is not None:
+                        self.cfg.add_edge(last_block.addr, block.addr)
+                        #last_block.end.append(addr)
                         last_block = None
-                    block.add(inst)
-                    block = None
-                elif inst.op == "return":
-                    block.add(inst)
-                    block = None
-                    last_block = None
-                else:
-                    block.add(inst)
+
+                    inst = self.parse_inst(l)
+                    inst.addr = addr
+
+                    if inst.op in ("goto", "if"):
+                        cond = None
+                        if inst.op == "goto":
+                            addr = inst.args[0]
+                        else:
+                            cond, addr = inst.args
+                        addr = addr.addr
+                        #print("!", (cond, addr))
+                        if addr not in self.cfg:
+                            self.cfg.add_node(addr)
+                        self.cfg.add_edge(block.addr, addr, cond=cond)
+                        if cond:
+                            last_block = block
+                        else:
+                            last_block = None
+                        block.add(inst)
+                        block = None
+                    elif inst.op == "return":
+                        block.add(inst)
+                        block = None
+                        last_block = None
+                    else:
+                        block.add(inst)
 
             if last_block:
                 print("Warning: function was not properly terminated")
