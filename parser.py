@@ -111,7 +111,7 @@ class Parser:
         self.pass_no = None
 
     def error(self, msg):
-        print("%s:%d: %s" % (self.fname, self.curline + 1, msg))
+        print("%s:%d: %s" % (self.fname, self.curline, msg))
         sys.exit(1)
 
     def parse_cond(self, lex):
