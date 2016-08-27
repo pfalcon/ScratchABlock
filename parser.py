@@ -108,6 +108,7 @@ class Parser:
         self.labels = {}
         self.curline = -1
         self.script = []
+        self.pass_no = None
 
     def error(self, msg):
         print("%s:%d: %s" % (self.fname, self.curline + 1, msg))
@@ -138,30 +139,49 @@ class Parser:
         return COND(arg1, cond, arg2)
 
 
-    def parse_labels(self):
-        with open(self.fname) as f:
-            for i, l in enumerate(f):
-                self.curline = i
-                l = l.rstrip()
-                if not l:
-                    continue
-                if l[0] == "#":
+    # Get line from a file, expanding any "macro-like" features,
+    # like "if (cond) $r0 = $r1"
+    def get_expand_line(self, f):
+        while True:
+            l = f.readline()
+            if not l:
+                return [(None, None)]
+            self.curline += 1
+            l = l.rstrip()
+            if not l:
+                continue
+
+            if l[0] == "#":
+                if self.pass_no == 1:
                     l = l[1:]
                     if l.startswith("xform: "):
                         self.script.append(l.split(None, 1))
                     elif l.startswith("xform_bblock: "):
                         self.script.append(l.split(None, 1))
-                    continue
-                if self.expect_line_addr is None:
-                    self.expect_line_addr = self.detect_addr_field(l)
-                if self.expect_line_addr:
-                    addr, l = l.split(" ", 1)
-                else:
-                    addr = i
-                #addr = int(addr, 16)
-                l = l.lstrip()
-                if l[-1] == ":":
-                    self.labels[l[:-1]] = addr
+                continue
+
+            if self.expect_line_addr is None:
+                self.expect_line_addr = self.detect_addr_field(l)
+
+            if self.expect_line_addr:
+                addr, l = l.split(" ", 1)
+            else:
+                addr = str(self.curline)
+            l = l.lstrip()
+
+            return [(addr, l)]
+
+    def parse_labels(self):
+        self.pass_no = 1
+        self.curline = 0
+        with open(self.fname) as f:
+            l = ""
+            while l is not None:
+                for addr, l in self.get_expand_line(f):
+                    if l is None:
+                        break
+                    if l[-1] == ":":
+                        self.labels[l[:-1]] = addr
 
     def parse_reg(self, lex):
         lex.expect("$")
@@ -406,6 +426,8 @@ class Parser:
                 self.cfg.add_edge(last_block.addr, block.addr)
 
     def parse_bblocks(self):
+        self.pass_no = 2
+        self.curline = 0
         try:
             self._parse_bblocks()
         except ParseError as e:
