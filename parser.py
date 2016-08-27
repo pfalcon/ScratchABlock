@@ -377,7 +377,7 @@ class Parser:
                     if l is None:
                         break
 
-                    #print((hex(addr), l))
+                    #print(addr, l)
                     l = l.split(";", 1)[0]
                     l = l.strip()
                     if not l:
