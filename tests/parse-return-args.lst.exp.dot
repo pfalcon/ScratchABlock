@@ -1,6 +1,0 @@
-digraph G {
-"ENTRY" -> "1"
-"ENTRY" -> "5"
-"1" [label="BBlock\n1"]
-"5" [label="BBlock\n5"]
-}
