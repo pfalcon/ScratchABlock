@@ -195,6 +195,9 @@ class Parser:
                     if l is None:
                         break
                     if l[-1] == ":":
+                        if not self.labels:
+                            # First label is function name
+                            self.cfg.name = l[:-1]
                         self.labels[l[:-1]] = addr
 
     def parse_reg(self, lex):
