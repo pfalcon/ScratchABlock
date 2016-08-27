@@ -1,9 +1,9 @@
 // Predecessors: []
-1:
+2:
 return
 Exits: []
 
 // Predecessors: []
-5:
+6:
 return $b, 10
 Exits: []
