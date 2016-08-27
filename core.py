@@ -243,6 +243,11 @@ class EXPR:
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.args == other.args
 
+    def __lt__(self, other):
+        if type(self) == type(other):
+            return str(self) < str(other)
+        return type(self).__name__ < type(other).__name__
+
     def __hash__(self):
         return hash(self.op) ^ hash(tuple(self.args))
 
