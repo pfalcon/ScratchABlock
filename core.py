@@ -76,6 +76,9 @@ class BBlock:
 def is_value(e):
     return isinstance(e, VALUE)
 
+def is_reg(e):
+    return isinstance(e, REG)
+
 def is_mem(e):
     return isinstance(e, MEM)
 
