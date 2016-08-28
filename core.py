@@ -94,14 +94,17 @@ class REG(SimpleExpr):
 
     def __init__(self, name):
         self.name = name
+        self.signed = False
 
     def __repr__(self):
         if self.simple_repr:
             return self.__str__()
-        return self.comment + "REG(%s)" % self.name
+        type = "REG_S" if self.signed else "REG"
+        return self.comment + type + "(%s)" % self.name
 
     def __str__(self):
-        return self.comment + "$" + self.name
+        cast = "(i32)" if self.signed else ""
+        return self.comment + cast + "$" + self.name
 
     def __eq__(self, other):
         return type(self) == type(other) and self.name == other.name
