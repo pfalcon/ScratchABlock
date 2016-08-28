@@ -123,6 +123,13 @@ class Parser:
         else:
             arg1 = self.parse_expr(lex)
             lex.ws()
+            if lex.peek() == "&":
+                lex.expect("&")
+                assert lex.ident() == "BIT"
+                lex.expect("(")
+                bit_no = self.parse_expr(lex)
+                lex.expect(")")
+                arg1 = EXPR("&", [arg1, EXPR("<<", [VALUE(1, 10), bit_no])])
             if lex.peek() == ")":
                 cond = "!="
                 arg2 = VALUE(0, 10)
