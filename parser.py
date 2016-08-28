@@ -247,6 +247,19 @@ class Parser:
             assert lex.isdigit()
             n, base = lex.num()
             return VALUE(-n, base)
+        elif lex.match("("):
+            # type cast
+            assert lex.isident()
+            tp = lex.ident()
+            lex.expect(")")
+            expr = self.parse_expr(lex)
+            if is_reg(expr) and tp[0] == "i":
+                expr.signed = True
+            elif is_value(expr):
+                pass
+            else:
+                assert 0, (lex.l, self.curline)
+            return expr
         elif lex.isident():
             id = lex.ident()
             if lex.peek() == "(":
