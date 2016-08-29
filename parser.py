@@ -108,7 +108,7 @@ class Parser:
     def __init__(self, fname):
         self.fname = fname
         self.expect_line_addr = None
-        self.cfg = Graph()
+        self.cfg = None
         self.labels = {}
         self.curline = -1
         self.script = []
@@ -206,9 +206,6 @@ class Parser:
                     if l is None:
                         break
                     if l[-1] == ":":
-                        if not self.labels:
-                            # First label is function name
-                            self.cfg.name = l[:-1]
                         self.labels[l[:-1]] = addr
 
     def parse_reg(self, lex):
@@ -406,8 +403,9 @@ class Parser:
         return False
 
 
-    def _parse_bblocks(self):
-        with open(self.fname) as f:
+    def _parse_bblocks(self, f):
+            self.cfg = Graph()
+            self.cfg.name = None
             block = None
             last_block = None
 
@@ -416,6 +414,8 @@ class Parser:
                 for addr, l in self.get_expand_line(f):
                     if l is None:
                         break
+                    if self.should_stop(l):
+                        return
 
                     #print(addr, l)
                     l = l.split(";", 1)[0]
@@ -430,6 +430,9 @@ class Parser:
                         block = BBlock(addr)
                         block.cfg = self.cfg
                         block.label = l[:-1]
+                        if self.cfg.name is None:
+                            # First label is function name
+                            self.cfg.name = l[:-1]
                         self.cfg.add_node(addr, val=block)
                         continue
                     elif block is None:
@@ -478,11 +481,10 @@ class Parser:
                 print("Warning: function was not properly terminated")
                 self.cfg.add_edge(last_block.addr, block.addr)
 
-    def parse_bblocks(self):
+    def parse_bblocks(self, f):
         self.pass_no = 2
-        self.curline = 0
         try:
-            self._parse_bblocks()
+            self._parse_bblocks(f)
         except ParseError as e:
             print("Error: %d: %r" % (self.curline + 1, e))
             raise
@@ -490,5 +492,10 @@ class Parser:
 
     def parse(self):
         self.parse_labels()
-        self.parse_bblocks()
+        self.curline = 0
+        with open(self.fname) as f:
+            self.parse_bblocks(f)
         return self.cfg
+
+    def should_stop(self, l):
+        return False
