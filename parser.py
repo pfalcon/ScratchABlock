@@ -260,7 +260,7 @@ class Parser:
             return VALUE(-n, base)
         elif lex.match("("):
             # type cast
-            assert lex.isident()
+            assert lex.isident(), self.curline
             tp = lex.ident()
             lex.expect(")")
             expr = self.parse_expr(lex)
@@ -389,7 +389,7 @@ class Parser:
                         return make_assign_inst(dest, op, [src, src2])
                 assert 0
         else:
-            assert False, repr(lex.l)
+            assert False, (repr(lex.l), self.curline)
 
 
     def detect_addr_field(self, l):
