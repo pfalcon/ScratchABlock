@@ -98,6 +98,10 @@ class Lexer:
             base = 16
         return int(self.word(), 0), base
 
+    def skip_comment(self):
+        if self.match("/*"):
+            self.match_till("*/")
+            self.expect("*/")
 
 class Parser:
 
@@ -301,7 +305,10 @@ class Parser:
             return Inst(None, "if", [c, ADDR(self.get_label(lex.rest()))])
         if lex.match("return"):
             args = []
-            while not lex.eol():
+            while True:
+                lex.skip_comment()
+                if lex.eol():
+                    break
                 a = self.parse_expr(lex)
                 args.append(a)
                 if not lex.eol():
