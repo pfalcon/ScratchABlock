@@ -276,10 +276,17 @@ class Parser:
             if lex.peek() == "(":
                 return SFUNC(id)
             else:
-                return ADDR(id)
+                return ADDR(self.labels.get(id, id))
         else:
             return None
             assert False, "Cannot parse: " + repr(lex.l)
+
+    # If there's numeric value, treat it as address. Otherwise, parse expression.
+    def parse_local_addr_expr(self, lex):
+        if lex.isdigit():
+            w = lex.word()
+            return ADDR(self.labels.get(w, w))
+        return self.parse_expr(lex)
 
     def get_label(self, label):
         try:
@@ -296,7 +303,7 @@ class Parser:
     def parse_inst(self, l):
         lex = Lexer(l)
         if lex.match("goto"):
-            return Inst(None, "goto", [ADDR(self.get_label(lex.rest()))])
+            return Inst(None, "goto", [self.parse_local_addr_expr(lex)])
         if lex.match("call"):
             return Inst(None, "call", [self.parse_expr(lex)])
         if lex.match("if"):
@@ -445,6 +452,10 @@ class Parser:
                             addr = inst.args[0]
                         else:
                             cond, addr = inst.args
+                        if not isinstance(addr, ADDR):
+                            # Skip handling indirect jumps
+                            block.add(inst)
+                            continue
                         addr = addr.addr
                         #print("!", (cond, addr))
                         if addr not in self.cfg:
