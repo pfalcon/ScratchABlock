@@ -369,11 +369,13 @@ class Inst:
                 op = self.op
             if not op[0].isalpha():
                 # Infix operator
-                assert len(args) == 2
+                assert len(args) >= 2
                 if self.dest == args[0]:
-                    s += "%s %s= %s" % (self.dest, op, args[1])
+                    s += "%s %s= " % (self.dest, op)
+                    args = args[1:]
                 else:
-                    s += "%s = %s %s %s" % (self.dest, args[0], op, args[1])
+                    s += "%s = " % self.dest
+                s += (" %s " % op).join(map(str, args))
             else:
                 if self.dest is not None:
                     s += "%s = " % self.dest
