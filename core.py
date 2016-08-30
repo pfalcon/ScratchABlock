@@ -163,6 +163,9 @@ class VALUE(SimpleExpr):
     def regs(self):
         return []
 
+    def side_effect(self):
+        return False
+
 
 class ADDR(SimpleExpr):
 
@@ -283,6 +286,11 @@ class EXPR:
             r |= set(a.regs())
         return r
 
+    def side_effect(self):
+        if self.op == "SFUNC":
+            return self.args[0] not in ("BIT", "bitfield")
+        return False
+
 
 class Inst:
 
@@ -309,8 +317,9 @@ class Inst:
     def side_effect(self):
         if self.op == "call":
             return True
-        if self.op == "SFUNC":
-            return self.args[0].name not in ("bitfield",)
+        if self.op in ("=", "SFUNC"):
+            assert len(self.args) == 1, self.args
+            return self.args[0].side_effect()
         return False
 
 
