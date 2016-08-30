@@ -339,6 +339,9 @@ class Inst:
         return s
 
     def __str__(self):
+        if not SimpleExpr.simple_repr:
+            return self.__repr__()
+
         if self.op == "LIT":
             return self.args[0]
 
