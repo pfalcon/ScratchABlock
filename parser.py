@@ -18,9 +18,6 @@ class Lexer:
         self.l = l
         self.ws()
 
-    def error(self, msg):
-        assert False, msg
-
     def peek(self):
         if not self.l:
             return self.l
@@ -29,15 +26,20 @@ class Lexer:
     def eol(self):
         return not self.l
 
+    def is_punct(self, c):
+        return c in "&|^-+*/%=<>"
+
     def match(self, tok):
         if not self.l.startswith(tok):
             return False
 
-        word = tok[0] in string.ascii_letters
+        is_word = tok[0] in string.ascii_letters
         rest = self.l[len(tok):]
-        if rest and word:
-            if rest[0] not in string.whitespace:
-                return False
+        if rest:
+            if is_word and rest[0] not in string.whitespace:
+                    return False
+            elif self.is_punct(tok[0]) and self.is_punct(rest[0]):
+                    return False
         self.l = rest
         self.ws()
         return True
@@ -63,9 +65,11 @@ class Lexer:
                 self.l = self.l[1:]
         return res
 
-    def expect(self, tok):
+    def expect(self, tok, msg=None):
         if not self.match(tok):
-            self.error("Expected: %s, buffer: %s" % (tok, self.l))
+            if msg is None:
+                msg = "Expected: '%s'" % tok
+            raise ParseError(msg, self.l)
 
     def ws(self):
         while self.l and self.l[0] == " ":
@@ -89,14 +93,18 @@ class Lexer:
 
     def ident(self):
         assert self.isident(), repr(self.l)
-        return self.word()
+        w = self.word()
+        self.ws()
+        return w
 
     def num(self):
         assert self.isdigit(), repr(self.l)
         base = 10
         if self.l.startswith("0x"):
             base = 16
-        return int(self.word(), 0), base
+        w = self.word()
+        self.ws()
+        return int(w, 0), base
 
     def skip_comment(self):
         if self.match("/*"):
@@ -113,25 +121,27 @@ class Parser:
         self.curline = -1
         self.script = []
         self.pass_no = None
+        self.lex = None
 
     def error(self, msg):
         print("%s:%d: %s" % (self.fname, self.curline, msg))
         sys.exit(1)
 
     def parse_cond(self, lex):
+        self.lex = lex
         lex.expect("(")
         if lex.match("!"):
-            arg1 = self.parse_expr(lex)
+            arg1 = self.parse_expr()
             cond = "=="
             arg2 = VALUE(0, 10)
         else:
-            arg1 = self.parse_expr(lex)
+            arg1 = self.parse_expr()
             lex.ws()
             if lex.peek() == "&":
                 lex.expect("&")
                 assert lex.ident() == "BIT"
                 lex.expect("(")
-                bit_no = self.parse_expr(lex)
+                bit_no = self.parse_expr()
                 lex.expect(")")
                 arg1 = EXPR("&", [arg1, EXPR("<<", [VALUE(1, 10), bit_no])])
             if lex.peek() == ")":
@@ -145,7 +155,7 @@ class Parser:
                         break
                 if not matched:
                     self.error("Expected a comparison operator: " + lex.l)
-                arg2 = self.parse_expr(lex)
+                arg2 = self.parse_expr()
         lex.expect(")")
         return COND(arg1, cond, arg2)
 
@@ -212,78 +222,112 @@ class Parser:
         lex.expect("$")
         return REG(lex.ident())
 
-    def parse_arglist(self, lex):
+    def parse_arglist(self):
         args = []
-        lex.expect("(")
-        while not lex.match(")"):
+        self.lex.expect("(")
+        while not self.lex.match(")"):
             comm = ""
-            if lex.match("/*"):
-                comm = "/*" + lex.match_till("*/") + "*/"
-                lex.expect("*/")
-            a = self.parse_expr(lex)
-            assert a, (repr(a), repr(lex.l))
+            if self.lex.match("/*"):
+                comm = "/*" + self.lex.match_till("*/") + "*/"
+                self.lex.expect("*/")
+            a = self.parse_expr()
+            assert a, (repr(a), repr(self.lex.l))
             a.comment = comm
             args.append(a)
-            if lex.match(","):
+            if self.lex.match(","):
                 pass
         return args
 
-    def parse_expr(self, lex):
-        if lex.match("*"):
-            lex.expect("(")
-            type = lex.ident()
-            lex.expect("*")
-            lex.expect(")")
-            offset = 0
-            if lex.match("("):
-                base = self.parse_reg(lex)
-                lex.ws()
-                lex.expect("+")
-                lex.ws()
-                offset = lex.num()[0]
-                lex.expect(")")
-            else:
-                base = self.parse_reg(lex)
-            if offset == 0:
-                return MEM(type, base)
-            return MEM(type, EXPR("+", [base, VALUE(offset)]))
-        elif lex.peek() == "$":
-            return self.parse_reg(lex)
-        elif lex.isdigit():
-            return VALUE(*lex.num())
-        elif lex.match("-"):
-            assert lex.isdigit()
-            n, base = lex.num()
+
+    def parse_primary(self):
+        if self.lex.match("*"):
+            self.lex.expect("(", "Dereference requires explicit pointer cast")
+            type = self.lex.ident()
+            self.lex.expect("*")
+            self.lex.expect(")")
+            e = self.parse_primary()
+            return MEM(type, e)
+        elif self.lex.match("("):
+            e = self.parse_expr()
+            self.lex.expect(")")
+            if is_addr(e):
+                # If there was identifier, check it for being a type name
+                if e.addr in ("i8", "u8", "i16", "u16", "i32", "u32", "i64", "u64"):
+                    tp = e.addr
+                    e = self.parse_primary()
+                    return EXPR("CAST", [tp, e])
+            return e
+        elif self.lex.peek() == "$":
+            return self.parse_reg(self.lex)
+        elif self.lex.isdigit():
+            return VALUE(*self.lex.num())
+        elif self.lex.match("-"):
+            assert self.lex.isdigit()
+            n, base = self.lex.num()
             return VALUE(-n, base)
-        elif lex.match("("):
-            # type cast
-            assert lex.isident(), self.curline
-            tp = lex.ident()
-            lex.expect(")")
-            expr = self.parse_expr(lex)
-            if is_reg(expr) and tp[0] == "i":
-                expr.signed = True
-            elif is_value(expr):
-                pass
-            else:
-                assert 0, (lex.l, self.curline)
-            return expr
-        elif lex.isident():
-            id = lex.ident()
-            if lex.peek() == "(":
-                return SFUNC(id)
+        elif self.lex.isident():
+            id = self.lex.ident()
+            if self.lex.peek() == "(":
+                args = self.parse_arglist()
+                return EXPR("SFUNC", [SFUNC(id)] + args)
             else:
                 return ADDR(self.labels.get(id, id))
         else:
-            return None
-            assert False, "Cannot parse: " + repr(lex.l)
+            self.error("Cannot parse")
+
+    def parse_level(self, operators, next_level):
+        e = next_level()
+        match = True
+        while match:
+            for op in operators:
+                if self.lex.match(op):
+                    e2 = next_level()
+                    e = EXPR(op, [e, e2])
+                    break
+            match = False
+        return e
+
+    def parse_mul(self):
+        return self.parse_level(("*", "/", "%"), self.parse_primary)
+
+    def parse_add(self):
+        e = self.parse_mul()
+        while True:
+            if self.lex.match("+"):
+                e2 = self.parse_mul()
+                e = EXPR("+", [e, e2])
+            elif self.lex.match("-"):
+                e2 = self.parse_mul()
+                e = EXPR("-", [e, e2])
+            else:
+                break
+        return e
+
+    def parse_shift(self):
+        return self.parse_level(("<<", ">>"), self.parse_add)
+
+    def parse_band(self):
+        return self.parse_level(("&",), self.parse_shift)
+    def parse_bxor(self):
+        return self.parse_level(("^",), self.parse_band)
+    def parse_bor(self):
+        return self.parse_level(("|",), self.parse_bxor)
+
+    def parse_land(self):
+        return self.parse_level(("&&",), self.parse_bor)
+    def parse_lor(self):
+        return self.parse_level(("||",), self.parse_land)
+
+    def parse_expr(self):
+        return self.parse_lor()
+
 
     # If there's numeric value, treat it as address. Otherwise, parse expression.
-    def parse_local_addr_expr(self, lex):
-        if lex.isdigit():
-            w = lex.word()
+    def parse_local_addr_expr(self):
+        if self.lex.isdigit():
+            w = self.lex.word()
             return ADDR(self.labels.get(w, w))
-        return self.parse_expr(lex)
+        return self.parse_expr()
 
     def get_label(self, label):
         try:
@@ -298,11 +342,11 @@ class Parser:
         return labels[0][0]
 
     def parse_inst(self, l):
-        lex = Lexer(l)
+        lex = self.lex = Lexer(l)
         if lex.match("goto"):
-            return Inst(None, "goto", [self.parse_local_addr_expr(lex)])
+            return Inst(None, "goto", [self.parse_local_addr_expr()])
         if lex.match("call"):
-            return Inst(None, "call", [self.parse_expr(lex)])
+            return Inst(None, "call", [self.parse_expr()])
         if lex.match("if"):
             c = self.parse_cond(lex)
             lex.expect("goto")
@@ -313,17 +357,18 @@ class Parser:
                 lex.skip_comment()
                 if lex.eol():
                     break
-                a = self.parse_expr(lex)
+                a = self.parse_expr()
                 args.append(a)
                 if not lex.eol():
                     lex.expect(",")
             return Inst(None, "return", args)
-        dest = self.parse_expr(lex)
+
+        dest = self.parse_expr()
         if not dest:
             return Inst(None, "LIT", [l])
-        if isinstance(dest, SFUNC):
-            args = self.parse_arglist(lex)
-            return Inst(None, "SFUNC", [dest] + args)
+
+        if is_expr(dest) and isinstance(dest.args[0], SFUNC):
+            return Inst(None, "SFUNC", [dest])
 
         def make_assign_inst(dest, op, args):
             #return Inst(dest, op, args)
@@ -332,49 +377,49 @@ class Parser:
         lex.ws()
         if lex.match("&="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "&", [dest, src])
         elif lex.match("|="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "|", [dest, src])
         elif lex.match("^="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "^", [dest, src])
         elif lex.match("+="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "+", [dest, src])
         elif lex.match("-="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "-", [dest, src])
         elif lex.match("*="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "*", [dest, src])
         elif lex.match("/="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "/", [dest, src])
         elif lex.match("%="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, "%", [dest, src])
         elif lex.match(">>="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             return make_assign_inst(dest, ">>", [dest, src])
         elif lex.match("<<="):
             src = self.parse_expr()
             return make_assign_inst(dest, "<<", [dest, src])
         elif lex.match("="):
             lex.ws()
-            src = self.parse_expr(lex)
+            src = self.parse_expr()
             assert src, repr(lex.l)
             if isinstance(src, SFUNC):
-                args = self.parse_arglist(lex)
+                args = self.parse_arglist()
                 return Inst(dest, "SFUNC", [src] + args)
             lex.ws()
             if lex.eol():
