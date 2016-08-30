@@ -250,7 +250,15 @@ class EXPR:
     def __str__(self):
         if not SimpleExpr.simple_repr:
             return self.__repr__()
-        return "(" + (" %s " % self.op).join([str(a) for a in self.args]) + ")"
+        l = [str(self.args[0])]
+        for a in self.args[1:]:
+            if self.op == "+" and is_value(a) and a.val < 0:
+                l.append("-")
+                a = VALUE(-a.val, a.base)
+            else:
+                l.append(self.op)
+            l.append(str(a))
+        return "(" + " ".join(l) + ")"
 
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.args == other.args
@@ -378,7 +386,15 @@ class Inst:
                     args = args[1:]
                 else:
                     s += "%s = " % self.dest
-                s += (" %s " % op).join(map(str, args))
+                l = [str(args[0])]
+                for a in args[1:]:
+                    if op == "+" and is_value(a) and a.val < 0:
+                        a = VALUE(-a.val, a.base)
+                        l.append("-")
+                    else:
+                        l.append(op)
+                    l.append(str(a))
+                s += " ".join(l)
             else:
                 if self.dest is not None:
                     s += "%s = " % self.dest
