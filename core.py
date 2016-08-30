@@ -250,6 +250,12 @@ class EXPR:
     def __str__(self):
         if not SimpleExpr.simple_repr:
             return self.__repr__()
+
+        if self.op == "SFUNC":
+            return str(self.args[0]) + "(" + ", ".join([str(a) for a in self.args[1:]]) + ")"
+        if self.op == "CAST":
+            return "(" + self.args[0] + ")" + str(self.args[1])
+
         l = [str(self.args[0])]
         for a in self.args[1:]:
             if self.op == "+" and is_value(a) and a.val < 0:
