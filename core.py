@@ -202,7 +202,7 @@ class MEM(SimpleExpr):
 
     def __str__(self):
         if isinstance(self.expr, EXPR):
-            return self.comment + "*(%s*)%s" % (self.type, self.expr)
+            return self.comment + "*(%s*)(%s)" % (self.type, self.expr)
         else:
             return self.comment + "*(%s*)%s" % (self.type, self.expr)
 
@@ -252,6 +252,27 @@ class EXPR:
     def __repr__(self):
         return "EXPR(%s%s)" % (self.op, self.args)
 
+    @staticmethod
+    def preced(e):
+        if is_expr(e):
+            if e.op in ("CAST", "SFUNC"):
+                return 1
+            # See e.g. ppreference.com/w/c/language/operator_precedence
+            return {
+                "||": 12, "&&": 11, "|": 10, "^": 9, "&": 8,
+                "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3
+            }[e.op]
+        return 1
+
+    # Render this expr's arg, wrapped in parens if needed
+    def strarg(self, arg):
+        s = str(arg)
+        preced_my = self.preced(self)
+        preced_arg = self.preced(arg)
+        if preced_arg > preced_my:
+            s = "(%s)" % s
+        return s
+
     def __str__(self):
         if not SimpleExpr.simple_repr:
             return self.__repr__()
@@ -261,15 +282,15 @@ class EXPR:
         if self.op == "CAST":
             return "(" + self.args[0] + ")" + str(self.args[1])
 
-        l = [str(self.args[0])]
+        l = [self.strarg(self.args[0])]
         for a in self.args[1:]:
             if self.op == "+" and is_value(a) and a.val < 0:
                 l.append("-")
                 a = VALUE(-a.val, a.base)
             else:
                 l.append(self.op)
-            l.append(str(a))
-        return "(" + " ".join(l) + ")"
+            l.append(self.strarg(a))
+        return " ".join(l)
 
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.args == other.args
