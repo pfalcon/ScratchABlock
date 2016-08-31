@@ -262,9 +262,10 @@ class Parser:
         elif self.lex.isdigit():
             return VALUE(*self.lex.num())
         elif self.lex.match("-"):
-            assert self.lex.isdigit()
-            n, base = self.lex.num()
-            return VALUE(-n, base)
+            e = self.parse_primary()
+            if is_value(e):
+                return VALUE(-e.val, e.base)
+            return EXPR("NEG", [e])
         elif self.lex.isident():
             id = self.lex.ident()
             if self.lex.peek() == "(":
