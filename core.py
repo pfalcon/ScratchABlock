@@ -1,6 +1,7 @@
 import sys
 import re
 from graph import Graph
+from copy import copy
 
 def natural_sort_key(s):
     arr = re.split("([0-9]+)", s)
@@ -405,42 +406,35 @@ class Inst:
         if self.op == "if":
             return s + "if %s goto %s" % (self.args[0], self.args[1]) + self.trail
 
-        if self.op == "=" and not isinstance(self.args[0], EXPR):
-            assert len(self.args) == 1
+        if self.op == "DEAD":
+            return s + "DEAD()" + self.trail
+
+        if self.op == "SFUNC":
+            assert self.dest is None
+            assert len(self.args) == 1, repr(self.args)
+            return s + str(self.args[0]) + self.trail
+
+        assert self.op == "=", repr(self.op)
+        assert len(self.args) == 1, (self.op, repr(self.args))
+
+        if self.op == "=" and not is_expr(self.args[0]):
             s += "%s = %s" % (self.dest, self.args[0])
         else:
-            if self.args and isinstance(self.args[0], EXPR):
-                assert len(self.args) == 1
-                args = self.args[0].args
-                op = self.args[0].op
-            else:
-                args = self.args
-                op = self.op
+            e = copy(self.args[0])
+            args = e.args
+            op = e.op
             if not op[0].isalpha():
                 # Infix operator
-                assert len(args) >= 2
+                assert len(args) >= 2, repr(args)
                 if self.dest == args[0]:
                     s += "%s %s= " % (self.dest, op)
-                    args = args[1:]
+                    e.args = args[1:]
                 else:
                     s += "%s = " % self.dest
-                l = [str(args[0])]
-                for a in args[1:]:
-                    if op == "+" and is_value(a) and a.val < 0:
-                        a = VALUE(-a.val, a.base)
-                        l.append("-")
-                    else:
-                        l.append(op)
-                    l.append(str(a))
-                s += " ".join(l)
             else:
                 if self.dest is not None:
                     s += "%s = " % self.dest
-                if op == "SFUNC":
-                    op = args[0]
-                    args = args[1:]
-                args = ", ".join([str(a) for a in args])
-                s += "%s(%s)" % (op, args)
+            s += "%s" % e
 
         return s + self.trail
 
