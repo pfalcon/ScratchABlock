@@ -99,6 +99,10 @@ class SimpleExpr:
         "Get register referenced by the expression"
         return None
 
+    def side_effect(self):
+        return False
+
+
 class REG(SimpleExpr):
 
     def __init__(self, name):
@@ -163,8 +167,6 @@ class VALUE(SimpleExpr):
     def regs(self):
         return []
 
-    def side_effect(self):
-        return False
 
 
 class ADDR(SimpleExpr):
