@@ -256,14 +256,14 @@ class EXPR:
     @staticmethod
     def preced(e):
         if is_expr(e):
-            if e.op in ("CAST", "SFUNC"):
-                return 1
-            # See e.g. ppreference.com/w/c/language/operator_precedence
+            # See e.g. http://en.cppreference.com/w/c/language/operator_precedence
             return {
                 "||": 12, "&&": 11, "|": 10, "^": 9, "&": 8,
                 "==": 7, "!=": 7, ">": 6, "<": 6, ">=": 6, "<=": 6,
-                "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3
-            }[e.op]
+                "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3,
+                # All the below is highest precedence
+                "CAST": 1, "SFUNC": 1, "NEG": 1,
+            }.get(e.op, 100)
         return 1
 
     # Render this expr's arg, wrapped in parens if needed
@@ -274,6 +274,11 @@ class EXPR:
         preced_arg = EXPR.preced(arg)
         if preced_arg > preced_my:
             s = "(%s)" % s
+        else:
+            # Common cases of confusing precedence in C, where parens is usually
+            # suggested.
+            if expr.op in ("<<", ">>") and (preced_arg != 1 and arg.op in ("+", "-")):
+                s = "(%s)" % s
         return s
 
     def __str__(self):
