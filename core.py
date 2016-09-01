@@ -483,7 +483,7 @@ class COND:
         return "(%s %s %s)" % (EXPR.strarg(self, self.arg1), self.op, EXPR.strarg(self, self.arg2))
 
     def __repr__(self):
-        return "SCond(%r %s %r)" % (self.arg1, self.op, self.arg2)
+        return "COND(%r %s %r)" % (self.arg1, self.op, self.arg2)
 
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.arg1 == other.arg1 and self.arg2 == other.arg2
