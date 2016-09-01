@@ -1,6 +1,6 @@
 // Predecessors: ['20']
 10:
-Exits: [(None, '11'), (SCond($a1 == 0), '20')]
+Exits: [(None, '11'), (COND($a1 == 0), '20')]
 
 // Predecessors: ['10']
 11:
