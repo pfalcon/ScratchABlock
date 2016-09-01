@@ -261,15 +261,17 @@ class EXPR:
             # See e.g. ppreference.com/w/c/language/operator_precedence
             return {
                 "||": 12, "&&": 11, "|": 10, "^": 9, "&": 8,
+                "==": 7, "!=": 7, ">": 6, "<": 6, ">=": 6, "<=": 6,
                 "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3
             }[e.op]
         return 1
 
     # Render this expr's arg, wrapped in parens if needed
-    def strarg(self, arg):
+    @staticmethod
+    def strarg(expr, arg):
         s = str(arg)
-        preced_my = self.preced(self)
-        preced_arg = self.preced(arg)
+        preced_my = EXPR.preced(expr)
+        preced_arg = EXPR.preced(arg)
         if preced_arg > preced_my:
             s = "(%s)" % s
         return s
@@ -283,14 +285,14 @@ class EXPR:
         if self.op == "CAST":
             return "(" + self.args[0] + ")" + str(self.args[1])
 
-        l = [self.strarg(self.args[0])]
+        l = [self.strarg(self, self.args[0])]
         for a in self.args[1:]:
             if self.op == "+" and is_value(a) and a.val < 0:
                 l.append("-")
                 a = VALUE(-a.val, a.base)
             else:
                 l.append(self.op)
-            l.append(self.strarg(a))
+            l.append(self.strarg(self, a))
         return " ".join(l)
 
     def __eq__(self, other):
@@ -465,7 +467,7 @@ class COND:
         return [self]
 
     def __str__(self):
-        return "(%s %s %s)" % (self.arg1, self.op, self.arg2)
+        return "(%s %s %s)" % (EXPR.strarg(self, self.arg1), self.op, EXPR.strarg(self, self.arg2))
 
     def __repr__(self):
         return "SCond(%r %s %r)" % (self.arg1, self.op, self.arg2)
