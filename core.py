@@ -290,6 +290,14 @@ class EXPR:
         if self.op == "CAST":
             return "(" + self.args[0] + ")" + str(self.args[1])
 
+        DICT = {
+            "NEG": "-",
+        }
+        if self.op in DICT:
+            assert len(self.args) == 1
+            s = DICT [self.op]
+            return s + self.strarg(self, self.args[0])
+
         l = [self.strarg(self, self.args[0])]
         for a in self.args[1:]:
             if self.op == "+" and is_value(a) and a.val < 0:
