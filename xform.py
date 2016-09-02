@@ -118,6 +118,16 @@ def const_expr_simplify(expr):
     """Calculate numeric value of expression, if it's constant expression.
     expr can be an instruction too.
     """
+    all_args_const = True
+    for a in expr.args:
+        if not isinstance(a, VALUE):
+            all_args_const = False
+
+    if not all_args_const:
+        return
+
+    assert len(expr.args) == 2, len(expr.args)
+
     res = None
     base = 10
     if expr.op == "+":
