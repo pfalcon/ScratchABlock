@@ -535,6 +535,12 @@ class Parser:
             print("Error: %d: %r" % (self.curline + 1, e))
             raise
             sys.exit(1)
+        # External labels may produce empty CFG nodes during parsing.
+        # Make a pass over graph and remove such.
+        for node, info in list(self.cfg.iter_nodes()):
+            if not info:
+                self.cfg.remove_node(node)
+
 
     def parse(self):
         self.parse_labels()
