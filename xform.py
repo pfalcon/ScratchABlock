@@ -87,6 +87,9 @@ def loop_single_entry(cfg):
 
 def expr_subst(expr, subst_dict):
 
+    if isinstance(expr, VALUE):
+        return None
+
     if isinstance(expr, REG):
         new = subst_dict.get(expr, expr)
         return new
