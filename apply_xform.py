@@ -11,10 +11,10 @@ from asmprinter import AsmPrinter
 import cprinter
 
 
-argp = argparse.ArgumentParser(description="Parse and dump PseudoC program")
+argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
 argp.add_argument("file", help="Input file in PseudoC format")
 argp.add_argument("--script", help="Apply script from file")
-argp.add_argument("--format", default="bblocks", help="Output format (none, bblocks, asm)")
+argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks", help="Output format (default: %(default)s)")
 argp.add_argument("--no-dead", action="store_true", help="Don't output DCE-eliminated instructions")
 argp.add_argument("--repr", action="store_true", help="Dump __repr__ format of instructions")
 argp.add_argument("--debug", action="store_true", help="Produce debug files")
