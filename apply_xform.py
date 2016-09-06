@@ -14,6 +14,7 @@ import cprinter
 def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
     argp.add_argument("file", help="Input file in PseudoC format")
+    argp.add_argument("-o", "--output", help="Output file (default stdout)")
     argp.add_argument("--script", help="Apply script from file")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks", help="Output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="Don't output DCE-eliminated instructions")
@@ -64,13 +65,18 @@ def handle_file(args):
         with open(args.file + ".out.dot", "w") as f:
             dot.dot(cfg, f)
 
+    if args.output:
+        out = open(args.output, "w")
+    else:
+        out = sys.stdout
+
     if args.format == "bblocks":
-        p = CFGPrinter(cfg, sys.stdout)
+        p = CFGPrinter(cfg, out)
         p.inst_printer = repr if args.repr else str
         p.no_dead = args.no_dead
         p.print()
     elif args.format == "asm":
-        p = AsmPrinter(cfg)
+        p = AsmPrinter(cfg, out)
         p.no_dead = args.no_dead
         p.print()
     elif args.format == "c":
@@ -78,7 +84,7 @@ def handle_file(args):
         cfg.number_postorder()
         Inst.trail = ";"
         cprinter.no_dead = args.no_dead
-        cprinter.dump_c(cfg)
+        cprinter.dump_c(cfg, out)
 
     return cfg
 
