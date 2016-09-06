@@ -551,6 +551,7 @@ class CFGPrinter:
         # Current BBlock properties
         self.bblock_props = None
         self.inst_printer = str
+        self.no_dead = False
 
     def bblock_order(self):
         "Return iterator over bblocks to be printed."
@@ -589,6 +590,10 @@ class CFGPrinter:
     def print_label(self):
         print("%s:" % self.addr, file=self.stream)
 
+    def print_inst(self, inst):
+        if inst.op == "DEAD" and self.no_dead:
+            return None
+        return self.inst_printer(inst)
 
     def print_separator(self):
         self.stream.write("\n")
@@ -630,7 +635,7 @@ class CFGPrinter:
             self.print_header()
             self.print_label()
             if self.bblock is not None:
-                self.bblock.dump(self.stream, 0, self.inst_printer)
+                self.bblock.dump(self.stream, 0, self.print_inst)
             else:
                 print("   ", self.bblock, file=self.stream)
             self.print_trailer()
