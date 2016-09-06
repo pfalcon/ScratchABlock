@@ -1,4 +1,8 @@
-from core import VALUE, ADDR, MEM, EXPR
+from core import *
+
+
+def is_expr_2args(e):
+    return is_expr(e) and len(e.args)
 
 
 def expr_xform(e, func):
@@ -23,12 +27,12 @@ def expr_xform(e, func):
 
 
 def expr_neg(expr):
-    if isinstance(expr, VALUE):
+    if is_value(expr):
         return VALUE(-expr.val, expr.base)
     assert 0
 
 
 def expr_sub_to_add(e):
-    if isinstance(e, EXPR) and len(e.args) == 2:
-        if e.op == "-" and isinstance(e.args[1], VALUE):
+    if is_expr_2args(e):
+        if e.op == "-" and is_value(e.args[1]):
             return EXPR("+", [e.args[0], expr_neg(e.args[1])])
