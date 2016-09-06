@@ -86,6 +86,9 @@ def handle_file(args):
         cprinter.no_dead = args.no_dead
         cprinter.dump_c(cfg, out)
 
+    if args.output:
+        out.close()
+
     return cfg
 
 
