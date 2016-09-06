@@ -61,7 +61,10 @@ if args.debug:
         dot.dot(cfg, f)
 
 if args.format == "bblocks":
-    dump_bblocks(cfg, printer=repr if args.repr else str)
+    p = CFGPrinter(cfg, sys.stdout)
+    p.inst_printer = repr if args.repr else str
+    p.no_dead = args.no_dead
+    p.print()
 elif args.format == "asm":
     p = AsmPrinter(cfg)
     p.no_dead = args.no_dead
