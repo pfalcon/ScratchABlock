@@ -36,3 +36,12 @@ def expr_sub_to_add(e):
     if is_expr_2args(e):
         if e.op == "-" and is_value(e.args[1]):
             return EXPR("+", [e.args[0], expr_neg(e.args[1])])
+
+
+def expr_associative_add(e):
+    "Turn (a + b) + c into a + b + c."
+    if is_expr(e) and e.op == "+":
+        if is_expr(e.args[0]) and e.args[0].op == "+":
+            new_args = e.args[0].args.copy()
+            new_args.extend(e.args[1:].copy())
+            return EXPR("+", new_args)
