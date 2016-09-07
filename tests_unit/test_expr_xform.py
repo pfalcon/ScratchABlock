@@ -25,3 +25,13 @@ def test_sub_to_add():
     e = E("-", [E("-", [V(3), V(2)]), V(1)])
     e2 = expr_xform(e, expr_sub_to_add)
     assert e2 == E("+", [E("+", [V(3), V(-2)]), V(-1)])
+
+
+def test_associative_add():
+    e = E("+", [E("+", [V(3), V(2)]), V(1)])
+    e2 = expr_xform(e, expr_associative_add)
+    assert e2 == E("+", [V(3), V(2), V(1)])
+
+    e = E("+", [E("+", [V(4), V(3), V(2)]), V(1), V(5), V(6)])
+    e2 = expr_xform(e, expr_associative_add)
+    assert e2 == E("+", [V(4), V(3), V(2), V(1), V(5), V(6)])
