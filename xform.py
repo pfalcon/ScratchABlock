@@ -283,3 +283,8 @@ def estimate_args(cfg):
     e = cfg[func_addr]
     import arch
     e["estimated_args"] = e["live_in"] & arch.call_args(func_addr)
+
+
+def repr_output(cfg):
+    import core
+    core.SimpleExpr.simple_repr = False
