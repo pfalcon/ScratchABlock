@@ -1,0 +1,6 @@
+#xform: repr_output
+#xform_bblock: sub_const_to_add
+10     $a = 2 - 1
+20     $b -= 3
+30     $c = $a - 1
+40     $d = 5 - $a
