@@ -61,16 +61,18 @@ def expr_simplify_add(e):
     if is_expr(e) and e.op == "+":
         new_args = []
         val = 0
+        base = 0
         for a in e.args:
             if is_value(a):
                 val = mod_add(val, a.val)
+                base = max(base, a.base)
             else:
                 new_args.append(a)
         if new_args:
             if val != 0:
-                new_args.append(VALUE(val))
+                new_args.append(VALUE(val, base))
             if len(new_args) == 1:
                 return new_args[0]
             return EXPR("+", new_args)
         else:
-            return VALUE(val)
+            return VALUE(val, base)
