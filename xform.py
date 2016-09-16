@@ -122,35 +122,13 @@ def expr_subst(expr, subst_dict):
             new_args.append(new)
         if not was_new:
             return None
+
         new_expr = EXPR(expr.op, new_args)
-        new_simple_expr = const_expr_simplify(new_expr)
-        return new_simple_expr or new_expr
+        new_expr = expr_xform(new_expr, expr_associative_add)
+        new_expr = expr_xform(new_expr, expr_simplify_add)
+        return new_expr
 
-
-def const_expr_simplify(expr):
-    """Calculate numeric value of expression, if it's constant expression.
-    expr can be an instruction too.
-    """
-    all_args_const = True
-    for a in expr.args:
-        if not isinstance(a, VALUE):
-            all_args_const = False
-
-    if not all_args_const:
-        return
-
-    assert len(expr.args) == 2, len(expr.args)
-
-    res = None
-    base = 10
-    if expr.op == "+":
-        res = (expr.args[0].val + expr.args[1].val) % 2**arch.BITNESS
-        base = max([a.base for a in expr.args])
-
-    if res is not None:
-        return VALUE(res, base)
-    else:
-        return None
+    assert 0, type(expr)
 
 
 def kill_subst_uses(subst, kill_var):
