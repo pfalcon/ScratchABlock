@@ -131,6 +131,9 @@ class REG(SimpleExpr):
         n2 = natural_sort_key(other.name)
         return n1 < n2
 
+    def __contains__(self, other):
+        return self == other
+
     def __hash__(self):
         return hash(self.name)
 
@@ -162,6 +165,9 @@ class VALUE(SimpleExpr):
     def __eq__(self, other):
         return type(self) == type(other) and self.val == other.val
 
+    def __contains__(self, other):
+        return self == other
+
     def __hash__(self):
         return hash(self.val)
 
@@ -185,6 +191,9 @@ class ADDR(SimpleExpr):
 
     def __eq__(self, other):
         return type(self) == type(other) and self.addr == other.addr
+
+    def __contains__(self, other):
+        return self == other
 
     def __hash__(self):
         return hash(self.addr)
@@ -215,6 +224,9 @@ class MEM(SimpleExpr):
         if type(self) == type(other):
             return self.expr < other.expr
         return type(self).__name__ < type(other).__name__
+
+    def __contains__(self, other):
+        return other in self.expr
 
     def __hash__(self):
         return hash(self.type) ^ hash(self.expr)
@@ -315,6 +327,12 @@ class EXPR:
         if type(self) == type(other):
             return str(self) < str(other)
         return type(self).__name__ < type(other).__name__
+
+    def __contains__(self, other):
+        for a in self.args:
+            if other in a:
+                return True
+        return False
 
     def __hash__(self):
         return hash(self.op) ^ hash(tuple(self.args))
