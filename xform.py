@@ -97,7 +97,7 @@ def sub_const_to_add(bblock):
 
 def expr_subst(expr, subst_dict):
 
-    if isinstance(expr, VALUE):
+    if isinstance(expr, (VALUE, ADDR)):
         return None
 
     if isinstance(expr, REG):
