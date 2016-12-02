@@ -21,7 +21,9 @@ Virtual registers:
 Start with "$" (chosen because some C compilers, like GCC, allow $ to
 be part of identifier), followed by a normal identifer. Examples:
 
+```c
 $a0, $a1, $r, $eax, $long_virtual_reg
+```
 
 Virtual registers are effectively "variables" of PseudoC program, and
 may be sometimes called as such in the documentation/code. But generally,
@@ -57,36 +59,46 @@ C syntax is used for operators, including "two address" form. Otherwise,
 syntax is normally "three address form". +, -, *, /, %, <<, >> operators
 are supported. Note that ++ and -- aren't supported. Examples:
 
+```c
 $a0 = $a1 + $a2
 $eax += $ebx
+```
 
 Operations like *, /, %, >> may have different forms for signed and
 unsigned case. As mentioned above, PseudoC currently defaults to
 unsigned operations. Where signed operations is performed, arguments
 should be cast to signed type. E.g.:
 
+```c
 $a0 = (i32)$a1 * (i32)$a2
 $eax = (i32)$eax >> 2
+```
 
 
 Jumps:
 
 Unconditional jumps are represented by:
 
+```c
 goto label
+```
 
 Where "label" is symbol.
 
 Conditional jumps:
 
+```c
 if (condition) goto label
+```
 
 Condition can be "$Z == 0" (Z flag is zero), "$S == 1 && $V == 0"
 (combination of flags) "$a0 == $a1" (direct register comparison,
 typical for RISC). Note that comparisons is another case when signed
 casts may be required:
 
+```c
 if ((i32)$a1 > (i32)$a2) goto less
+```
 
 
 Special functions:
@@ -97,17 +109,21 @@ function. PseudoC defines inventory of generic special functions,
 useful across different CPUs, and any particular CPU may define its
 specific. Example of generic special functions:
 
+```c
 // Rotate left
 $a0 = rol($a0)
 // Extract bitfield, with keyword-like arguments
 $a0 = bitfield($a0, /*lsb*/0, /*sz*/5)
+```
 
 CPU specific special functions:
 
+```c
 // Maybe, disable interrupts
 di()
 // Maybe, read status register of coprocessor 2
 $a0 = csr(2)
+```
 
 Note that this syntax is NOT used to represent calls to functions/
 procedures defined in the PsuedoC code.
@@ -115,11 +131,13 @@ procedures defined in the PsuedoC code.
 
 Accessing memory
 
-The syntax is: *(type*)expr. Examples:
+The syntax is: `*(type*)expr`. Examples:
 
+```c
 $a0 = *(u32*)$a0
 $a0 = *(u8*)($a1 + $a2)
 $eax = *(u32*)($ebx + $ecx * 8 + 3)
+```
 
 
 Calling functions/procedures
@@ -128,8 +146,10 @@ The syntax is similar to unconditional jumps:
 
 call label or call expr, e.g.
 
+```c
 call printf
 call $eax
+```
 
 
 Macro-like functionality
@@ -143,27 +163,35 @@ Conditional instructions
 Some pseudo-RISC CPUs support conditional instruction exection. PseudoC
 allows syntax like:
 
+```c
 if (cond) operation
+```
 
 But it will be converted to:
 
+```c
 if (!cond) goto _skip
 operation
 _skip:
+```
 
 
 Multiply-accumulate
 
 Could be represented with:
 
+```c
 $bigreg += $small1 * $small2
+```
 
 
 Special functions described above in general allow for concise
 representation of cumbersome constructs, e.g.:
 
+```c
 // lt() hides flag combination for signed less
 if (lt()) goto label
+```
 
 
 
@@ -180,6 +208,7 @@ on the line number of the instruction.
 
 Example of PseudoC program:
 
+```c
 // if-else
 10  if (!$a1) goto l30
 20  $a2 = 1
@@ -188,3 +217,4 @@ Example of PseudoC program:
 20  $a2 = 2
 40 l40:
 40  $a3 = 0
+```
