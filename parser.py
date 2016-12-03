@@ -80,13 +80,13 @@ class Lexer:
 
     def word(self):
         w = ""
-        while self.l and self.l[0] in (string.ascii_letters + string.digits + "_."):
+        while self.l and self.l[0] in (string.ascii_letters + string.digits + "_.$"):
             w += self.l[0]
             self.l = self.l[1:]
         return w
 
     def isident(self):
-        return self.l[0] in string.ascii_letters + "_"
+        return self.l[0] in string.ascii_letters + "_."
 
     def isdigit(self):
         return self.l[0] in string.digits
