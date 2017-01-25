@@ -23,6 +23,8 @@ def dot(graph, out=sys.stdout, directed=None):
         label = "%s\\n%s" % (typ, addr)
         if "dfsno" in info:
             label += "(#%s)" % info["dfsno"]
+        if "idom" in info:
+            label += "\nidom: %s" % info["idom"]
         out.write('"%s" [label="%s"]\n' % (addr, label))
 
     for (fr, to), data in sorted(graph.iter_edges()):
