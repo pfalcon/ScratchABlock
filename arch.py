@@ -27,6 +27,7 @@ def call_defs(addr):
 
 
 def ret_uses():
-    # a0 contains return address, and sp should be preserved across
-    # call, so depend on it also.
-    return {REG("a0"), REG("sp")}
+    # a0 contains return address
+    # sp should be preserved across call, but we'll check that using sp0 pseudo-reg.
+    #return {REG("a0"), REG("sp")}
+    return {REG("a0")}
