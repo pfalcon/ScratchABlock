@@ -244,6 +244,12 @@ def expr_propagation(cfg):
     propagate(cfg, bblock_expr_propagation)
 
 
+def insert_sp0(cfg):
+    entry_addr = cfg.entry()
+    first_bblock = cfg[entry_addr]["val"]
+    first_bblock.items.insert(0, Inst(REG("sp"), "=", [REG("sp0")], addr=entry_addr + ".sp0"))
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
