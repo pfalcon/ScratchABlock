@@ -42,21 +42,6 @@ def match_seq(cfg):
                 return True
 
 
-class If(BBlock):
-    def __init__(self, header, t_block, false_cond):
-        super().__init__(header.addr)
-        self.cond = false_cond
-        self.items = [header, t_block]
-
-    def __repr__(self):
-        return "%s(%r, %r)" % (self.__class__.__name__, self.items[0], self.items[1])
-
-    def dump(self, stream, indent=0, printer=str):
-        self.write(stream, indent, "if %s {" % self.cond.neg())
-        self.items[1].dump(stream, indent + 1, printer)
-        self.write(stream, indent, "}")
-
-
 def match_if(cfg):
     for v, _ in cfg.iter_nodes():
         if cfg.degree_out(v) == 2:
@@ -68,7 +53,7 @@ def match_if(cfg):
                     v = split_bblock(cfg, v)
                     if_header = cfg.node(v)["val"]
                     t_block = cfg.node(b)["val"]
-                    newb = If(if_header, t_block, cfg.edge(v, a).get("cond"))
+                    newb = IfElse(if_header, t_block, None, cfg.edge(v, a).get("cond").neg())
                     cfg.add_node(v, val=newb)
                     cfg.remove_node(b)
                     cfg.set_edge(v, a, cond=None)
@@ -76,19 +61,26 @@ def match_if(cfg):
 
 
 class IfElse(BBlock):
-    def __init__(self, header, t_block, f_block, false_cond):
+    def __init__(self, header, t_block, f_block, true_cond):
         super().__init__(header.addr)
-        self.cond = false_cond
-        self.l = [header, t_block, f_block]
+        self.header = header
+        self.branches = [(true_cond, t_block), (None, f_block)]
 
     def __repr__(self):
-        return "%s(%r, %r)" % (self.__class__.__name__, self.l[0], self.l[1])
+        return "%s(%r)" % (self.__class__.__name__, self.branches)
 
     def dump(self, stream, indent=0, printer=str):
-        self.write(stream, indent, "if %s {" % self.cond.neg())
-        self.l[1].dump(stream, indent + 1, printer)
-        self.write(stream, indent, "} else {")
-        self.l[2].dump(stream, indent + 1, printer)
+        self.write(stream, indent, "if %s {" % self.branches[0][0])
+        self.branches[0][1].dump(stream, indent + 1, printer)
+
+        for cond, block in self.branches[1:-1]:
+            self.write(stream, indent, "} else if %s {" % cond)
+            block.dump(stream, indent + 1, printer)
+
+        assert self.branches[-1][0] is None
+        if self.branches[-1][1] is not None:
+            self.write(stream, indent, "} else {")
+            self.branches[-1][1].dump(stream, indent + 1, printer)
         self.write(stream, indent, "}")
 
 
@@ -121,7 +113,7 @@ def match_ifelse(cfg):
                     if_header = cfg.node(v)["val"]
                     t_block = cfg.node(t_v)["val"]
                     f_block = cfg.node(f_v)["val"]
-                    newb = IfElse(if_header, t_block, f_block, cond)
+                    newb = IfElse(if_header, t_block, f_block, cond.neg())
                     cfg.add_node(v, val=newb)
                     cfg.remove_node(t_v)
                     cfg.remove_node(f_v)
