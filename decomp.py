@@ -121,6 +121,16 @@ def match_ifelse(cfg):
                     return True
 
 
+def match_if_else_ladder(cfg):
+    for v, node_props in cfg.iter_nodes():
+        block = node_props["val"]
+        if isinstance(block, IfElse):
+            else_block = block.branches[-1][1]
+            if isinstance(else_block, IfElse):
+                block.branches = block.branches[:-1] + else_block.branches
+                return True
+
+
 class Loop(BBlock):
     def __init__(self, b):
         super().__init__(b.addr)
