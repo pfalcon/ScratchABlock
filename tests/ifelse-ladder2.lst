@@ -1,0 +1,16 @@
+#xform_bblock: remove_trailing_jumps
+#xform: match_ifelse
+#xform: match_ifelse
+#xform: match_if_else_ladder
+05  $a4 = 100
+10  if ($a1 != 1) goto 30
+20  $a2 = 1
+21  goto 40
+30 30:
+31  if ($a1 != 2) goto 35
+32  $a2 = 2
+33  goto 40
+35 35:
+35  $a2 = 3
+40 40:
+40  $a3 = 0
