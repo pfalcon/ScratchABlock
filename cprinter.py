@@ -35,6 +35,8 @@ def dump_c(cfg):
             label = cfg.parser.label_from_addr(bblock.addr)
             if label[0].isdigit():
                 label = "fun_" + label
+            if ("estimated_args" in info):
+                print("// Estimated arguments: %s" % sorted(list(info["estimated_args"])))
             print("void %s()\n{" % label)
             func_start = False
         if addr in labels:
