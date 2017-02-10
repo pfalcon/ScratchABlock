@@ -1,4 +1,5 @@
 import core
+from core import is_expr
 from utils import set_union, set_intersection
 from xform import foreach_bblock
 
@@ -204,3 +205,34 @@ class LiveVarAnalysis(GenKillAnalysis):
 
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
+
+
+def make_du_chains(cfg):
+
+    def trace(bblock, mapping):
+        for inst in bblock.items:
+            args = inst.args
+            if len(args) == 1 and is_expr(args[0]):
+                args = args[0].args
+            for a in args:
+                if a in mapping:
+                    mapping[a].comments["uses"].append(inst.addr)
+
+            if inst.dest:
+                mapping[inst.dest] = inst
+                inst.comments["uses"] = []
+
+    # sorted_nodes are for unit testing
+    # Generally, should either start from single entry or initialize
+    # last_def_insts with reachdef_in.
+    for addr, node_props in cfg.iter_sorted_nodes():
+        bblock = node_props["val"]
+        last_def_insts = {}
+        trace(bblock, last_def_insts)
+
+        for addr, node_props in cfg.iter_sorted_nodes():
+            bblock = node_props["val"]
+            for var, inst in last_def_insts.items():
+                if (var, inst.addr) in node_props["reachdef_in"]:
+                    mapping = last_def_insts.copy()
+                    trace(bblock, mapping)
