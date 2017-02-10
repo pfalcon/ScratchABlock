@@ -1,0 +1,9 @@
+#xform: repr_output
+#xform: analyze_reach_defs
+#xform: make_du_chains
+10     $a = 1
+20     $b = $a
+25     if ($r0 == 5) goto 40
+30     $c = $a + 1
+40 40:
+40     $d = $c + $a
