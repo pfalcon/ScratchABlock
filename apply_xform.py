@@ -5,6 +5,7 @@ import argparse
 import core
 from parser import *
 import dot
+from dataflow import *
 from xform import *
 from decomp import *
 from asmprinter import AsmPrinter
