@@ -1,5 +1,5 @@
 import core
-from core import is_expr
+from core import is_expr, is_mem
 from utils import set_union, set_intersection
 from xform import foreach_bblock
 
@@ -215,10 +215,16 @@ def make_du_chains(cfg):
             if len(args) == 1 and is_expr(args[0]):
                 args = args[0].args
             for a in args:
-                if a in mapping:
-                    mapping[a].comments["uses"].append(inst.addr)
+                for r in a.regs():
+                    if r in mapping:
+                        mapping[r].comments["uses"].append(inst.addr)
 
             if inst.dest:
+                if is_mem(inst.dest):
+                    for r in inst.dest.regs():
+                        if r in mapping:
+                            mapping[r].comments["uses"].append(inst.addr)
+
                 mapping[inst.dest] = inst
                 inst.comments["uses"] = []
 
