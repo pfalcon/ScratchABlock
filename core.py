@@ -197,6 +197,11 @@ class ADDR(SimpleExpr):
     def __eq__(self, other):
         return type(self) == type(other) and self.addr == other.addr
 
+    def __lt__(self, other):
+        if type(self) != type(other):
+            return type(self).__name__ < type(other).__name__
+        return self.addr < other.addr
+
     def __contains__(self, other):
         return self == other
 
