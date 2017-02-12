@@ -31,7 +31,10 @@ class AsmPrinter(CFGPrinter):
     def print_with_addr(self, inst):
         if inst.op == "DEAD" and self.no_dead:
             return
-        return self.format_addr(inst.addr, self.inst_indent) + " " + str(inst)
+        addr = inst.addr
+        if addr is None:
+            addr = "?"
+        return self.format_addr(addr, self.inst_indent) + " " + str(inst)
 
     def resolve_label(self, addr):
         return self.cfg.parser.label_from_addr(addr)
