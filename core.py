@@ -89,6 +89,9 @@ def is_mem(e):
 def is_expr(e):
     return isinstance(e, EXPR)
 
+def is_cond(e):
+    return isinstance(e, COND)
+
 
 class SimpleExpr:
     # Something which is a simple expression
