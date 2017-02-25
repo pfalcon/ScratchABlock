@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import argparse
+import os.path
+import glob
 
 import core
 from parser import *
@@ -14,8 +16,8 @@ import cprinter
 
 def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
-    argp.add_argument("file", help="Input file in PseudoC format")
-    argp.add_argument("-o", "--output", help="Output file (default stdout)")
+    argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
+    argp.add_argument("-o", "--output", help="Output file/dir (default stdout for single file, *.out for directory)")
     argp.add_argument("--script", help="Apply script from file")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks", help="Output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="Don't output DCE-eliminated instructions")
@@ -98,4 +100,18 @@ def handle_file(args):
 
 if __name__ == "__main__":
     args = parse_args()
-    handle_file(args)
+    if os.path.isdir(args.file):
+        out = args.output
+        if out and not os.path.isdir(out):
+            os.makedirs(out)
+        for full_name in glob.glob(args.file + "/*"):
+            if os.path.isfile(full_name):
+                args.file = full_name
+                if out:
+                    base_name = full_name.rsplit("/", 1)[-1]
+                    args.output = out + "/" + base_name
+                else:
+                    args.output = full_name + ".out"
+                handle_file(args)
+    else:
+        handle_file(args)
