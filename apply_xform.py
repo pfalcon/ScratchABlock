@@ -17,13 +17,14 @@ import cprinter
 def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
     argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
-    argp.add_argument("-o", "--output", help="Output file/dir (default stdout for single file, *.out for directory)")
-    argp.add_argument("--script", help="Apply script from file")
-    argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks", help="Output format (default: %(default)s)")
-    argp.add_argument("--no-dead", action="store_true", help="Don't output DCE-eliminated instructions")
-    argp.add_argument("--no-graph-header", action="store_true", help="Don't output graph properties")
-    argp.add_argument("--repr", action="store_true", help="Dump __repr__ format of instructions")
-    argp.add_argument("--debug", action="store_true", help="Produce debug files")
+    argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
+    argp.add_argument("--script", help="apply script from file")
+    argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
+        help="output format (default: %(default)s)")
+    argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
+    argp.add_argument("--no-graph-header", action="store_true", help="don't output graph properties")
+    argp.add_argument("--repr", action="store_true", help="dump __repr__ format of instructions and other objects")
+    argp.add_argument("--debug", action="store_true", help="produce debug files")
     args = argp.parse_args()
 
     if args.repr:
