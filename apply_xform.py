@@ -19,6 +19,7 @@ def parse_args():
     argp.add_argument("--script", help="Apply script from file")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks", help="Output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="Don't output DCE-eliminated instructions")
+    argp.add_argument("--no-graph-header", action="store_true", help="Don't output graph properties")
     argp.add_argument("--repr", action="store_true", help="Dump __repr__ format of instructions")
     argp.add_argument("--debug", action="store_true", help="Produce debug files")
     args = argp.parse_args()
@@ -43,7 +44,7 @@ def handle_file(args):
 
     if args.debug:
         with open(args.file + ".0.bb", "w") as f:
-            dump_bblocks(cfg, f)
+            dump_bblocks(cfg, f, no_graph_header=args.no_graph_header)
         with open(args.file + ".0.dot", "w") as f:
             dot.dot(cfg, f)
 
@@ -62,7 +63,7 @@ def handle_file(args):
 
     if args.debug:
         with open(args.file + ".out.bb", "w") as f:
-            dump_bblocks(cfg, f)
+            dump_bblocks(cfg, f, no_graph_header=args.no_graph_header)
         with open(args.file + ".out.dot", "w") as f:
             dot.dot(cfg, f)
 
@@ -73,6 +74,8 @@ def handle_file(args):
 
     if args.format == "bblocks":
         p = CFGPrinter(cfg, out)
+        if args.no_graph_header:
+            p.print_graph_header = lambda: None
         p.inst_printer = repr if args.repr else str
         p.no_dead = args.no_dead
         p.print()

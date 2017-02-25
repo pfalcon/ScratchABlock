@@ -673,7 +673,9 @@ class CFGPrinter:
             cnt += 1
 
 
-def dump_bblocks(cfg, stream=sys.stdout, printer=str):
+def dump_bblocks(cfg, stream=sys.stdout, printer=str, no_graph_header=False):
     p = CFGPrinter(cfg, stream)
     p.inst_printer = printer
+    if no_graph_header:
+        p.print_graph_header = lambda: None
     p.print()
