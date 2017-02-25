@@ -3,7 +3,7 @@ import arch
 
 
 def is_expr_2args(e):
-    return is_expr(e) and len(e.args)
+    return is_expr(e) and len(e.args) == 2
 
 
 def mod_add(a, b, bits=arch.BITNESS):
