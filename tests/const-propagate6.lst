@@ -1,0 +1,7 @@
+# Propagation inside COND's
+#xform_bblock: bblock_const_propagation
+05  $a0 = 100
+10 if ($a1 == $a0) goto 20
+11  $a2 = 1
+20 20:
+20  $a3 = 3
