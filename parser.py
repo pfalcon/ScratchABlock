@@ -431,11 +431,7 @@ class Parser:
             if lex.eol():
                 return Inst(dest, "=", [src])
             else:
-                for op in ("+", "-", "*", "/", "&", "|", "^", "<<", ">>"):
-                    if lex.match(op):
-                        src2 = self.parse_expr(lex)
-                        return make_assign_inst(dest, op, [src, src2])
-                assert 0
+                assert 0, (lex.l, self.curline)
         else:
             assert False, (repr(lex.l), self.curline)
 
