@@ -493,6 +493,11 @@ class Parser:
                         #last_block.end.append(addr)
                         last_block = None
 
+                    if l[0] == "\x01":
+                        inst = Inst(None, "LIT", [l[1:]], addr=addr)
+                        block.add(inst)
+                        continue
+
                     inst = self.parse_inst(l)
                     if not inst:
                         continue
