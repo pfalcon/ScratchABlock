@@ -1,0 +1,4 @@
+# Propagate symbols, not just constants
+#xform_bblock: bblock_const_propagation
+10     $a = symbol
+20     $b = $a
