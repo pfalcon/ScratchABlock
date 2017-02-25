@@ -344,6 +344,11 @@ class Parser:
 
     def parse_inst(self, l):
         lex = self.lex = Lexer(l)
+        if lex.peek() == ".":
+            # Asm directive, ignore
+            return None
+        if lex.match("db") or lex.match("unk"):
+            return Inst(None, "SFUNC", [EXPR("SFUNC", [SFUNC("litbyte"), lex.l])])
         if lex.match("goto"):
             return Inst(None, "goto", [self.parse_local_addr_expr()])
         if lex.match("call"):
@@ -493,6 +498,8 @@ class Parser:
                         last_block = None
 
                     inst = self.parse_inst(l)
+                    if not inst:
+                        continue
                     inst.addr = addr
 
                     if inst.op in ("goto", "if"):
