@@ -110,6 +110,18 @@ def expr_subst(expr, subst_dict):
             return MEM(expr.type, new)
         return
 
+    if isinstance(expr, COND):
+        # This performs substituations in-place, because the same
+        # COND instance is referenced in inst (to be later removed
+        # by remove_trailing_jumps) and in out edges in CFG.
+        new1 = expr_subst(expr.arg1, subst_dict)
+        if new1:
+            expr.arg1 = new1
+        new2 = expr_subst(expr.arg2, subst_dict)
+        if new2:
+            expr.arg2 = new2
+        return
+
     if isinstance(expr, EXPR):
         new_args = []
         was_new = False
