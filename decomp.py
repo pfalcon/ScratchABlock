@@ -102,8 +102,8 @@ def match_ifelse(cfg):
                 f_v_s = cfg.succ(f_v)
                 t_v_s = cfg.succ(t_v)
 
-                if len(t_v_s) < 1: continue
-                if len(f_v_s) < 1: continue
+                if len(t_v_s) != 1: continue
+                if len(f_v_s) != 1: continue
                 common = list(set(t_v_s) & set(f_v_s))
                 if common:
                     f_v_s = common
