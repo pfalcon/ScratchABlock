@@ -1,3 +1,5 @@
+import copy
+
 from graph import Graph
 from core import *
 
@@ -14,6 +16,22 @@ def split_bblock(cfg, n):
     cfg.move_succ(n, addr)
     cfg.add_edge(n, addr)
     return addr
+
+
+def split_node(cfg, n):
+    """Split node "horizontally", by duplicating its content and splitting
+    incoming and outgoing edges.
+    """
+    assert cfg.degree_in(n) == 2
+    assert cfg.degree_out(n) == 1
+    preds = cfg.pred(n)
+    node_props = cfg[n]
+    node2_props = copy.deepcopy(node_props)
+    n2 = n + ".split1"
+    cfg.add_node(n2, **node2_props)
+    cfg.remove_edge(preds[1], n)
+    cfg.add_edge(preds[1], n2)
+    cfg.add_edge(n2, cfg.succ(n)[0])
 
 
 class Seq(BBlock):
