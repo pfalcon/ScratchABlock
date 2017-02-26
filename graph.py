@@ -31,6 +31,8 @@ class Graph:
         self._succ = defaultdict(list)
         self._pred = defaultdict(list)
         self.first_node = None
+        # Graph-level properties
+        self.props = {}
 
     def add_node(self, node, **attrs):
         """Add node to a graph. node is an ID of a node (usually lightweight
