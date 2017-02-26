@@ -278,3 +278,15 @@ def match_control_and(cfg):
                     cfg.remove_node(v2)
                     cfg.add_edge(v, succ2[1])
                     return True
+
+
+def match_abnormal_sel(cfg):
+    """Should be run only if match_if, match_ifelse don't match anything
+    in acyclic graph. Then any join node belong to abnormal selection
+    pattern. We try to find the top-most and split it, after which normal
+    structured matches should be tried again.
+    """
+    for v, _ in cfg.iter_rev_postorder():
+        if cfg.degree_in(v) == 2 and cfg.degree_out(v) == 1:
+            split_node(cfg, v)
+            return True
