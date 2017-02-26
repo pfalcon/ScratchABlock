@@ -46,18 +46,30 @@ def match_if(cfg):
     for v, _ in cfg.iter_nodes():
         if cfg.degree_out(v) == 2:
             a, b = cfg.sorted_succ(v)
+
             if cfg.degree_in(a) >= 2 and cfg.degree_in(b) == 1 and cfg.degree_out(b) == 1:
-                c = cfg.succ(b)[0]
-                if c == a:
-                    print("if:", v, b, c)
-                    v = split_bblock(cfg, v)
-                    if_header = cfg.node(v)["val"]
-                    t_block = cfg.node(b)["val"]
-                    newb = IfElse(if_header, t_block, None, cfg.edge(v, a).get("cond").neg())
-                    cfg.add_node(v, val=newb)
-                    cfg.remove_node(b)
-                    cfg.set_edge(v, a, cond=None)
-                    return True
+                truth = False
+                cond = cfg.edge(v, a).get("cond")
+            elif cfg.degree_in(b) >= 2 and cfg.degree_in(a) == 1 and cfg.degree_out(a) == 1:
+                truth = True
+                cond = cfg.edge(v, a).get("cond")
+                a, b = b, a
+            else:
+                continue
+
+            c = cfg.succ(b)[0]
+            if c == a:
+                print("if:", v, b, c)
+                v = split_bblock(cfg, v)
+                if_header = cfg.node(v)["val"]
+                t_block = cfg.node(b)["val"]
+                if truth == False:
+                    cond = cond.neg()
+                newb = IfElse(if_header, t_block, None, cond)
+                cfg.add_node(v, val=newb)
+                cfg.remove_node(b)
+                cfg.set_edge(v, a, cond=None)
+                return True
 
 
 class IfElse(BBlock):
