@@ -197,6 +197,8 @@ class Parser:
                 c = self.parse_cond(lex)
                 rest = lex.rest()
                 if not lex.match("goto"):
+                    # Uncomment to treat as literal line for roundtrip testing
+                    #return [(addr, "\x01" + l)]
                     out = [
                         (addr, "if %s goto %s.1.cond" % (str(c.neg()), addr)),
                         (addr + ".0", rest),
