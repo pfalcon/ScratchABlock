@@ -149,7 +149,7 @@ def kill_subst_uses(subst, kill_var):
         # Here we assume that expression can be at most reference to a var,
         # which is true for at most copy propagation, but to handle expr
         # propagation, need to do better
-        return var != expr
+        return var not in expr
     subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
     # We of course should kill state for var itself
     subst.pop(kill_var, None)
