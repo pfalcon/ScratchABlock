@@ -215,6 +215,27 @@ class ADDR(SimpleExpr):
         return []
 
 
+class CVAR(SimpleExpr):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return self.comment + "CVAR(%s)" % self.name
+
+    def __str__(self):
+        return self.comment + self.name
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def regs(self):
+        return []
+
+
 class MEM(SimpleExpr):
     def __init__(self, type, expr):
         self.type = type
