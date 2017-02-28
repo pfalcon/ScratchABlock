@@ -262,6 +262,21 @@ def insert_sp0(cfg):
     first_bblock.items.insert(0, Inst(REG("sp"), "=", [REG("sp0")], addr=entry_addr + ".sp0"))
 
 
+def rewrite_stack_vars(bblock):
+    "Rewrite memory references relative to sp0 to local variables."
+    def mem2loc(m):
+        if is_mem(m) and set(m.regs()) == {REG("sp0")}:
+            name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
+            return CVAR(name)
+
+    for i, inst in enumerate(bblock.items):
+        if inst.dest:
+            inst.dest = mem2loc(inst.dest) or inst.dest
+
+        for arg_no, arg in enumerate(inst.args):
+            inst.args[arg_no] = expr_xform(arg, mem2loc)
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
