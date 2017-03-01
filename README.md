@@ -50,6 +50,9 @@ criticised in many aspects too.
 Down to Earth part
 ------------------
 
+ScratchABlock is released under the terms of GNU General Public License v3
+(GPLv3).
+
 ScratchABlock is written in Python3 language, and tested with version 3.3
 and up, though may work with 3.2 or lower too (won't work with legacy
 Python2 versions). For unit testing, "nose" package is required:
