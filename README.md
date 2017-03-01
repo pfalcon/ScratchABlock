@@ -59,6 +59,31 @@ Python2 versions). For unit testing, "nose" package is required:
 https://pypi.python.org/pypi/nose (expected executable name is
 `nosetests3`).
 
-At this time, you can run regression testsuite using `./run_tests` command
-and study how framework works with various simple (unit-test style) cases
-present in the `tests/` subdirectory.
+Source code and interfacing scripts are in the root of the repository.
+The most important scripts are:
+
+* apply_xform.py - A central driver, allows to apply a sequence of
+transformations (or in general, high-level analysis/transformation
+algorithm) to a single file or a directory of files.
+
+* run_tests - Regregression testsuite runner. The Mmajority of
+testsuite is high-level, consisting of running apply_xform.py with
+different passes on file(s) and checking the expected results.
+
+Other subdirectories of the repository:
+
+* tests_unit - Classical unit tests for Python modules, written in
+Python.
+
+* tests - The main testsuite. While integrational in the nature, it
+usually tests one pass on one simple files, so follows unit testing
+philosophy. Tests are represented as PseudoC input files, while
+expected results - as PseudoC with basic blocks annotation and (where
+applicable) CFG in .dot format. Looking at these testcases, trying
+to modify them and see the outcome is the best way to learn how
+ScratchABlock works.
+
+* docs - Growing collection of documentation. Currently there's a
+specification of PseudoC assembler language serving as intermediate
+representation (IR) for ScratchABlock and a survey why another
+existing IR was not selected.
