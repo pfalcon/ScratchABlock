@@ -1,0 +1,8 @@
+#xform: cfg_single_exit
+10 if ($a1 != 0) goto 20
+11  return
+20 20:
+21 if ($a1 != 1) goto 30
+22  return
+30 30:
+31  return
