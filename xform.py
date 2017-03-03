@@ -86,6 +86,22 @@ def loop_single_entry(cfg):
             return True
 
 
+# Make sure that CFG has a single exit, as required for some algorithms.
+# Note that this doesn't do anything to former individual exit BBlocks,
+# so they likely still end with "return" instructions.
+def cfg_single_exit(cfg):
+    exits = cfg.exits()
+    if len(exits) == 1:
+        return
+
+    newb = BBlock("single_exit")
+    newb.cfg = cfg
+    newb.add(Inst(None, "return", [], "single_exit"))
+    cfg.add_node(newb.addr, val=newb)
+    for e in exits:
+        cfg.add_edge(e, newb.addr)
+
+
 def sub_const_to_add(bblock):
     "Replace all subtractions of constant with adds."
 
