@@ -1,20 +1,11 @@
 import dot
 
 
-cnt = 1
-
-def debug_out(g):
-    global cnt
-    with open("_graph.%02d.dot" % cnt, "w") as f:
-        dot.dot(g, f)
-    cnt += 1
-
-
 def t1_transform(g, node):
     if g.has_edge(node, node):
         print("t1: yes", node)
         g.remove_edge(node, node)
-        debug_out(g)
+        dot.debug_dot(g)
         return True
     return False
 
@@ -27,7 +18,7 @@ def t2_transform(g, node):
         g.move_succ(node, pred)
         g[pred].setdefault("folded", []).append(node)
         g.remove_node(node)
-        debug_out(g)
+        dot.debug_dot(g)
         return True
     print("t2: no", node)
     return False

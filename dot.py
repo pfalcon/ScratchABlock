@@ -55,3 +55,13 @@ def parse(f, graph):
         fields = [x.strip() for x in fields]
         graph.add_edge(unquote(fields[0]), unquote(fields[1]))
     return graph
+
+
+
+cnt = 1
+
+def debug_dot(g):
+    global cnt
+    with open("_graph.%02d.dot" % cnt, "w") as f:
+        dot(g, f)
+    cnt += 1
