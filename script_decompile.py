@@ -65,3 +65,9 @@ def apply(cfg):
         cfg.number_postorder()
         compute_idom(cfg)
         structure(cfg)
+
+    #
+    # Post-processing
+    #
+
+    foreach_bblock_and_subblock(cfg, rewrite_stack_vars)
