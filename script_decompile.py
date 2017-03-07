@@ -54,3 +54,14 @@ def apply(cfg):
     cfg.number_postorder()
     compute_idom(cfg)
     structure(cfg)
+
+    # We can't know which node to split before we start control flow processing,
+    # but splitting node changes data flow, so need to recompute it
+    if match_abnormal_sel(cfg):
+
+        propagate(cfg)
+        dce(cfg)
+
+        cfg.number_postorder()
+        compute_idom(cfg)
+        structure(cfg)
