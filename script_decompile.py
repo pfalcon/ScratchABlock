@@ -34,6 +34,9 @@ def apply(cfg):
     # Data flow
     #
 
+    # Various algos below require single-exit CFG
+    cfg_single_exit(cfg)
+
     foreach_bblock(cfg, sub_const_to_add)
     insert_sp0(cfg)
 
