@@ -58,6 +58,8 @@ def apply(cfg):
     compute_idom(cfg)
     structure(cfg)
 
+    # match_abnormal_sel() requires updated DFS numbers
+    cfg.number_postorder()
     # We can't know which node to split before we start control flow processing,
     # but splitting node changes data flow, so need to recompute it
     if match_abnormal_sel(cfg):
