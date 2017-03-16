@@ -197,7 +197,7 @@ class LiveVarAnalysis(GenKillAnalysis):
             for inst in bblock.items:
                 if inst.op == "call" and self.skip_calls:
                     continue
-                for r in inst.uses():
+                for r in inst.uses(self.g):
                     if r not in kill:
                         gen.add(r)
                 if inst.dest:

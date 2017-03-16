@@ -414,7 +414,7 @@ class Inst:
         return False
 
 
-    def uses(self):
+    def uses(self, cfg=None):
         # Avoid circular import. TODO: fix properly
         import arch
         """Return set of all registers used by this instruction. Function
@@ -422,7 +422,7 @@ class Inst:
         if self.op == "call":
             return arch.call_uses(self.args[0])
         if self.op == "return":
-            return arch.ret_uses()
+            return arch.ret_uses(cfg)
         uses = set()
         for a in self.args:
             for r in a.regs():
