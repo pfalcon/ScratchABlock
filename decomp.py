@@ -39,6 +39,9 @@ class Seq(BBlock):
         super().__init__(b1.addr)
         self.items = [b1, b2]
 
+    def subblocks(self):
+        return self.items
+
     def __repr__(self):
         return "%s(%r, %r)" % (self.__class__.__name__, self.items[0], self.items[1])
 
@@ -95,6 +98,9 @@ class IfElse(BBlock):
         super().__init__(header.addr)
         self.header = header
         self.branches = [(true_cond, t_block), (None, f_block)]
+
+    def subblocks(self):
+        return [x[1] for x in self.branches if x[1]]
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.branches)

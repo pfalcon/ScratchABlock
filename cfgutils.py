@@ -1,3 +1,6 @@
+from core import BBlock
+
+
 def swap_if_branches(cfg, node):
     "Assuming `node` is 'if' node, swap its branches and invert condition."
     succ = cfg.sorted_succ(node)
@@ -20,6 +23,19 @@ def foreach_bblock(cfg, func, join_func=lambda a, b: a or b):
         else:
             res = join_func(res, r)
     return res
+
+
+def foreach_bblock_and_subblock(cfg, func):
+    def apply(bblock, func):
+        if type(bblock) is BBlock:
+            func(bblock)
+        else:
+            for sub in bblock.subblocks():
+                apply(sub, func)
+
+    for addr, info in cfg.iter_sorted_nodes():
+        bblock = info["val"]
+        apply(bblock, func)
 
 
 def foreach_inst(cfg, func):
