@@ -93,6 +93,9 @@ def match_if(cfg):
                 return True
 
 
+IFELSE_COND = 0
+IFELSE_BRANCH = 1
+
 class IfElse(BBlock):
     def __init__(self, header, t_block, f_block, true_cond):
         super().__init__(header.addr)
@@ -101,6 +104,13 @@ class IfElse(BBlock):
 
     def subblocks(self):
         return [x[1] for x in self.branches if x[1]]
+
+    def swap_branches(self):
+        # Swap If/Else branches, negating condition
+        assert len(self.branches) == 2
+        assert self.branches[1][1] is not None
+        [(true_cond, t_block), (dummy, f_block)] = self.branches
+        self.branches = [(true_cond.neg(), f_block), (None, t_block)]
 
     def __repr__(self):
         return "%s(%r)" % (self.__class__.__name__, self.branches)
@@ -155,6 +165,36 @@ def match_ifelse(cfg):
                     cfg.remove_node(f_v)
                     cfg.add_edge(v, f_v_s[0])
                     return True
+
+
+#
+# If we have:
+#
+# if (cond) {
+#   if ...
+# } else {
+#   // not if
+# }
+#
+# It's better to transform it to:
+#
+# if (!cond) {
+#   // not if
+# } else {
+#   if ...
+# }
+#
+# , then to be recognized by match_if_else_ladder
+def match_if_else_inv_ladder(cfg):
+    for v, node_props in cfg.iter_nodes():
+        block = node_props["val"]
+        if isinstance(block, IfElse):
+            assert len(block.branches) == 2, "Must be applied before match_if_else_ladder"
+            if_block = block.branches[0][IFELSE_BRANCH]
+            else_block = block.branches[1][IFELSE_BRANCH]
+            if isinstance(if_block, IfElse) and not isinstance(else_block, IfElse):
+                block.swap_branches()
+                return True
 
 
 def match_if_else_ladder(cfg):
