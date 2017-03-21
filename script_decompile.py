@@ -26,6 +26,7 @@ def structure(cfg):
     apply_iterative(match_ifelse, (cfg,))
     apply_iterative(match_seq, (cfg,))
     apply_iterative(match_ifelse, (cfg,))
+    apply_iterative(match_if_else_inv_ladder, (cfg,))
     apply_iterative(match_if_else_ladder, (cfg,))
 
 
