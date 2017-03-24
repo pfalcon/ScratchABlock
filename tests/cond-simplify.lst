@@ -1,0 +1,7 @@
+#xform_bblock: sub_const_to_add
+#xform_bblock: bblock_expr_propagation
+05  $a1 = $a2 - 5
+10 if (!$a1) goto 20
+11  $a2 = 1
+20 20:
+20  $a3 = 3
