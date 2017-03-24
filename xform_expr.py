@@ -36,6 +36,12 @@ def expr_xform(e, func):
     return func(e) or e
 
 
+def add_vals(a, b):
+    val = a.val + b.val
+    base = max(a.base, b.base)
+    return VALUE(val, base)
+
+
 def expr_neg(expr):
     if is_value(expr):
         return VALUE(-expr.val, expr.base)
@@ -76,3 +82,11 @@ def expr_simplify_add(e):
             return EXPR("+", new_args)
         else:
             return VALUE(val, base)
+
+
+# Should transform inplace
+def simplify_cond(e):
+    if is_expr_2args(e.arg1) and e.arg1.op == "+" and is_value(e.arg1.args[1]) and is_value(e.arg2):
+        arg1 = e.arg1
+        e.arg1 = arg1.args[0]
+        e.arg2 = add_vals(expr_neg(arg1.args[1]), e.arg2)
