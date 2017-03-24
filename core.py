@@ -581,7 +581,7 @@ def repr_state(state):
             unk.append(str(k))
         else:
             res.append("%s=%s" % (k, v))
-    res = " ".join(res)
+    res = ", ".join(res)
     if unk:
         res += " UNK: " + ",".join(unk)
     return "{" + res + "}"
