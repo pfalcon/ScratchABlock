@@ -140,6 +140,7 @@ def expr_subst(expr, subst_dict):
         new2 = expr_subst(expr.arg2, subst_dict)
         if new2:
             expr.arg2 = new2
+        simplify_cond(expr)
         return
 
     if isinstance(expr, EXPR):
