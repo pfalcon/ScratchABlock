@@ -52,7 +52,7 @@ def apply(cfg):
     # Control flow
     #
 
-    foreach_bblock(cfg, remove_trailing_jumps)
+    foreach_bblock(cfg, remove_trailing_jumps, remove_returns=True)
     remove_jump_over_jump(cfg)
 
     cfg.number_postorder()
