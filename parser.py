@@ -463,7 +463,7 @@ class Parser:
                 for addr, l in self.get_expand_line(f):
                     if l is None:
                         break
-                    if self.should_stop(l):
+                    if self.should_stop(addr, l):
                         return
 
                     #print(addr, l)
@@ -559,5 +559,5 @@ class Parser:
             self.parse_bblocks(f)
         return self.cfg
 
-    def should_stop(self, l):
+    def should_stop(self, addr, l):
         return False
