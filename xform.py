@@ -16,7 +16,17 @@ def apply_iterative(func, args):
     print("Ran %s %d times" % (func, cnt))
 
 
-def remove_trailing_jumps(bblock, remove_returns=False):
+def remove_trailing_jumps(cfg):
+    remove_returns = False
+    exits = cfg.exits()
+    if len(exits) == 1:
+        remove_returns = True
+
+    foreach_bblock(cfg, remove_trailing_jumps_bblock, remove_returns=remove_returns)
+    cfg.trailing_jumps = False
+
+
+def remove_trailing_jumps_bblock(bblock, remove_returns=False):
     """Trailing jumps are encoded as out edges of basic block, and
     superfluous for most deeper transformations (but useful for
     surface transformations which should maintain instruction

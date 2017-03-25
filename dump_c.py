@@ -12,7 +12,7 @@ cfg = p.parse()
 #print("Labels:", p.labels)
 
 cfg.parser = p
-foreach_bblock(cfg, remove_trailing_jumps)
+remove_trailing_jumps(cfg)
 cfg.number_postorder()
 Inst.trail = ";"
 
