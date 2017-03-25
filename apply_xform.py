@@ -4,6 +4,8 @@ import argparse
 import os.path
 import glob
 
+import yaml
+
 import core
 from parser import *
 import dot
@@ -14,12 +16,20 @@ from decomp import *
 from asmprinter import AsmPrinter
 import cprinter
 
+# TODO: something above shadows "copy" otherwise
+import copy
+
+
+FUNC_DB = {}
+FUNC_DB_ORG = {}
+
 
 def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
     argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
     argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
     argp.add_argument("--script", help="apply script from file")
+    argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in current/input dir)")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
         help="output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
@@ -101,17 +111,44 @@ def handle_file(args):
     if args.output:
         out.close()
 
+    update_funcdb(cfg)
+
     return cfg
+
+
+def update_funcdb(cfg):
+    "Aggregate data from each CFG processed into a function DB."
+    if "addr" not in cfg.props:
+        return
+    func_props = FUNC_DB.setdefault(cfg.props["addr"], {})
+    func_props["label"] = cfg.props["name"]
+    for prop in ("calls", "func_refs", "mmio_refs"):
+        if prop in cfg.props:
+            func_props[prop] = [x.addr for x in cfg.props[prop]]
 
 
 if __name__ == "__main__":
     args = parse_args()
+
+    if not args.funcdb:
+        if os.path.isdir(args.file):
+            # For an input as directory, use this *input* directory
+            args.funcdb = args.file + "/funcdb.yaml"
+        else:
+            # For a single file, use *current* directory
+            args.funcdb = "funcdb.yaml"
+
+    if os.path.exists(args.funcdb):
+        with open(args.funcdb) as f:
+            FUNC_DB = yaml.load(f)
+            FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
+
     if os.path.isdir(args.file):
         out = args.output
         if out and not os.path.isdir(out):
             os.makedirs(out)
         for full_name in glob.glob(args.file + "/*"):
-            if os.path.isfile(full_name):
+            if full_name.endswith(".lst") and os.path.isfile(full_name):
                 args.file = full_name
                 if out:
                     base_name = full_name.rsplit("/", 1)[-1]
@@ -121,3 +158,10 @@ if __name__ == "__main__":
                 handle_file(args)
     else:
         handle_file(args)
+
+    if FUNC_DB != FUNC_DB_ORG:
+        if os.path.exists(args.funcdb):
+            os.rename(args.funcdb, args.funcdb + ".bak")
+
+        with open(args.funcdb, "w") as f:
+            yaml.dump(FUNC_DB, f)
