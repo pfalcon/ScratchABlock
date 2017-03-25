@@ -10,14 +10,14 @@ def swap_if_branches(cfg, node):
     cfg[node, succ[1]]["cond"] = cond.neg()
 
 
-def foreach_bblock(cfg, func, join_func=lambda a, b: a or b):
+def foreach_bblock(cfg, func, join_func=lambda a, b: a or b, **kwargs):
     """Apply basic-block level transformation to each block in CFG.
     Return cumulative status (OR of each block's status).
     """
     res = Ellipsis
     for addr, info in cfg.iter_sorted_nodes():
         bblock = info["val"]
-        r = func(bblock)
+        r = func(bblock, **kwargs)
         if res is Ellipsis:
             res = r
         else:
