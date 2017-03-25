@@ -1,4 +1,4 @@
-#xform_bblock: remove_trailing_jumps
+#xform_bblock: remove_trailing_jumps_bblock
 #xform: match_dowhile
 10 repeat:
 20 $a2 = 1
