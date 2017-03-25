@@ -308,6 +308,20 @@ def rewrite_stack_vars(bblock):
             inst.args[arg_no] = expr_xform(arg, mem2loc)
 
 
+# Requires expr_propagation
+def collect_calls(cfg):
+    calls = set()
+
+    def collect(inst):
+        if inst.op == "call":
+            arg = inst.args[0]
+            if is_addr(arg):
+                calls.add(arg)
+
+    foreach_inst(cfg, collect)
+    cfg.props["calls"] = calls
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
