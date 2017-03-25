@@ -1,4 +1,4 @@
-#xform_bblock: remove_trailing_jumps
+#xform_bblock: remove_trailing_jumps_bblock
 #xform: remove_jump_over_jump
 # First goto is not removed, even though superfluous - we keep it so
 # entry node keeps its original address.
