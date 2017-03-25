@@ -56,12 +56,16 @@ def handle_file(args):
         mod = __import__(args.script)
         mod.apply(cfg)
     elif hasattr(p, "script"):
-        for (type, xform) in p.script:
-            func = globals()[xform]
-            if type == "xform:":
+        for op_type, op_name in p.script:
+            if op_type == "xform:":
+                func = globals()[op_name]
                 func(cfg)
-            elif type == "xform_bblock:":
+            elif op_type == "xform_bblock:":
+                func = globals()[op_name]
                 foreach_bblock(cfg, func)
+            elif op_type == "script:":
+                mod = __import__(op_name)
+                mod.apply(cfg)
             else:
                 assert 0
 
