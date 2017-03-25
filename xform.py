@@ -322,6 +322,24 @@ def collect_calls(cfg):
     cfg.props["calls"] = calls
 
 
+# While collect_calls collects direct calls, this pass
+# collects function references by address. Requires
+# funcdb to know what address is a function.
+def collect_func_refs(cfg):
+    refs = []
+
+    def collect(inst):
+        if inst.op == "=":
+            arg = inst.args[0]
+            if is_addr(arg):
+                import arch
+                if arg.addr in arch.FUNC_DB:
+                    refs.append(arg)
+
+    foreach_inst(cfg, collect)
+    cfg.props["func_refs"] = refs
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
