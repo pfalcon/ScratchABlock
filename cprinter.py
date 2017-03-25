@@ -37,12 +37,15 @@ def dump_c(cfg):
                 label = "fun_" + label
             if ("estimated_args" in info):
                 print("// Estimated arguments: %s" % sorted(list(info["estimated_args"])))
+            if cfg.trailing_jumps:
+                print("// Trailing jumps not removed, not rendering CFG edges as jumps")
             print("void %s()\n{" % label)
             func_start = False
         if addr in labels:
             print("\nl%s:" % addr)
         bblock.dump(sys.stdout, indent=1, printer=print_inst)
-        for succ in cfg.succ(addr):
+        if not cfg.trailing_jumps:
+          for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
             if not cond and nxt and succ == nxt[0]:
                 continue
