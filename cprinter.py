@@ -35,8 +35,8 @@ def dump_c(cfg):
             label = cfg.parser.label_from_addr(bblock.addr)
             if label[0].isdigit():
                 label = "fun_" + label
-            if ("estimated_args" in info):
-                print("// Estimated arguments: %s" % sorted(list(info["estimated_args"])))
+            if ("estimated_args" in cfg.props):
+                print("// Estimated arguments: %s" % sorted(list(cfg.props["estimated_args"])))
             if cfg.trailing_jumps:
                 print("// Trailing jumps not removed, not rendering CFG edges as jumps")
             print("void %s()\n{" % label)
