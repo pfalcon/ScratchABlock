@@ -85,7 +85,7 @@ def handle_file(args):
         with open(args.file + ".out.dot", "w") as f:
             dot.dot(cfg, f)
 
-    if args.output:
+    if args.output and args.format != "none":
         out = open(args.output, "w")
     else:
         out = sys.stdout
@@ -108,7 +108,7 @@ def handle_file(args):
         cprinter.no_dead = args.no_dead
         cprinter.dump_c(cfg, out)
 
-    if args.output:
+    if out is not sys.stdout:
         out.close()
 
     update_funcdb(cfg)
