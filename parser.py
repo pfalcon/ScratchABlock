@@ -456,7 +456,7 @@ class Parser:
 
     def _parse_bblocks(self, f):
             self.cfg = Graph()
-            self.cfg.name = None
+            self.cfg.props["name"] = None
             self.cfg.props["trailing_jumps"] = True
             block = None
             last_block = None
@@ -482,9 +482,9 @@ class Parser:
                         block = BBlock(addr)
                         block.cfg = self.cfg
                         block.label = l[:-1]
-                        if self.cfg.name is None:
+                        if self.cfg.props["name"] is None:
                             # First label is function name
-                            self.cfg.name = l[:-1]
+                            self.cfg.props["name"] = l[:-1]
                         self.cfg.add_node(addr, val=block)
                         continue
                     elif block is None:
