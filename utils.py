@@ -1,3 +1,10 @@
+
+# We need a stable output to compare with expected patterns. But mark
+# places where sorting is optional with 'maybesorted' so it can be
+# optimized for "production" runs.
+maybesorted = sorted
+
+
 def pairwise(iterable):
     "For sequence of (a, b, c) yield pairs of (a, b), (b, c), (c, None)."
     prev = Ellipsis
