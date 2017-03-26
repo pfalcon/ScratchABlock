@@ -1,11 +1,8 @@
 // Predecessors: []
 10:
-// $a = 1
-DEAD()
-// $b = 2
-DEAD()
-// $a += $b
-DEAD()
+// $a = 1 (dead)
+// $b = 2 (dead)
+// $a += $b (dead)
 $b = 3
 $a = 4
 Exits: []
