@@ -457,7 +457,7 @@ class Parser:
     def _parse_bblocks(self, f):
             self.cfg = Graph()
             self.cfg.name = None
-            self.cfg.trailing_jumps = True
+            self.cfg.props["trailing_jumps"] = True
             block = None
             last_block = None
 

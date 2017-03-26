@@ -37,14 +37,14 @@ def dump_c(cfg, stream=sys.stdout):
                 label = "fun_" + label
             if ("estimated_args" in cfg.props):
                 print("// Estimated arguments: %s" % sorted(list(cfg.props["estimated_args"])), file=stream)
-            if cfg.trailing_jumps:
+            if cfg.props["trailing_jumps"]:
                 print("// Trailing jumps not removed, not rendering CFG edges as jumps", file=stream)
             print("void %s()\n{" % label, file=stream)
             func_start = False
         if addr in labels:
             print("\nl%s:" % addr, file=stream)
         bblock.dump(stream, indent=1, printer=print_inst)
-        if not cfg.trailing_jumps:
+        if not cfg.props["trailing_jumps"]:
           for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
             if not cond and nxt and succ == nxt[0]:

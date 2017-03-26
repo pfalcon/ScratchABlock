@@ -23,7 +23,7 @@ def remove_trailing_jumps(cfg):
         remove_returns = True
 
     foreach_bblock(cfg, remove_trailing_jumps_bblock, remove_returns=remove_returns)
-    cfg.trailing_jumps = False
+    cfg.props["trailing_jumps"] = False
 
 
 def remove_trailing_jumps_bblock(bblock, remove_returns=False):
