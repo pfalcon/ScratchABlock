@@ -461,7 +461,7 @@ class Inst:
 
         s = ""
         if self.show_comments and "org_inst" in self.comments:
-            s = "// " + str(self.comments["org_inst"]) + "\n"
+            s = "// " + str(self.comments["org_inst"]) + " "
 
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
