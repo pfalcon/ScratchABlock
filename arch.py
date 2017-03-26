@@ -36,8 +36,8 @@ def ret_uses(cfg):
     # a0 contains return address
     # sp should be preserved across call, but we'll check that using sp0 pseudo-reg.
     #return {REG("a0"), REG("sp")}
-    if cfg and cfg.name in FUNC_DB:
-        regs = FUNC_DB[cfg.name]["ret"]
+    if cfg and cfg.props["name"] in FUNC_DB:
+        regs = FUNC_DB[cfg.props["name"]]["ret"]
         assert isinstance(regs, list)
         return set(map(REG, regs))
     return {REG("a0")}
