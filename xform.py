@@ -356,7 +356,7 @@ def estimate_args(cfg):
     func_addr = cfg.entry()
     e = cfg[func_addr]
     import arch
-    e["estimated_args"] = e["live_in"] & arch.call_args(func_addr)
+    cfg.props["estimated_args"] = e["live_in"] & arch.call_args(func_addr)
 
 
 def repr_output(cfg):
