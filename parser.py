@@ -485,6 +485,7 @@ class Parser:
                         if self.cfg.props["name"] is None:
                             # First label is function name
                             self.cfg.props["name"] = l[:-1]
+                            self.cfg.props["addr"] = addr
                         self.cfg.add_node(addr, val=block)
                         continue
                     elif block is None:
