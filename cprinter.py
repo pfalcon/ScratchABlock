@@ -26,7 +26,7 @@ def print_inst(inst):
         return
     return str(inst)
 
-def dump_c(cfg):
+def dump_c(cfg, stream=sys.stdout):
     labels = find_used_labels(cfg)
     func_start = True
     for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
@@ -36,22 +36,22 @@ def dump_c(cfg):
             if label[0].isdigit():
                 label = "fun_" + label
             if ("estimated_args" in cfg.props):
-                print("// Estimated arguments: %s" % sorted(list(cfg.props["estimated_args"])))
+                print("// Estimated arguments: %s" % sorted(list(cfg.props["estimated_args"])), file=stream)
             if cfg.trailing_jumps:
-                print("// Trailing jumps not removed, not rendering CFG edges as jumps")
-            print("void %s()\n{" % label)
+                print("// Trailing jumps not removed, not rendering CFG edges as jumps", file=stream)
+            print("void %s()\n{" % label, file=stream)
             func_start = False
         if addr in labels:
-            print("\nl%s:" % addr)
-        bblock.dump(sys.stdout, indent=1, printer=print_inst)
+            print("\nl%s:" % addr, file=stream)
+        bblock.dump(stream, indent=1, printer=print_inst)
         if not cfg.trailing_jumps:
           for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
             if not cond and nxt and succ == nxt[0]:
                 continue
-            sys.stdout.write("  ")
+            stream.write("  ")
             if cond:
-                sys.stdout.write("if %s " % cond)
-            print("goto l%s;" % succ)
+                stream.write("if %s " % cond)
+            print("goto l%s;" % succ, file=stream)
 
-    print("}")
+    print("}", file=stream)
