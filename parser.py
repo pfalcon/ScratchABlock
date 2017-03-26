@@ -179,6 +179,8 @@ class Parser:
                         self.script.append(l.split(None, 1))
                     elif l.startswith("xform_bblock: "):
                         self.script.append(l.split(None, 1))
+                    elif l.startswith("xform_inst: "):
+                        self.script.append(l.split(None, 1))
                     elif l.startswith("script: "):
                         self.script.append(l.split(None, 1))
                 continue

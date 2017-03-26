@@ -73,6 +73,9 @@ def handle_file(args):
             elif op_type == "xform_bblock:":
                 func = globals()[op_name]
                 foreach_bblock(cfg, func)
+            elif op_type == "xform_inst:":
+                func = globals()[op_name]
+                foreach_inst(cfg, func)
             elif op_type == "script:":
                 mod = __import__(op_name)
                 mod.apply(cfg)
