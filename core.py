@@ -474,7 +474,7 @@ class Inst:
             return s + "if %s goto %s" % (self.args[0], self.args[1]) + self.trail
 
         if self.op == "DEAD":
-            return s + "DEAD()" + self.trail
+            return s + "(dead)" + self.trail
 
         if self.op == "SFUNC":
             assert self.dest is None
