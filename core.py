@@ -4,6 +4,8 @@ from graph import Graph
 from copy import copy
 
 def natural_sort_key(s):
+    if not isinstance(s, str):
+        return s
     arr = re.split("([0-9]+)", s)
     return [int(x) if x.isdigit() else x for x in arr]
 
@@ -668,7 +670,7 @@ class CFGPrinter:
             return "set()"
         res = "{"
         comma = False
-        for k in sorted(list(d), key=repr):
+        for k in sorted(list(d), key=lambda x: natural_sort_key(repr(x))):
             if comma:
                 res += ", "
             res += "%r" % (k,)
