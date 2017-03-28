@@ -389,6 +389,7 @@ class Inst:
 
     trail = ""
     show_comments = True
+    comment = "//"
 
     def __init__(self, dest, op, args, addr=None):
         self.op = op
@@ -463,7 +464,7 @@ class Inst:
 
         s = ""
         if self.show_comments and "org_inst" in self.comments:
-            s = "// " + str(self.comments["org_inst"]) + " "
+            s = self.comment + " " + str(self.comments["org_inst"]) + " "
 
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
