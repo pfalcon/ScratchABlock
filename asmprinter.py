@@ -49,6 +49,8 @@ class AsmPrinter(CFGPrinter):
                 return
         print("%s %s:" % (self.format_addr(self.addr), label), file=self.stream)
 
+    def print_graph_header(self):
+        pass
     def print_header(self):
         pass
     def print_separator(self):
