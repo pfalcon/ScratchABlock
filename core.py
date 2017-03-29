@@ -612,6 +612,19 @@ class CFGPrinter:
         "Return iterator over bblocks to be printed."
         return self.cfg.iter_sorted_nodes()
 
+    def print_graph_header(self):
+        if self.cfg.props:
+            print("// Graph props:", file=self.stream)
+            for k in sorted(self.cfg.props.keys()):
+                v = self.cfg.props[k]
+                if isinstance(v, dict):
+                    v = self.repr_stable_dict(v)
+                elif isinstance(v, set):
+                    v = self.repr_stable_set(v)
+                print("//  %s: %s" % (k, v), file=self.stream)
+            print(file=self.stream)
+
+
     def print_header(self):
         print("// Predecessors: %s" % sorted(self.cfg.pred(self.addr)), file=self.stream)
 
@@ -680,6 +693,7 @@ class CFGPrinter:
         return res
 
     def print(self):
+        self.print_graph_header()
         cnt = 0
         for self.addr, info in self.bblock_order():
             self.node_props = info.copy()
