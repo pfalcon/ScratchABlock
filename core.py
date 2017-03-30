@@ -459,12 +459,14 @@ class Inst:
         if not SimpleExpr.simple_repr:
             return self.__repr__()
 
+        comments = self.comments.copy()
+
         if self.op == "LIT":
             return self.args[0]
 
         s = ""
-        if self.show_comments and "org_inst" in self.comments:
-            s = self.comment + " " + str(self.comments["org_inst"]) + " "
+        if self.show_comments and "org_inst" in comments:
+            s = self.comment + " " + str(comments.pop("org_inst")) + " "
 
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
@@ -506,7 +508,11 @@ class Inst:
                     s += "%s = " % self.dest
             s += "%s" % e
 
-        return s + self.trail
+        s += self.trail
+        if self.show_comments and comments:
+            s += " # " + repr(comments)
+        return s
+
 
     def __eq__(self, other):
         return self.op == other.op and self.dest == other.dest and self.args == other.args
