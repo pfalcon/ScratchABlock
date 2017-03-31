@@ -8,8 +8,8 @@ from xform import foreach_inst
 
 class AsmPrinter(CFGPrinter):
 
-    def __init__(self, cfg):
-        super().__init__(cfg)
+    def __init__(self, cfg, stream=sys.stdout):
+        super().__init__(cfg, stream)
         self.addr_width = 8
         self.inst_indent = 4
         self.no_dead = False
