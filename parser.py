@@ -511,9 +511,9 @@ class Parser:
                         continue
                     inst.addr = addr
 
-                    if inst.op in ("goto", "if"):
+                    if inst.op in ("goto", "if", "call"):
                         cond = None
-                        if inst.op == "goto":
+                        if inst.op != "if":
                             addr = inst.args[0]
                         else:
                             cond, addr = inst.args
@@ -526,7 +526,7 @@ class Parser:
                         if addr not in self.cfg:
                             self.cfg.add_node(addr)
                         self.cfg.add_edge(block.addr, addr, cond=cond)
-                        if cond:
+                        if cond or inst.op == "call":
                             last_block = block
                         else:
                             last_block = None
