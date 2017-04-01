@@ -259,7 +259,7 @@ class Parser:
             if is_addr(e):
                 # If there was identifier, check it for being a type name
                 if e.addr in ("i8", "u8", "i16", "u16", "i32", "u32", "i64", "u64"):
-                    tp = e.addr
+                    tp = TYPE(e.addr)
                     e = self.parse_primary()
                     return EXPR("CAST", [tp, e])
             return e
