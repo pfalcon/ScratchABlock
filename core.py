@@ -292,6 +292,30 @@ class SFUNC(SimpleExpr):
         return []
 
 
+class TYPE(SimpleExpr):
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return "(TYPE)%s" % (self.name)
+
+    def __str__(self):
+        return "%s" % self.name
+
+    def __eq__(self, other):
+        return type(self) == type(other) and self.name == other.name
+
+    def __contains__(self, other):
+        return False
+
+    def __hash__(self):
+        return hash(self.name)
+
+    def regs(self):
+        return []
+
+
 class EXPR:
     "A recursive expression."
     def __init__(self, op, args):
@@ -336,7 +360,7 @@ class EXPR:
         if self.op == "SFUNC":
             return str(self.args[0]) + "(" + ", ".join([str(a) for a in self.args[1:]]) + ")"
         if self.op == "CAST":
-            return "(" + self.args[0] + ")" + str(self.args[1])
+            return "(" + str(self.args[0]) + ")" + str(self.args[1])
 
         DICT = {
             "NEG": "-",
