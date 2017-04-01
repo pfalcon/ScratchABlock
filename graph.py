@@ -167,6 +167,11 @@ class Graph:
         # TODO: Will also return single disconnected nodes
         return [n for n in self._nodes if not self._succ[n]]
 
+    def exit(self):
+        e = self.exits()
+        assert len(e) == 1
+        return e[0]
+
     def move_pred(self, from_node, to_node):
         """Move all predecessor edges from one node to another. Useful in
         graph transformations involving node folding."""
