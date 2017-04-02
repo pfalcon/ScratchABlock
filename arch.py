@@ -40,7 +40,8 @@ def ret_uses(cfg):
         regs = FUNC_DB[cfg.props["name"]].get("ret", [])
         assert isinstance(regs, list)
         return set(map(REG, regs))
-    return {REG("a0")}
+#    return {REG("a0")}
+    return set()
 
 
 if os.path.exists("funcdb.yaml"):
