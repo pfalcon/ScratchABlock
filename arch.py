@@ -47,3 +47,5 @@ if os.path.exists("funcdb.yaml"):
     #print("Loading function database")
     with open("funcdb.yaml") as f:
         FUNC_DB = yaml.load(f)
+        for addr, props in list(FUNC_DB.items()):
+            FUNC_DB[props["label"]] = props
