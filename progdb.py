@@ -1,6 +1,17 @@
 
+
+FUNC_DB = {}
+FUNC_DB_BY_ADDR = {}
 struct_types = {}
 struct_instances = {}
+
+
+def set_funcdb(db):
+    global FUNC_DB, FUNC_DB_BY_ADDR
+    # index by name in addition to by addr
+    for addr, props in list(db.items()):
+        FUNC_DB[props["label"]] = props
+    FUNC_DB_BY_ADDR = db
 
 
 def set_struct_types(data):
