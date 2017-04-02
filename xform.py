@@ -339,8 +339,8 @@ def collect_func_refs(cfg):
         if inst.op == "=":
             arg = inst.args[0]
             if is_addr(arg):
-                import arch
-                if arg.addr in arch.FUNC_DB:
+                import progdb
+                if arg.addr in progdb.FUNC_DB:
                     refs.append(arg)
 
     foreach_inst(cfg, collect)

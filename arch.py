@@ -3,11 +3,11 @@ from core import REG
 
 import yaml
 
+import progdb
+
 
 BITNESS = 32
 ENDIANNESS = "LITTLE"
-
-FUNC_DB = {}
 
 
 def reg_range(first, last):
@@ -17,8 +17,8 @@ ALL_REGS = reg_range(0, 15)
 
 
 def call_args(addr):
-    if addr in FUNC_DB:
-        regs = FUNC_DB[addr]["args"]
+    if addr in progdb.FUNC_DB:
+        regs = progdb.FUNC_DB[addr]["args"]
         assert isinstance(regs, list)
         return set(map(REG, regs))
     return reg_range(2, 7)
@@ -40,17 +40,9 @@ def ret_uses(cfg):
     # a0 contains return address
     # sp should be preserved across call, but we'll check that using sp0 pseudo-reg.
     #return {REG("a0"), REG("sp")}
-    if cfg and cfg.props["name"] in FUNC_DB:
-        regs = FUNC_DB[cfg.props["name"]].get("ret", [])
+    if cfg and cfg.props["name"] in progdb.FUNC_DB:
+        regs = progdb.FUNC_DB[cfg.props["name"]].get("ret", [])
         assert isinstance(regs, list)
         return set(map(REG, regs))
 #    return {REG("a0")}
     return set()
-
-
-if os.path.exists("funcdb.yaml"):
-    #print("Loading function database")
-    with open("funcdb.yaml") as f:
-        FUNC_DB = yaml.load(f)
-        for addr, props in list(FUNC_DB.items()):
-            FUNC_DB[props["label"]] = props

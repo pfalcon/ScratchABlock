@@ -153,6 +153,8 @@ if __name__ == "__main__":
         with open(args.funcdb) as f:
             FUNC_DB = yaml.load(f)
             FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
+            import progdb
+            progdb.set_funcdb(FUNC_DB)
 
     if os.path.isdir(args.file):
         out = args.output
