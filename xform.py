@@ -293,6 +293,13 @@ def insert_sp0(cfg):
     first_bblock.items.insert(0, Inst(REG("sp"), "=", [REG("sp0")], addr=entry_addr + ".sp0"))
 
 
+def insert_args(cfg):
+    entry_addr = cfg.entry()
+    first_bblock = cfg[entry_addr]["val"]
+    for i, reg in enumerate(sorted(list(arch.call_args(cfg.props["name"])))):
+        first_bblock.items.insert(i, Inst(reg, "=", [REG("arg_" + reg.name)], addr=entry_addr + ".arg%d" % i))
+
+
 def rewrite_stack_vars(bblock):
     "Rewrite memory references relative to sp0 to local variables."
     def mem2loc(m):
