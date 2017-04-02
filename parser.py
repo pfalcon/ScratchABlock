@@ -541,7 +541,10 @@ class Parser:
 
             if last_block:
                 print("Warning: function was not properly terminated")
-                self.cfg.add_edge(last_block.addr, block.addr)
+                # block may be None e.g. if last instruction was call,
+                # and function abruptly ended without return.
+                if block:
+                    self.cfg.add_edge(last_block.addr, block.addr)
 
     def parse_bblocks(self, f):
         self.pass_no = 2
