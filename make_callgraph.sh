@@ -13,5 +13,8 @@ set -e
 
 DIR=$(dirname $0)
 
-$DIR/apply_xform.py --script script_callgraph --format none $1
-$DIR/funcdb_dot.py $1/funcdb.yaml -o $1/callgraph.dot
+funcdir="$1"
+shift
+
+$DIR/apply_xform.py --script script_callgraph --format none $funcdir
+$DIR/funcdb_dot.py $funcdir/funcdb.yaml -o $funcdir/callgraph.dot "$@"
