@@ -17,6 +17,10 @@ ALL_REGS = reg_range(0, 15)
 
 
 def call_args(addr):
+    if addr in FUNC_DB:
+        regs = FUNC_DB[addr]["args"]
+        assert isinstance(regs, list)
+        return set(map(REG, regs))
     return reg_range(2, 7)
 
 def call_ret(addr):
