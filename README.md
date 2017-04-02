@@ -98,3 +98,11 @@ improve performance of the decompilation, the passes usually require
 more tight coupling. Exploring those directions is the next
 priority after implementing inventory of the passes as described
 above.
+
+Algorithms and transformations implemented by ScratchABlock:
+
+* Graph algorithms:
+  * Construction and querying (predecessors, successors, etc.)
+  * Traversal (depth first search (DFS), postorder)
+  * Dominator tree
+  * Node splitting
