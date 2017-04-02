@@ -44,6 +44,14 @@ def parse_args():
 
 
 def handle_file(args):
+    try:
+        handle_file_unprotected(args)
+    except Exception as e:
+        print("Error while processing file: " + args.file)
+        raise e
+
+
+def handle_file_unprotected(args):
     p = Parser(args.file)
     cfg = p.parse()
     cfg.parser = p
