@@ -11,11 +11,36 @@ argp = argparse.ArgumentParser(description="Render function database as various 
 argp.add_argument("file", help="Input file (YAML)")
 argp.add_argument("-o", "--output", help="Output file (default stdout)")
 argp.add_argument("--func", help="Start from this function")
-argp.add_argument("--no-runtime", action="store_true", help="Don't show calls to 'runtime' functions")
 argp.add_argument("--no-refs", action="store_true", help="Show only direct calls, not refs to other functions "
     "(otherwise shown as dashed lines)")
+argp.add_argument("--group", action="append", default=[], help="Group some functions together, GROUP is name=file.txt, "
+    "if name is '_ignore_', don't graph these functions")
 argp.add_argument("--each-call", action="store_true", help="Show multiple edges for each call site")
 args = argp.parse_args()
+
+IGNORE = set()
+GROUPS = {}
+
+
+def read_func_list(fname):
+    res = []
+    with open(fname) as f:
+        for l in f:
+            l = l.strip()
+            if not l or l[0] == "#":
+                continue
+            res.append(l)
+    return res
+
+
+for g in args.group:
+    name, fname = g.split("=", 1)
+    funcs = read_func_list(fname)
+    if name == "_ignore_":
+        IGNORE.update(funcs)
+    else:
+        GROUPS[name] = set(funcs)
+
 
 FUNC_DB = yaml.load(open(args.file))
 
@@ -25,24 +50,6 @@ else:
     out = sys.stdout
 
 
-RUNTIME = {
-    "ets_delay_us",
-    "ets_memcpy",
-    "ets_memset",
-    "ets_bzero",
-    "bzero",
-    "memcpy__1",
-
-    "ets_printf",
-    "ets_vprintf",
-    "eprintf",
-
-    "ets_intr_lock",
-    "ets_intr_unlock",
-    "ets_isr_mask",
-    "ets_isr_unmask",
-}
-
 dup_set = set()
 
 
@@ -51,24 +58,28 @@ def index_by_name(db):
         db[props["label"]] = props
 
 
-def is_runtime(funcname):
-    if funcname in RUNTIME:
-        return True
-    if funcname.startswith("__"):
-        return True
+def get_group(funcname):
+    if funcname in IGNORE:
+        return "_ignore_"
+    for name, funcs in GROUPS.items():
+        if funcname in funcs:
+            return name
+
+
+def map_group(funcname):
+    return get_group(funcname) or funcname
 
 
 def dump_level(func, props):
-    if props["label"] in RUNTIME:
+    if get_group(props["label"]):
         return
     for propname in ("calls", "func_refs"):
         if propname == "func_refs" and args.no_refs:
             continue
         for callee in maybesorted(props.get(propname, [])):
-            if is_runtime(callee):
-                if args.no_runtime:
-                    continue
-                callee = "RUNTIME"
+            if callee in IGNORE:
+                continue
+            callee = map_group(callee)
 
             if not args.each_call:
                 if (props["label"], callee) in dup_set:
