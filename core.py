@@ -285,6 +285,9 @@ class SFUNC(SimpleExpr):
     def __eq__(self, other):
         return type(self) == type(other) and self.name == other.name
 
+    def __contains__(self, other):
+        return False
+
     def __hash__(self):
         return hash(self.name)
 
