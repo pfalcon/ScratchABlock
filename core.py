@@ -31,6 +31,9 @@ class BBlock:
     def add(self, s):
         self.items.append(s)
 
+    def __getitem__(self, i):
+        return self.items[i]
+
     def def_addrs(self, regs_only=True):
         """Return all variable definitions for this basic block,
         as set of (var, inst_addr) pairs. Note that this includes
