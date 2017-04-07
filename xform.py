@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 
 from graph import Graph
@@ -7,6 +8,8 @@ from dce import *
 from xform_expr import *
 import arch
 
+
+log = logging.getLogger(__file__)
 
 # Apply tranformation while it's possible
 def apply_iterative(func, args):
@@ -259,7 +262,7 @@ def collect_state_in(cfg):
             if len(val_set) == 1:
                 state[var] = val_set.pop()
             elif len(val_set) > 1:
-                print("Warning: %s: in value set for %s are: %s" % (bblock_addr, var, val_set))
+                log.warn("%s: in value set for %s are: %s" % (bblock_addr, var, val_set))
         if state != org_state:
             node_props["val"].props["state_in"] = state
             changed = True
