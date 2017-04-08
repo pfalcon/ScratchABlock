@@ -1,7 +1,12 @@
 import copy
+import logging
 
 from graph import Graph
 from core import *
+import cfgutils
+
+
+_log = logging.getLogger(__file__)
 
 
 def split_bblock(cfg, n):
@@ -194,6 +199,41 @@ def match_if_else_inv_ladder(cfg):
             else_block = block.branches[1][IFELSE_BRANCH]
             if isinstance(if_block, IfElse) and not isinstance(else_block, IfElse):
                 block.swap_branches()
+                return True
+
+
+#
+# If we have:
+#
+# $a0 = val1
+# if (...) {
+#   $a0 = val2
+# }
+#
+# it's equivalent to:
+#
+# if (...) {
+#   $a0 = val2
+# } else {
+#   $a0 = val1
+# }
+#
+# And transforming it to such may enable match_if_else_ladder
+def match_if_else_unjumped(cfg):
+    for v, node_props in cfg.iter_nodes():
+        #print((v, node_props))
+        block = node_props["val"]
+        if type(block) is BBlock and cfg.degree_out(v) == 1:
+            succ = cfg.succ(v)[0]
+            #print(">", (succ, cfg.node(succ)))
+            succ_block = cfg.node(succ)["val"]
+            if isinstance(succ_block, IfElse) \
+              and succ_block.branches[-1][IFELSE_BRANCH] is None \
+              and type(succ_block.branches[0][IFELSE_BRANCH]) is BBlock:
+                # TODO: Check uses/kills of the if block
+                _log.warn("match_if_else_unjumped: variable liveness is not checked!")
+                cfgutils.detach_node(cfg, v)
+                succ_block.branches[-1] = (None, block)
                 return True
 
 
