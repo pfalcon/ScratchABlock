@@ -1,0 +1,8 @@
+#xform_bblock: remove_trailing_jumps_bblock
+#xform: match_if
+#xform: match_if_else_unjumped
+05  $a2 = 1
+10 if ($a1 != 5) goto 20
+11  $a2 = 2
+20 20:
+20  $a3 = 3
