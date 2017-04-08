@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 10
+//  name: repeat
+//  trailing_jumps: True
+
 // Predecessors: []
 10:
 do {

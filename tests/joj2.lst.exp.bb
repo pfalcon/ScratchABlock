@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 20
+//  name: 20
+//  trailing_jumps: True
+
 // Predecessors: []
 00:
 Exits: [(COND($a1 == 0), '20'), (None, '30')]

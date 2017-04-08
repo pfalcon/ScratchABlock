@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 30
+//  name: 30
+//  trailing_jumps: True
+
 // Predecessors: []
 05:
 $a4 = 100

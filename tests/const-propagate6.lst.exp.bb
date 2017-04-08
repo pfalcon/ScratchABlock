@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 20
+//  name: 20
+//  trailing_jumps: True
+
 // Predecessors: []
 // BBlock props:
 //  state_out: {$a0=100}

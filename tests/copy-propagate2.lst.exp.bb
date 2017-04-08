@@ -1,3 +1,7 @@
+// Graph props:
+//  name: None
+//  trailing_jumps: True
+
 // Predecessors: []
 // BBlock props:
 //  state_out: {$a=1, $c=$b, $d=$b}
