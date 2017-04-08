@@ -1,3 +1,7 @@
+// Graph props:
+//  name: None
+//  trailing_jumps: True
+
 // Predecessors: []
 // Node props:
 //  live_gen: set()

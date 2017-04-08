@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 30
+//  name: 30
+//  trailing_jumps: True
+
 // Predecessors: []
 10:
 if ($a1 != 0) {

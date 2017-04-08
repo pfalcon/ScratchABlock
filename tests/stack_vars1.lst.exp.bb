@@ -1,3 +1,7 @@
+// Graph props:
+//  name: None
+//  trailing_jumps: True
+
 // Predecessors: []
 // Node props:
 //  reachdef_gen: {($a0, '10'), ($sp, '10')}

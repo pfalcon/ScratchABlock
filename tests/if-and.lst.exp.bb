@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 50
+//  name: false
+//  trailing_jumps: True
+
 // Predecessors: []
 10:
 /* && */

@@ -1,3 +1,7 @@
+// Graph props:
+//  name: None
+//  trailing_jumps: True
+
 // Predecessors: []
 10:
 /*10*/ $a = [EXPR(+[VALUE(0x2), VALUE(-0x1)])]

@@ -1,3 +1,7 @@
+// Graph props:
+//  name: None
+//  trailing_jumps: True
+
 // Predecessors: []
 2:
 return

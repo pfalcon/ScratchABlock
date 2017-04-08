@@ -1,3 +1,8 @@
+// Graph props:
+//  addr: 40
+//  name: 40
+//  trailing_jumps: True
+
 // Predecessors: []
 // Node props:
 //  reachdef_gen: {(REG(a), '10'), (REG(b), '10')}
