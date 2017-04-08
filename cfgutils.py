@@ -10,6 +10,19 @@ def swap_if_branches(cfg, node):
     cfg[node, succ[1]]["cond"] = cond.neg()
 
 
+def detach_node(cfg, n):
+    din = cfg.degree_in(n)
+    dout = cfg.degree_out(n)
+    assert din == 1 or dout == 1
+    if din == 1:
+        pred = cfg.pred(n)[0]
+        cfg.move_succ(n, pred)
+    else:
+        succ = cfg.succ(n)[0]
+        cfg.move_pred(n, succ)
+    cfg.remove_node(n)
+
+
 def foreach_bblock(cfg, func, join_func=lambda a, b: a or b, **kwargs):
     """Apply basic-block level transformation to each block in CFG.
     Return cumulative status (OR of each block's status).
