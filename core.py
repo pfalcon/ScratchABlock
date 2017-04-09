@@ -42,18 +42,16 @@ class BBlock:
         """
         defs = set()
         for i in self.items:
-            if i.dest:
-                if not regs_only or isinstance(i.dest, REG):
-                    defs.add((i.dest, i.addr))
+            inst_defs = i.defs(regs_only)
+            for d in inst_defs:
+                defs.add((d, i.addr))
         return defs
 
     def defs(self, regs_only=True):
         """Return set of all variable defined in this basic block."""
         defs = set()
         for i in self.items:
-            if i.dest:
-                if not regs_only or isinstance(i.dest, REG):
-                    defs.add(i.dest)
+            defs |= i.defs(regs_only)
         return defs
 
     def uses(self):
@@ -461,6 +459,21 @@ class Inst:
             for r in a.regs():
                 uses.add(r)
         return uses
+
+
+    def defs(self, regs_only=True, cfg=None):
+        # Avoid circular import. TODO: fix properly
+        import arch
+        """Return set of all registers defined by this instruction. Function
+        calls (and maybe SFUNCs) require special treatment."""
+        if self.op == "call":
+            return arch.call_ret(self.args[0])
+
+        defs = set()
+        if self.dest:
+            if not regs_only or isinstance(self.dest, REG):
+                defs.add(self.dest)
+        return defs
 
 
     def __repr__(self):
