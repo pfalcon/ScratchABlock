@@ -174,7 +174,7 @@ def expr_subst(expr, subst_dict):
         new_expr = expr_xform(new_expr, expr_simplify_add)
         return new_expr
 
-    assert 0, type(expr)
+    assert 0, (expr, type(expr))
 
 
 def kill_subst_uses(subst, kill_var):
