@@ -320,13 +320,13 @@ def rewrite_stack_vars(bblock):
 
 # Requires expr_propagation
 def collect_calls(cfg):
-    calls = set()
+    calls = []
 
     def collect(inst):
         if inst.op == "call":
             arg = inst.args[0]
             if is_addr(arg):
-                calls.add(arg)
+                calls.append(arg)
 
     foreach_inst(cfg, collect)
     cfg.props["calls"] = calls
