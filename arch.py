@@ -13,7 +13,7 @@ ENDIANNESS = "LITTLE"
 def reg_range(first, last):
     return {REG("a%d" % x) for x in range(first, last + 1)}
 
-ALL_REGS = reg_range(0, 15)
+ALL_REGS = {REG("a0"), REG("sp")} | reg_range(2, 15)
 
 
 def call_args(addr):
