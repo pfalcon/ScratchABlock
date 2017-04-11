@@ -134,7 +134,10 @@ def expr_subst(expr, subst_dict):
         return None
 
     if isinstance(expr, REG):
-        new = subst_dict.get(expr, expr)
+        new = subst_dict.get(expr)
+        if new and expr in new:
+            log.warn("Trying to replace %s with recursively referring %s, not doing" % (expr, new))
+            return None
         return new
 
     if isinstance(expr, MEM):
