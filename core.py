@@ -412,6 +412,19 @@ class EXPR:
             return self.args[0] not in ("BIT", "bitfield")
         return False
 
+    def foreach_subexpr(self, func):
+        # If func returned True, it means it handled entire subexpression,
+        # so we don't recurse into it.
+        # Note that this function recurses only within EXPR tree, it doesn't
+        # recurse e.g. inside MEM.
+        if func(self):
+            return
+        for a in self.args:
+            if is_expr(a):
+                a.foreach_subexpr(func)
+            else:
+                func(a)
+
 
 class Inst:
 
@@ -474,6 +487,19 @@ class Inst:
             if not regs_only or isinstance(self.dest, REG):
                 defs.add(self.dest)
         return defs
+
+
+    def foreach_subexpr(self, func):
+        def do(arg):
+            if arg:
+                if is_expr(arg) or is_cond(arg):
+                    arg.foreach_subexpr(func)
+                else:
+                    func(arg)
+
+        do(self.dest)
+        for a in self.args:
+            do(a)
 
 
     def __repr__(self):
@@ -597,6 +623,15 @@ class COND:
 
     def regs(self):
         return [x for x in (self.arg1, self.arg2) if isinstance(x, REG)]
+
+    def foreach_subexpr(self, func):
+        def do(a):
+            if is_expr(a):
+                a.foreach_subexpr(func)
+            else:
+                func(a)
+        do(self.arg1)
+        do(self.arg2)
 
 
 class CompoundCond:
