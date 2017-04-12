@@ -212,13 +212,15 @@ def bblock_propagation(bblock, propagated_types):
             if not isinstance(args[arg_no], VALUE):
                 all_args_const = False
 
-        if inst.dest:
+        for dest in inst.defs():
             # Calling kill_subst_uses isn't really needed for const propagation
             # (as variables aren't propagated), but needed for copy propagation
             # and higher.
-            state = kill_subst_uses(state, inst.dest)
-            if inst.op == "=" and isinstance(inst.args[0], propagated_types):
-                state[inst.dest] = inst.args[0]
+            state = kill_subst_uses(state, dest)
+
+        if inst.op == "=" and isinstance(inst.args[0], propagated_types):
+            assert inst.dest
+            state[inst.dest] = inst.args[0]
 
     bblock.props["state_out"] = state
 
