@@ -214,10 +214,9 @@ def make_du_chains(cfg):
             args = inst.args
             if len(args) == 1 and is_expr(args[0]):
                 args = args[0].args
-            for a in args:
-                for r in a.regs():
-                    if r in mapping:
-                        mapping[r].comments["uses"].append(inst.addr)
+            for r in inst.uses(cfg):
+                if r in mapping:
+                    mapping[r].comments["uses"].append(inst.addr)
 
             if inst.dest:
                 if is_mem(inst.dest):
@@ -225,7 +224,8 @@ def make_du_chains(cfg):
                         if r in mapping:
                             mapping[r].comments["uses"].append(inst.addr)
 
-                mapping[inst.dest] = inst
+            for dest in inst.defs(regs_only=False):
+                mapping[dest] = inst
                 inst.comments["uses"] = []
 
     # sorted_nodes are for unit testing
