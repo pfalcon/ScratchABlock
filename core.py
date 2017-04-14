@@ -109,6 +109,9 @@ class SimpleExpr:
     def side_effect(self):
         return False
 
+    def __len__(self):
+        return 1
+
 
 class REG(SimpleExpr):
 
@@ -381,6 +384,13 @@ class EXPR:
 
     def __hash__(self):
         return hash(self.op) ^ hash(tuple(self.args))
+
+    def __len__(self):
+        # One for operation itself
+        l = 1
+        for a in self.args:
+            l += len(a)
+        return l
 
     def regs(self):
         r = set()
