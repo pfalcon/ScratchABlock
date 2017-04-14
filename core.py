@@ -102,10 +102,6 @@ class SimpleExpr:
     comment = ""
     simple_repr = True
 
-    def reg(self):
-        "Get register referenced by the expression"
-        return None
-
     def regs(self):
         "Get registers referenced by the expression"
         return []
@@ -146,9 +142,6 @@ class REG(SimpleExpr):
 
     def __hash__(self):
         return hash(self.name)
-
-    def reg(self):
-        return self
 
     def regs(self):
         return [self]
