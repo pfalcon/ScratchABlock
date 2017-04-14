@@ -106,6 +106,10 @@ class SimpleExpr:
         "Get register referenced by the expression"
         return None
 
+    def regs(self):
+        "Get registers referenced by the expression"
+        return []
+
     def side_effect(self):
         return False
 
@@ -182,10 +186,6 @@ class VALUE(SimpleExpr):
     def __hash__(self):
         return hash(self.val)
 
-    def regs(self):
-        return []
-
-
 
 class ADDR(SimpleExpr):
 
@@ -214,9 +214,6 @@ class ADDR(SimpleExpr):
     def __hash__(self):
         return hash(self.addr)
 
-    def regs(self):
-        return []
-
 
 class CVAR(SimpleExpr):
 
@@ -234,9 +231,6 @@ class CVAR(SimpleExpr):
 
     def __hash__(self):
         return hash(self.name)
-
-    def regs(self):
-        return []
 
 
 class MEM(SimpleExpr):
@@ -292,9 +286,6 @@ class SFUNC(SimpleExpr):
     def __hash__(self):
         return hash(self.name)
 
-    def regs(self):
-        return []
-
 
 class TYPE(SimpleExpr):
 
@@ -315,9 +306,6 @@ class TYPE(SimpleExpr):
 
     def __hash__(self):
         return hash(self.name)
-
-    def regs(self):
-        return []
 
 
 class EXPR:
