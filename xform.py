@@ -138,6 +138,9 @@ def expr_subst(expr, subst_dict):
         if new and expr in new:
             log.warn("Trying to replace %s with recursively referring %s, not doing" % (expr, new))
             return None
+        if new and len(new) > 10:
+            log.warn("Trying to replace %s with complex [len=%d] %s, not doing" % (expr, len(new), new))
+            return None
         return new
 
     if isinstance(expr, MEM):
