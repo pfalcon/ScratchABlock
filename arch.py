@@ -35,12 +35,12 @@ def call_uses(addr):
     return call_args(addr)
 
 def call_defs(addr):
-    assert isinstance(addr, ADDR)
-    addr = addr.addr
-    if addr in progdb.FUNC_DB and "modifieds" in progdb.FUNC_DB[addr]:
-        #print("call_defs: funcdb for %s" % addr)
-        regs = progdb.FUNC_DB[addr]["modifieds"]
-        return set(map(REG, regs))
+    if isinstance(addr, ADDR):
+        addr = addr.addr
+        if addr in progdb.FUNC_DB and "modifieds" in progdb.FUNC_DB[addr]:
+            #print("call_defs: funcdb for %s" % addr)
+            regs = progdb.FUNC_DB[addr]["modifieds"]
+            return set(map(REG, regs))
     return call_ret(addr) | (ALL_REGS - call_save(addr))
 
 
