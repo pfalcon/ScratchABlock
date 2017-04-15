@@ -17,12 +17,12 @@ ALL_REGS = {REG("a0"), REG("sp")} | reg_range(2, 15)
 
 
 def call_args(addr):
-    assert isinstance(addr, ADDR)
-    addr = addr.addr
-    if addr in progdb.FUNC_DB and "args" in progdb.FUNC_DB[addr]:
-        regs = progdb.FUNC_DB[addr]["args"]
-        assert isinstance(regs, list)
-        return set(map(REG, regs))
+    if isinstance(addr, ADDR):
+        addr = addr.addr
+        if addr in progdb.FUNC_DB and "args" in progdb.FUNC_DB[addr]:
+            regs = progdb.FUNC_DB[addr]["args"]
+            assert isinstance(regs, list)
+            return set(map(REG, regs))
     return reg_range(2, 7)
 
 def call_ret(addr):
