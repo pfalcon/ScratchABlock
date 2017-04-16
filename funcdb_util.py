@@ -5,6 +5,8 @@ import argparse
 
 import yaml
 
+import yamlutils
+
 
 argp = argparse.ArgumentParser(description="Perform various transformations on a function database")
 argp.add_argument("command", help="transformation to perform")
@@ -27,6 +29,18 @@ elif args.command == "addr2label":
     for addr, props in FUNC_DB.items():
         print(addr)
         props["calls"] = [FUNC_DB[x]["label"] if x in FUNC_DB else x for x in props["calls_addr"]]
+
+elif args.command == "called_by":
+    calls = {}
+    for addr, props in FUNC_DB.items():
+        name = props["label"]
+        for callee in props.get("calls", []):
+            calls.setdefault(callee, set()).add(name)
+
+    for addr, props in FUNC_DB.items():
+        name = props["label"]
+        if name in calls:
+            props["called_by"] = calls[name]
 
 
 os.rename(args.file, args.file + ".bak")
