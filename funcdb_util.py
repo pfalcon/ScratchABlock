@@ -42,6 +42,8 @@ elif args.command == "called_by":
         if name in calls:
             props["called_by"] = calls[name]
 
+else:
+    argp.error("Unknown command: " + args.command)
 
 os.rename(args.file, args.file + ".bak")
 
