@@ -517,15 +517,13 @@ class Parser:
                             addr = inst.args[0]
                         else:
                             cond, addr = inst.args
-                        if not isinstance(addr, ADDR):
-                            # Skip handling indirect jumps
-                            block.add(inst)
-                            continue
-                        addr = addr.addr
                         #print("!", (cond, addr))
-                        if addr not in self.cfg:
-                            self.cfg.add_node(addr)
-                        self.cfg.add_edge(block.addr, addr, cond=cond)
+                        # Skip adding bblocks for indirect jumps
+                        if isinstance(addr, ADDR):
+                            addr = addr.addr
+                            if addr not in self.cfg:
+                                self.cfg.add_node(addr)
+                            self.cfg.add_edge(block.addr, addr, cond=cond)
                         if cond or inst.op == "call":
                             last_block = block
                         else:
