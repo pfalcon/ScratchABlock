@@ -533,23 +533,27 @@ class Inst:
         if self.show_comments and "org_inst" in comments:
             s = self.comment + " " + str(comments.pop("org_inst")) + " "
 
+        tail = self.trail
+        if self.show_comments and comments:
+            tail += " # " + repr(comments)
+
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
             if args:
                 args = " " + args
-            return s + self.op + args + self.trail
+            return s + self.op + args + tail
         if self.op in ("goto", "call"):
-            return s + "%s %s" % (self.op, self.args[0]) + self.trail
+            return s + "%s %s" % (self.op, self.args[0]) + tail
         if self.op == "if":
-            return s + "if %s goto %s" % (self.args[0], self.args[1]) + self.trail
+            return s + "if %s goto %s" % (self.args[0], self.args[1]) + tail
 
         if self.op == "DEAD":
-            return s + "(dead)" + self.trail
+            return s + "(dead)" + tail
 
         if self.op == "SFUNC":
             assert self.dest is None
             assert len(self.args) == 1, repr(self.args)
-            return s + str(self.args[0]) + self.trail
+            return s + str(self.args[0]) + tail
 
         assert self.op == "=", repr(self.op)
         assert len(self.args) == 1, (self.op, repr(self.args))
@@ -573,9 +577,7 @@ class Inst:
                     s += "%s = " % self.dest
             s += "%s" % e
 
-        s += self.trail
-        if self.show_comments and comments:
-            s += " # " + repr(comments)
+        s += tail
         return s
 
 
