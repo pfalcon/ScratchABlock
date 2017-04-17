@@ -75,6 +75,11 @@ class BBlock:
             if out is not None:
                 self.write(stream, indent, out)
 
+TYPE_SORT = ("REG", "ADDR", "MEM", "EXPR", "COND", "VALUE")
+
+def type_sort(t):
+    return TYPE_SORT.index(t.__name__)
+
 # Helper predicates for types below
 
 def is_value(e):
@@ -134,7 +139,7 @@ class REG(SimpleExpr):
 
     def __lt__(self, other):
         if type(self) != type(other):
-            return type(self).__name__ < type(other).__name__
+            return type_sort(type(self)) < type_sort(type(other))
 
         n1 = natural_sort_key(self.name)
         n2 = natural_sort_key(other.name)
@@ -173,7 +178,7 @@ class VALUE(SimpleExpr):
 
     def __lt__(self, other):
         if type(self) != type(other):
-            return type(self).__name__ < type(other).__name__
+            return type_sort(type(self)) < type_sort(type(other))
         return self.val < other.val
 
     def __contains__(self, other):
@@ -201,7 +206,7 @@ class ADDR(SimpleExpr):
 
     def __lt__(self, other):
         if type(self) != type(other):
-            return type(self).__name__ < type(other).__name__
+            return type_sort(type(self)) < type_sort(type(other))
         return self.addr < other.addr
 
     def __contains__(self, other):
@@ -250,7 +255,7 @@ class MEM(SimpleExpr):
     def __lt__(self, other):
         if type(self) == type(other):
             return self.expr < other.expr
-        return type(self).__name__ < type(other).__name__
+        return type_sort(type(self)) < type_sort(type(other))
 
     def __contains__(self, other):
         return other in self.expr
@@ -374,7 +379,7 @@ class EXPR:
     def __lt__(self, other):
         if type(self) == type(other):
             return str(self) < str(other)
-        return type(self).__name__ < type(other).__name__
+        return type_sort(type(self)) < type_sort(type(other))
 
     def __contains__(self, other):
         for a in self.args:
