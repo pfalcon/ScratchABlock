@@ -4,7 +4,7 @@
 
 // Predecessors: []
 // BBlock props:
-//  state_out: {*(u32*)($esp0 - 12)=$ebx, *(u32*)($esp0 - 16)=$ecx, *(u32*)($esp0 - 8)=$esi, $ebp=$esp0 - 4, $edx=*(u32*)($esp0 + 4), $esp=$esp0 - 24, $tmp1=$esp0 - 16}
+//  state_out: {$ebp=$esp0 - 4, $edx=*(u32*)($esp0 + 4), $esp=$esp0 - 24, $tmp1=$esp0 - 16, *(u32*)($esp0 - 12)=$ebx, *(u32*)($esp0 - 16)=$ecx, *(u32*)($esp0 - 8)=$esi}
 0:
 $esp = $esp0
 $esp = $esp0 - 4
