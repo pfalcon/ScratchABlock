@@ -1,4 +1,8 @@
-
+#
+# This module deals with various "program databases" as required
+# for analysis passes. Among them: function database (funcdb.yaml),
+# databases of structures, etc.
+#
 
 FUNC_DB = {}
 FUNC_DB_BY_ADDR = {}
