@@ -1,13 +1,8 @@
 import sys
-import re
 from graph import Graph
 from copy import copy
 
-def natural_sort_key(s):
-    if not isinstance(s, str):
-        return s
-    arr = re.split("([0-9]+)", s)
-    return [int(x) if x.isdigit() else x for x in arr]
+import utils
 
 
 class Singleton:
@@ -141,8 +136,8 @@ class REG(SimpleExpr):
         if type(self) != type(other):
             return type_sort(type(self)) < type_sort(type(other))
 
-        n1 = natural_sort_key(self.name)
-        n2 = natural_sort_key(other.name)
+        n1 = utils.natural_sort_key(self.name)
+        n2 = utils.natural_sort_key(other.name)
         return n1 < n2
 
     def __contains__(self, other):
@@ -535,7 +530,7 @@ class Inst:
 
         tail = self.trail
         if self.show_comments and comments:
-            tail += " # " + CFGPrinter.repr_stable_dict(comments)
+            tail += " # " + utils.repr_stable_dict(comments)
 
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
@@ -699,10 +694,7 @@ class CFGPrinter:
             print("// Graph props:", file=self.stream)
             for k in sorted(self.cfg.props.keys()):
                 v = self.cfg.props[k]
-                if isinstance(v, dict):
-                    v = self.repr_stable_dict(v)
-                elif isinstance(v, set):
-                    v = self.repr_stable_set(v)
+                v = utils.repr_stable(v)
                 print("//  %s: %s" % (k, v), file=self.stream)
             print(file=self.stream)
 
@@ -714,10 +706,7 @@ class CFGPrinter:
             print("// Node props:", file=self.stream)
             for k in sorted(self.node_props.keys()):
                 v = self.node_props[k]
-                if isinstance(v, dict):
-                    v = self.repr_stable_dict(v)
-                elif isinstance(v, set):
-                    v = self.repr_stable_set(v)
+                v = utils.repr_stable(v)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
         if self.bblock_props:
@@ -728,7 +717,7 @@ class CFGPrinter:
                 if k.startswith("state_"):
                     v = repr_state(v)
                 elif isinstance(v, dict):
-                    v = self.repr_stable_dict(v)
+                    v = utils.repr_stable_dict(v)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
 
@@ -747,32 +736,6 @@ class CFGPrinter:
 
     def print_separator(self):
         self.stream.write("\n")
-
-    @staticmethod
-    def repr_stable_dict(d):
-        res = "{"
-        comma = False
-        for k, v in sorted(d.items()):
-            if comma:
-                res += ", "
-            res += "%r: %r" % (k, v)
-            comma = True
-        res += "}"
-        return res
-
-    @staticmethod
-    def repr_stable_set(d):
-        if not d:
-            return "set()"
-        res = "{"
-        comma = False
-        for k in sorted(list(d), key=lambda x: natural_sort_key(repr(x))):
-            if comma:
-                res += ", "
-            res += "%r" % (k,)
-            comma = True
-        res += "}"
-        return res
 
     def print(self):
         self.print_graph_header()
