@@ -183,6 +183,20 @@ class VALUE(SimpleExpr):
         return hash(self.val)
 
 
+class STR(SimpleExpr):
+
+    def __init__(self, s):
+        self.val = s
+
+    def __repr__(self):
+        if self.simple_repr:
+            return self.__str__()
+        return self.comment + "STR(%s)" % self.val
+
+    def __str__(self):
+        return self.comment + self.val
+
+
 class ADDR(SimpleExpr):
 
     resolver = staticmethod(lambda x: x)

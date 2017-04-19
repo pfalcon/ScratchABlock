@@ -244,6 +244,9 @@ class Parser:
                 pass
         return args
 
+    def parse_num(self):
+        if self.lex.isdigit():
+            return VALUE(*self.lex.num())
 
     def parse_primary(self):
         if self.lex.match("*"):
@@ -354,7 +357,10 @@ class Parser:
             # Asm directive, ignore
             return None
         if lex.match("db") or lex.match("unk"):
-            return Inst(None, "SFUNC", [EXPR("SFUNC", [SFUNC("litbyte"), lex.l])])
+            arg = self.parse_num()
+            if arg is None:
+                arg = STR(lex.l)
+            return Inst(None, "SFUNC", [EXPR("SFUNC", [SFUNC("litbyte"), arg])])
         if lex.match("goto"):
             return Inst(None, "goto", [self.parse_local_addr_expr()])
         if lex.match("call"):
