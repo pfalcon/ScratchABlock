@@ -135,7 +135,9 @@ class ReachDefAnalysis(GenKillAnalysis):
         self.regs_only = regs_only
 
     def init(self):
-        "Entry node is set to itself, the rest - to graph's all nodes."
+        """In and out sets of all nodes are initialized to empty sets, but
+        entry's in set is initialized to a set of all defined locations with
+        None address, representing non-initialized location."""
         entry = self.g.entries()
         assert len(entry) == 1
         entry = entry[0]
@@ -181,7 +183,7 @@ class LiveVarAnalysis(GenKillAnalysis):
         self.skip_calls = skip_calls
 
     def init(self):
-        "Entry node is set to itself, the rest - to graph's all nodes."
+        "In and out sets of all nodes is set to empty."
         exits = self.g.exits()
         assert len(exits) == 1
         exit = exits[0]
