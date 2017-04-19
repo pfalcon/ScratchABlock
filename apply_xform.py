@@ -143,6 +143,20 @@ def update_funcdb(cfg):
             func_props[prop] = [x.addr for x in cfg.props[prop]]
 
 
+def preprocess_funcdb(FUNC_DB):
+    for addr, props in FUNC_DB.items():
+        for prop in ("callsites_live_out",):
+            if prop in props:
+                props[prop] = set(core.REG(x) for x in props[prop])
+
+
+def postprocess_funcdb(FUNC_DB):
+    for addr, props in FUNC_DB.items():
+        for prop in ("callsites_live_out",):
+            if prop in props:
+                props[prop] = sorted([x.name for x in props[prop]], key=core.natural_sort_key)
+
+
 if __name__ == "__main__":
     args = parse_args()
 
@@ -157,6 +171,7 @@ if __name__ == "__main__":
     if os.path.exists(args.funcdb):
         with open(args.funcdb) as f:
             FUNC_DB = yaml.load(f)
+            preprocess_funcdb(FUNC_DB)
             FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
             import progdb
             progdb.set_funcdb(FUNC_DB)
@@ -177,7 +192,9 @@ if __name__ == "__main__":
     else:
         handle_file(args)
 
+
     if FUNC_DB != FUNC_DB_ORG:
+        postprocess_funcdb(FUNC_DB)
         if os.path.exists(args.funcdb):
             os.rename(args.funcdb, args.funcdb + ".bak")
 
