@@ -133,6 +133,11 @@ def update_funcdb(cfg):
         return
     func_props = FUNC_DB.setdefault(cfg.props["addr"], {})
     func_props["label"] = cfg.props["name"]
+
+    for prop in ("estimated_args", "modifieds", "preserveds", "reach_exit"):
+        if prop in cfg.props:
+            func_props[prop] = sorted([x.name for x in cfg.props[prop]], key=core.natural_sort_key)
+
     for prop in ("calls", "func_refs", "mmio_refs"):
         if prop in cfg.props:
             func_props[prop] = [x.addr for x in cfg.props[prop]]
