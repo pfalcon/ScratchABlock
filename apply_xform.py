@@ -29,6 +29,7 @@ def parse_args():
     argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
     argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
     argp.add_argument("--script", help="apply script from file")
+    argp.add_argument("--iter", action="store_true", help="apply transform iteratively until no changes to funcdb")
     argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in current/input dir)")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
         help="output format (default: %(default)s)")
@@ -157,6 +158,47 @@ def postprocess_funcdb(FUNC_DB):
                 props[prop] = sorted([x.name for x in props[prop]], key=core.natural_sort_key)
 
 
+def one_iter(input, output):
+    global FUNC_DB, FUNC_DB_ORG
+
+    if os.path.exists(args.funcdb):
+        with open(args.funcdb) as f:
+            FUNC_DB = yaml.load(f)
+            preprocess_funcdb(FUNC_DB)
+            FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
+            import progdb
+            progdb.set_funcdb(FUNC_DB)
+
+    if os.path.isdir(input):
+        if output and not os.path.isdir(output):
+            os.makedirs(output)
+        for full_name in glob.glob(input + "/*"):
+            if full_name.endswith(".lst") and os.path.isfile(full_name):
+                if args.debug:
+                    print(full_name)
+                args.file = full_name
+                if output:
+                    base_name = full_name.rsplit("/", 1)[-1]
+                    args.output = output + "/" + base_name
+                else:
+                    args.output = full_name + ".out"
+                handle_file(args)
+    else:
+        handle_file(args)
+
+
+    changed = FUNC_DB != FUNC_DB_ORG
+    if changed:
+        postprocess_funcdb(FUNC_DB)
+        if os.path.exists(args.funcdb):
+            os.rename(args.funcdb, args.funcdb + ".bak")
+
+        with open(args.funcdb, "w") as f:
+            yaml.dump(FUNC_DB, f)
+
+    return changed
+
+
 if __name__ == "__main__":
     args = parse_args()
 
@@ -168,35 +210,12 @@ if __name__ == "__main__":
             # For a single file, use *current* directory
             args.funcdb = "funcdb.yaml"
 
-    if os.path.exists(args.funcdb):
-        with open(args.funcdb) as f:
-            FUNC_DB = yaml.load(f)
-            preprocess_funcdb(FUNC_DB)
-            FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
-            import progdb
-            progdb.set_funcdb(FUNC_DB)
+    input = args.file
+    output = args.output
 
-    if os.path.isdir(args.file):
-        out = args.output
-        if out and not os.path.isdir(out):
-            os.makedirs(out)
-        for full_name in glob.glob(args.file + "/*"):
-            if full_name.endswith(".lst") and os.path.isfile(full_name):
-                args.file = full_name
-                if out:
-                    base_name = full_name.rsplit("/", 1)[-1]
-                    args.output = out + "/" + base_name
-                else:
-                    args.output = full_name + ".out"
-                handle_file(args)
-    else:
-        handle_file(args)
-
-
-    if FUNC_DB != FUNC_DB_ORG:
-        postprocess_funcdb(FUNC_DB)
-        if os.path.exists(args.funcdb):
-            os.rename(args.funcdb, args.funcdb + ".bak")
-
-        with open(args.funcdb, "w") as f:
-            yaml.dump(FUNC_DB, f)
+    while True:
+        changed = one_iter(input, output)
+        if not changed or not args.iter:
+            break
+        if args.debug:
+            print("Another iteration")
