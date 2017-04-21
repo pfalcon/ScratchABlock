@@ -8,6 +8,7 @@ import os.path
 import yaml
 import yamlutils
 
+import utils
 import core
 
 
@@ -41,7 +42,7 @@ def postprocess_funcdb(FUNC_DB):
     for addr, props in FUNC_DB.items():
         for prop in REG_PROPS:
             if prop in props:
-                props[prop] = sorted([x.name for x in props[prop]], key=core.natural_sort_key)
+                props[prop] = sorted([x.name for x in props[prop]], key=utils.natural_sort_key)
 
 
 def load_funcdb(fname):
