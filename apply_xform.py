@@ -141,7 +141,15 @@ def update_funcdb(cfg):
 
     for prop in ("calls", "func_refs", "mmio_refs"):
         if prop in cfg.props:
-            func_props[prop] = [x.addr for x in cfg.props[prop]]
+            def ext_repr(x):
+                if is_addr(x):
+                    return x.addr
+                if is_value(x):
+                    return hex(x.val)
+                if is_expr(x):
+                    return str(x)
+                assert False, repr(x)
+            func_props[prop] = [ext_repr(x) for x in cfg.props[prop]]
 
 
 def preprocess_funcdb(FUNC_DB):
