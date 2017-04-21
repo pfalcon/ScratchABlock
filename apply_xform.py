@@ -147,9 +147,12 @@ def update_funcdb(cfg):
                 if is_value(x):
                     return hex(x.val)
                 if is_expr(x):
+                    if x.op == "+" and len(x.args) == 2:
+                        if is_value(x.args[1]):
+                            x = EXPR("+", [x.args[1], x.args[0]])
                     return str(x)
                 assert False, repr(x)
-            func_props[prop] = [ext_repr(x) for x in cfg.props[prop]]
+            func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
 
 def preprocess_funcdb(FUNC_DB):
