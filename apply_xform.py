@@ -15,6 +15,7 @@ from xform_graph import *
 from decomp import *
 from asmprinter import AsmPrinter
 import cprinter
+import progdb
 
 # TODO: something above shadows "copy" otherwise
 import copy
@@ -155,35 +156,14 @@ def update_funcdb(cfg):
             func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
 
-REG_PROPS = [
-    "callsites_live_out", "modifieds", "preserveds", "reach_exit", "args", "estimated_args",
-    "returns",
-]
-
-def preprocess_funcdb(FUNC_DB):
-    for addr, props in FUNC_DB.items():
-        for prop in REG_PROPS:
-            if prop in props:
-                props[prop] = set(core.REG(x) for x in props[prop])
-
-
-def postprocess_funcdb(FUNC_DB):
-    for addr, props in FUNC_DB.items():
-        for prop in REG_PROPS:
-            if prop in props:
-                props[prop] = sorted([x.name for x in props[prop]], key=core.natural_sort_key)
-
-
 def one_iter(input, output):
     global FUNC_DB, FUNC_DB_ORG
 
     if os.path.exists(args.funcdb):
-        with open(args.funcdb) as f:
-            FUNC_DB = yaml.load(f)
-            preprocess_funcdb(FUNC_DB)
-            FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
-            import progdb
-            progdb.set_funcdb(FUNC_DB)
+        progdb.load_funcdb(args.funcdb)
+
+    FUNC_DB = progdb.FUNC_DB_BY_ADDR
+    FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
 
     if os.path.isdir(input):
         if output and not os.path.isdir(output):
@@ -205,12 +185,7 @@ def one_iter(input, output):
 
     changed = FUNC_DB != FUNC_DB_ORG
     if changed:
-        postprocess_funcdb(FUNC_DB)
-        if os.path.exists(args.funcdb):
-            os.rename(args.funcdb, args.funcdb + ".bak")
-
-        with open(args.funcdb, "w") as f:
-            yaml.dump(FUNC_DB, f)
+        progdb.save_funcdb(args.funcdb)
 
     return changed
 
