@@ -106,3 +106,48 @@ Algorithms and transformations implemented by ScratchABlock:
   * Traversal (depth first search (DFS), postorder)
   * Dominator tree
   * Node splitting
+
+* Data flow analysis:
+  * Generic iterative dataflow algorithm framework
+  * Dominator tree
+  * Reaching definitions
+  * Live variables
+  * Building def-use chains
+
+* Propagation:
+  * Constant
+  * Copy
+  * Memory references
+  * Expressions
+
+* Dead code elimination (DCE)
+
+* Rewriting:
+  * Of stack variables
+  * Of structure fields (TODO)
+  * Devirtualization (TODO)
+
+* Control flow structuring:
+  * Removal of jumps-over-jumps
+  * Single exit
+  * Loop single landing site
+  * if/if-else/if-elif-else ladders
+  * Control-flow "and" (if (a && b))
+  * Abnormal selection via node splitting
+  * while/do-while/infinite loops
+  * Generic loop structuring (TODO)
+  * Unreachable basic blocks elimination (TODO)
+
+* Output formats:
+  * PseudoC
+  * PseudoC with annotated basic blocks
+  * C
+  * .dot (for control flow (CFGs) and other graphs)
+  * YAML (for function properties database)
+
+ScratchABlock's partner tool is [ScratchABit](https://github.com/pfalcon/ScratchABit),
+which is an interactive disassemler intended to perform the lowest-level
+tasks of decompilation process, like separation of code from data, and
+identifying function boundaries. ScratchABit produces a PseudoC output
+(subject to plugin availability for a particular CPU architecture),
+which can serve as input to ScratchABlock.
