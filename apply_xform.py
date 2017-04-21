@@ -137,7 +137,7 @@ def update_funcdb(cfg):
 
     for prop in ("estimated_args", "modifieds", "preserveds", "reach_exit"):
         if prop in cfg.props:
-            func_props[prop] = sorted([x.name for x in cfg.props[prop]], key=core.natural_sort_key)
+            func_props[prop] = cfg.props[prop]
 
     for prop in ("calls", "func_refs", "mmio_refs"):
         if prop in cfg.props:
@@ -155,16 +155,21 @@ def update_funcdb(cfg):
             func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
 
+REG_PROPS = [
+    "callsites_live_out", "modifieds", "preserveds", "reach_exit", "args", "estimated_args",
+    "returns",
+]
+
 def preprocess_funcdb(FUNC_DB):
     for addr, props in FUNC_DB.items():
-        for prop in ("callsites_live_out",):
+        for prop in REG_PROPS:
             if prop in props:
                 props[prop] = set(core.REG(x) for x in props[prop])
 
 
 def postprocess_funcdb(FUNC_DB):
     for addr, props in FUNC_DB.items():
-        for prop in ("callsites_live_out",):
+        for prop in REG_PROPS:
             if prop in props:
                 props[prop] = sorted([x.name for x in props[prop]], key=core.natural_sort_key)
 
