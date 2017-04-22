@@ -301,7 +301,7 @@ def expr_propagation(cfg):
 def insert_sp0(cfg):
     entry_addr = cfg.entry()
     first_bblock = cfg[entry_addr]["val"]
-    first_bblock.items.insert(0, Inst(REG("sp"), "=", [REG("sp0")], addr=entry_addr + ".sp0"))
+    first_bblock.items.insert(0, Inst(REG("sp"), "=", [REG("sp_0")], addr=entry_addr + ".init0"))
 
 
 # Generalization of insert_sp0
@@ -324,7 +324,7 @@ def insert_args(cfg):
 def rewrite_stack_vars(bblock):
     "Rewrite memory references relative to sp0 to local variables."
     def mem2loc(m):
-        if is_mem(m) and set(m.regs()) == {REG("sp0")}:
+        if is_mem(m) and set(m.regs()) == {REG("sp_0")}:
             name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
             return CVAR(name)
 
