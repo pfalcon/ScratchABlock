@@ -321,12 +321,12 @@ def insert_args(cfg):
         first_bblock.items.insert(i, Inst(reg, "=", [REG("arg_" + reg.name)], addr=entry_addr + ".arg%d" % i))
 
 
-def rewrite_stack_vars(bblock):
+def rewrite_stack_vars(bblock, rewrite_to=CVAR):
     "Rewrite memory references relative to sp0 to local variables."
     def mem2loc(m):
         if is_mem(m) and set(m.regs()) == {REG("sp_0")}:
             name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
-            return CVAR(name)
+            return rewrite_to(name)
 
     for i, inst in enumerate(bblock.items):
         if inst.dest:
