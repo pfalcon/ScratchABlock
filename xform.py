@@ -384,7 +384,9 @@ def estimate_args(cfg):
     func_addr = cfg.entry()
     e = cfg[func_addr]
     import arch
-    cfg.props["estimated_args"] = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
+    args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
+    args -= set([REG("sp")])
+    cfg.props["estimated_args"] = args
 
 
 def repr_output(cfg):
