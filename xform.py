@@ -389,6 +389,16 @@ def estimate_args(cfg):
     cfg.props["estimated_args"] = args
 
 
+# Precisely compute func arguments
+def collect_args(cfg):
+    ana = dataflow.LiveVarAnalysis(cfg, skip_calls=False)
+    ana.solve()
+    func_addr = cfg.entry()
+    e = cfg[func_addr]
+    args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
+    cfg.props["args"] = args
+
+
 def repr_output(cfg):
     import core
     core.SimpleExpr.simple_repr = False

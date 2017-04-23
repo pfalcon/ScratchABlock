@@ -136,7 +136,7 @@ def update_funcdb(cfg):
     func_props = FUNC_DB.setdefault(cfg.props["addr"], {})
     func_props["label"] = cfg.props["name"]
 
-    for prop in ("estimated_args", "modifieds", "preserveds", "reach_exit"):
+    for prop in ("args", "estimated_args", "modifieds", "preserveds", "reach_exit"):
         if prop in cfg.props:
             func_props[prop] = cfg.props[prop]
 
