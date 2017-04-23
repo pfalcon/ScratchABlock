@@ -124,36 +124,9 @@ def handle_file_unprotected(args):
     if out is not sys.stdout:
         out.close()
 
-    update_funcdb(cfg)
+    progdb.update_funcdb(cfg)
 
     return cfg
-
-
-def update_funcdb(cfg):
-    "Aggregate data from each CFG processed into a function DB."
-    if "addr" not in cfg.props:
-        return
-    func_props = FUNC_DB.setdefault(cfg.props["addr"], {})
-    func_props["label"] = cfg.props["name"]
-
-    for prop in ("args", "estimated_args", "modifieds", "preserveds", "reach_exit"):
-        if prop in cfg.props:
-            func_props[prop] = cfg.props[prop]
-
-    for prop in ("calls", "func_refs", "mmio_refs"):
-        if prop in cfg.props:
-            def ext_repr(x):
-                if is_addr(x):
-                    return x.addr
-                if is_value(x):
-                    return hex(x.val)
-                if is_expr(x):
-                    if x.op == "+" and len(x.args) == 2:
-                        if is_value(x.args[1]):
-                            x = EXPR("+", [x.args[1], x.args[0]])
-                    return str(x)
-                assert False, repr(x)
-            func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
 
 def one_iter(input, output):
