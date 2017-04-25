@@ -158,13 +158,14 @@ class ReachDefAnalysis(GenKillAnalysis):
             kill = set()
             gen = set()
             for inst in bblock.items:
-                if inst.dest and (not self.regs_only or isinstance(inst.dest, core.REG)):
-                    kill |= set(filter(lambda x: x[0] == inst.dest, all_defs)) | {(inst.dest, None)}
-                    if self.inst_level:
-                        addr = inst.addr
-                    else:
-                        addr = bblock.addr
-                    gen.add((inst.dest, addr))
+                addr = inst.addr if self.inst_level else bblock.addr
+                defs = inst.defs(self.regs_only)
+                # Kill any real matching defs in function
+                kill |= {x for x in all_defs if x[0] in defs}
+                # and also any "undefined" defs from function reach-in
+                kill |= {(r, None) for r in defs}
+                for d in defs:
+                    gen.add((d, addr))
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
 
