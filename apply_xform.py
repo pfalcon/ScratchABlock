@@ -139,6 +139,16 @@ def one_iter(input, output):
     FUNC_DB = progdb.FUNC_DB_BY_ADDR
     FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
 
+    if args.script:
+        # If script has init() function, call it at the beginning of each
+        # iteration, this is useful to reset some state. E.g., if some
+        # funcdb property is calculated as a union, but we want to find
+        # its lower bound, we need to reset it to empty set at each
+        # iteration.
+        mod = __import__(args.script)
+        if hasattr(mod, "init"):
+            mod.init()
+
     if os.path.isdir(input):
         if output and not os.path.isdir(output):
             os.makedirs(output)
