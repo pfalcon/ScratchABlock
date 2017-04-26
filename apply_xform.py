@@ -178,9 +178,11 @@ if __name__ == "__main__":
     input = args.file
     output = args.output
 
+    iter_no = 0
     while True:
         changed = one_iter(input, output)
         if not changed or not args.iter:
             break
         if args.debug:
-            print("Another iteration")
+            print("=== Done iteration %d ===" % iter_no)
+        iter_no += 1
