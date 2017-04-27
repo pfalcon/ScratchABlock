@@ -305,10 +305,11 @@ def insert_sp0(cfg):
 
 
 # Generalization of insert_sp0
-# Requires analyze_reach_defs
+# Requires analyze_live_vars
 def insert_initial_regs(cfg):
     entry_addr = cfg.entry()
-    used_regs = reversed(sorted([x[0] for x in cfg[entry_addr]["reachdef_in"]]))
+#    used_regs = reversed(sorted([x[0] for x in cfg[entry_addr]["reachdef_in"]]))
+    used_regs = cfg[entry_addr]["live_in"]
     first_bblock = cfg[entry_addr]["val"]
     for r in used_regs:
         first_bblock.items.insert(0, Inst(r, "=", [REG(r.name + "_0")], addr=entry_addr + ".init0"))
