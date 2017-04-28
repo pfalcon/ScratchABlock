@@ -311,8 +311,8 @@ def insert_initial_regs(cfg):
 #    used_regs = reversed(sorted([x[0] for x in cfg[entry_addr]["reachdef_in"]]))
     used_regs = cfg[entry_addr]["live_in"]
     first_bblock = cfg[entry_addr]["val"]
-    for r in sorted(list(used_regs)):
-        first_bblock.items.insert(0, Inst(r, "=", [REG(r.name + "_0")], addr=entry_addr + ".init0"))
+    for i, r in enumerate(sorted(list(used_regs))):
+        first_bblock.items.insert(i, Inst(r, "=", [REG(r.name + "_0")], addr=entry_addr + ".init%d" % i))
 
 
 def insert_args(cfg):
