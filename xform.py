@@ -6,6 +6,7 @@ from core import *
 from cfgutils import *
 from dce import *
 from xform_expr import *
+from utils import set_union
 import arch
 
 
@@ -367,6 +368,15 @@ def collect_func_refs(cfg):
 
     foreach_inst(cfg, collect)
     cfg.props["func_refs"] = refs
+
+
+def collect_reach_exit(cfg):
+    all_defs1 = foreach_bblock(cfg, lambda b: b.defs(True), set_union)
+    exit = cfg.exit()
+    #all_defs2 = set(x[0] for x in cfg.node(exit)["reachdef_out"])
+    #assert all_defs1 == all_defs2
+    cfg.props["reach_exit"] = all_defs1
+    return all_defs1
 
 
 import dataflow
