@@ -389,6 +389,9 @@ def analyze_reach_defs(cfg):
     ana.solve()
 
 
+# Regs in live_in set on function entry are estimated args
+# (may miss something, e.g. if value in a reg is passed thru
+# (without referencing it) to another function).
 def estimate_args(cfg):
     ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
     ana.solve()
