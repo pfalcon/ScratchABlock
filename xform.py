@@ -112,12 +112,32 @@ def cfg_single_exit(cfg):
     if len(exits) == 1:
         return
 
-    newb = BBlock("single_exit")
-    newb.cfg = cfg
-    newb.add(Inst(None, "return", [], "single_exit"))
-    cfg.add_node(newb.addr, val=newb)
+    # Capture entry node before we add unconnected single exit node
+    entry_addr = cfg.entry()
+
+    exitb = BBlock("single_exit")
+    exitb.cfg = cfg
+    exitb.add(Inst(None, "return", [], addr="single_exit"))
+    cfg.add_node(exitb.addr, val=exitb)
     for e in exits:
-        cfg.add_edge(e, newb.addr)
+        cfg.add_edge(e, exitb.addr)
+
+    if not exits:
+        old_entry_node = cfg.node(entry_addr)
+
+        # Duplicate the original entry node as "entry.real"
+        new_entry_addr = entry_addr + ".real"
+        cfg.add_node(new_entry_addr, val=old_entry_node["val"])
+        cfg.move_succ(entry_addr, new_entry_addr)
+
+        ifb = BBlock(entry_addr)
+        ifb.cfg = cfg
+        ifb.add(Inst(None, "if", [VALUE(0), ADDR(exitb.addr)]))
+        ifb.add(Inst(None, "goto", [ADDR(new_entry_addr)]))
+        old_entry_node["val"] = ifb
+
+        cfg.add_edge(entry_addr, exitb.addr, cond=VALUE(0))
+        cfg.add_edge(entry_addr, new_entry_addr)
 
 
 def sub_const_to_add(bblock):
