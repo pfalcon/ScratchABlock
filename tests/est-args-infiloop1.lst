@@ -1,0 +1,7 @@
+#xform: cfg_single_exit
+#xform: estimate_args
+10 start:
+10     $r0 = 1
+20 20:
+20     func($r1)
+30     goto 20
