@@ -1,0 +1,4 @@
+#script: script_preserveds
+10 func:
+10  $a3 = $a2 + 1
+20  return

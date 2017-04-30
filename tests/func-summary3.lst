@@ -1,0 +1,7 @@
+#script: script_preserveds
+05 func:
+05  $save = $a2
+10  $a3 = $a2 + 1
+15  $a2 = 10
+17  $a2 = $save
+20  return
