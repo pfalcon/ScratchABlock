@@ -1,0 +1,9 @@
+#script: script_preserveds
+01 func:
+01  $sp -= 0x10
+05  *(u32*)$sp = $a2
+10  $a3 = $a2 + 1
+15  $a2 = 10
+17  $a2 = *(u32*)$sp
+18  $sp += 0x10
+20  return
