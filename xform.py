@@ -359,6 +359,20 @@ def rewrite_stack_vars(bblock, rewrite_to=CVAR):
             inst.args[arg_no] = expr_xform(arg, mem2loc)
 
 
+# Requires insert_initial_regs pass followed by expr_propagation passes
+# (normal, then stack vars propagation), and should be run before DCE.
+def collect_preserveds(cfg):
+    exit_addr = cfg.exit()
+    exit_bblock = cfg[exit_addr]["val"]
+    state_out = exit_bblock.props["state_out"]
+    preserveds = set()
+    for k, v in state_out.items():
+        if is_reg(k) and is_reg(v):
+            if v.name == k.name + "_0":
+                preserveds.add(k)
+    cfg.props["preserveds"] = preserveds
+
+
 # Requires expr_propagation
 def collect_calls(cfg):
     calls = []
