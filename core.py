@@ -435,6 +435,7 @@ class Inst:
 
     trail = ""
     show_comments = True
+    annotate_calls = False
     comment = "//"
 
     def __init__(self, dest, op, args, addr=None):
@@ -541,6 +542,10 @@ class Inst:
         s = ""
         if self.show_comments and "org_inst" in comments:
             s = self.comment + " " + str(comments.pop("org_inst")) + " "
+
+        if self.op == "call" and self.annotate_calls:
+            comments["uses"] = sorted(self.uses())
+            comments["defs"] = sorted(self.defs())
 
         tail = self.trail
         if self.show_comments and comments:
