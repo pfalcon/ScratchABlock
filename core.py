@@ -485,7 +485,7 @@ class Inst:
         """Return set of all registers defined by this instruction. Function
         calls (and maybe SFUNCs) require special treatment."""
         if self.op == "call":
-            return arch.call_ret(self.args[0])
+            return arch.call_defs(self.args[0])
 
         defs = set()
         if self.dest:
