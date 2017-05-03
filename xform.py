@@ -10,7 +10,7 @@ from utils import set_union
 import arch
 
 
-log = logging.getLogger(__file__)
+log = logging.getLogger(__name__)
 
 # Apply tranformation while it's possible
 def apply_iterative(func, args):
