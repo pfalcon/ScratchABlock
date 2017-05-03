@@ -37,6 +37,7 @@ def parse_args():
         help="output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
     argp.add_argument("--no-graph-header", action="store_true", help="don't output graph properties")
+    argp.add_argument("--annotate-calls", action="store_true", help="annotate calls if uses/defs")
     argp.add_argument("--repr", action="store_true", help="dump __repr__ format of instructions and other objects")
     argp.add_argument("--debug", action="store_true", help="produce debug files")
     args = argp.parse_args()
@@ -176,6 +177,8 @@ def one_iter(input, output):
 
 if __name__ == "__main__":
     args = parse_args()
+    if args.annotate_calls:
+        core.Inst.annotate_calls = True
 
     if not args.funcdb:
         if os.path.isdir(args.file):
