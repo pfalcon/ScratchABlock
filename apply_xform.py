@@ -3,6 +3,7 @@ import sys
 import argparse
 import os.path
 import glob
+import logging
 
 import yaml
 import yamlutils
@@ -40,6 +41,7 @@ def parse_args():
     argp.add_argument("--annotate-calls", action="store_true", help="annotate calls if uses/defs")
     argp.add_argument("--repr", action="store_true", help="dump __repr__ format of instructions and other objects")
     argp.add_argument("--debug", action="store_true", help="produce debug files")
+    argp.add_argument("--log-level", help="set logging level")
     args = argp.parse_args()
 
     if args.repr:
@@ -177,6 +179,10 @@ def one_iter(input, output):
 
 if __name__ == "__main__":
     args = parse_args()
+
+    if args.log_level:
+        logging.basicConfig(level=getattr(logging, args.log_level))
+
     if args.annotate_calls:
         core.Inst.annotate_calls = True
 
