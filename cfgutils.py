@@ -23,6 +23,13 @@ def detach_node(cfg, n):
     cfg.remove_node(n)
 
 
+def foreach_node(cfg, func):
+    """Call function for each node of graph, passing node's properties.
+    """
+    for addr, info in cfg.iter_sorted_nodes():
+        func(info)
+
+
 def foreach_bblock(cfg, func, join_func=lambda a, b: a or b, **kwargs):
     """Apply basic-block level transformation to each block in CFG.
     Return cumulative status (OR of each block's status).
