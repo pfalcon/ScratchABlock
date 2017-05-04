@@ -447,6 +447,23 @@ def collect_args(cfg):
     cfg.props["args"] = args
 
 
+# Collect regs which are live after a function call. Intersection of
+# this set with function's modifieds will be returns of a function.
+def collect_call_live_out(cfg):
+    import progdb
+
+    def collect(node):
+        bb = node["val"]
+        if bb[-1].op == "call":
+            inst = bb[-1]
+            arg = inst.args[0]
+            if is_addr(arg):
+                func = arg.addr
+                progdb.FUNC_DB.setdefault(func, {}).setdefault("callsites_live_out", set()).update(node["live_out"])
+
+    foreach_node(cfg, collect)
+
+
 def repr_output(cfg):
     import core
     core.SimpleExpr.simple_repr = False
