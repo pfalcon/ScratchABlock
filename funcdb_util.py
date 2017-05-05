@@ -50,6 +50,11 @@ elif args.command == "called_by":
         if name in called:
             props["called_by"] = called[name]
 
+elif args.command == "returns":
+    for addr, props in FUNC_DB.items():
+        if "modifieds" in props and "callsites_live_out" in props:
+            props["returns"] = set(props["modifieds"]) & set(props["callsites_live_out"])
+
 else:
     argp.error("Unknown command: " + args.command)
 
