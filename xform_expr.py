@@ -84,6 +84,12 @@ def expr_simplify_add(e):
             return VALUE(val, base)
 
 
+def simplify_expr(expr):
+    new_expr = expr_xform(expr, expr_associative_add)
+    new_expr = expr_xform(new_expr, expr_simplify_add)
+    return new_expr
+
+
 # Should transform inplace
 def simplify_cond(e):
     if is_expr_2args(e.arg1) and e.arg1.op == "+" and is_value(e.arg1.args[1]) and is_value(e.arg2):

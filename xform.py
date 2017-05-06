@@ -197,8 +197,7 @@ def expr_subst(expr, subst_dict):
             return None
 
         new_expr = EXPR(expr.op, new_args)
-        new_expr = expr_xform(new_expr, expr_associative_add)
-        new_expr = expr_xform(new_expr, expr_simplify_add)
+        new_expr = simplify_expr(new_expr)
         return new_expr
 
     assert 0, (expr, type(expr))
