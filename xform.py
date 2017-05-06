@@ -20,6 +20,12 @@ def apply_iterative(func, args):
     print("Ran %s %d times" % (func, cnt))
 
 
+def check_pass(cfg, prop_name, err_msg):
+    entry_addr = cfg.entry()
+    if prop_name not in cfg[entry_addr]:
+        assert 0, err_msg
+
+
 def remove_trailing_jumps(cfg):
     remove_returns = False
     exits = cfg.exits()
@@ -300,6 +306,7 @@ def collect_state_in(cfg):
 
 
 def propagate(cfg, bblock_propagator):
+    check_pass(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:
         foreach_bblock(cfg, bblock_propagator)
         if not collect_state_in(cfg):
