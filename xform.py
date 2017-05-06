@@ -420,6 +420,26 @@ def collect_reach_exit(cfg):
     return all_defs1
 
 
+# Collect registers which may be either defined or not on the exit.
+# These registers often represent parasitic arguments (as they
+# may be either modified or not, the way to return the original value
+# of the reg is take it as a param).
+# Requires reachdef on raw CFG (before insert_initial_regs).
+def collect_reach_exit_maybe(cfg):
+    exit = cfg.exit()
+    vardict = {}
+    for var, addr in cfg.node(exit)["reachdef_out"]:
+        vardict.setdefault(var, set()).add(addr)
+    mod_maybe = set()
+
+    for var, addrs in vardict.items():
+        if len(addrs) > 1 and None in addrs:
+            mod_maybe.add(var)
+
+    if mod_maybe:
+        cfg.props["reach_exit_maybe"] = mod_maybe
+
+
 import dataflow
 def analyze_live_vars(cfg):
     ana = dataflow.LiveVarAnalysis(cfg)
