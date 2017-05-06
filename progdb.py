@@ -4,6 +4,7 @@
 # databases of structures, etc.
 #
 import os.path
+import copy
 
 import yaml
 import yamlutils
@@ -54,13 +55,13 @@ def load_funcdb(fname):
 
 
 def save_funcdb(fname, backup=True):
-    global FUNC_DB_BY_ADDR
-    postprocess_funcdb(FUNC_DB_BY_ADDR)
+    db = copy.deepcopy(FUNC_DB_BY_ADDR)
+    postprocess_funcdb(db)
     if backup and os.path.exists(fname):
         os.rename(fname, fname + ".bak")
 
     with open(fname, "w") as f:
-        yaml.dump(FUNC_DB_BY_ADDR, f)
+        yaml.dump(db, f)
 
 
 def update_funcdb(cfg):
