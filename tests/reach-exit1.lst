@@ -1,0 +1,10 @@
+#xform: analyze_reach_defs
+#xform: collect_reach_exit
+10  if (!$a1) goto 30
+20  $a2 = 1
+21  goto 40
+30 30:
+20  $a3 = 2
+40 40:
+40  $a4 = 0
+50  return
