@@ -434,8 +434,9 @@ def analyze_reach_defs(cfg):
 # (may miss something, e.g. if value in a reg is passed thru
 # (without referencing it) to another function).
 def estimate_args(cfg):
-    ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
-    ana.solve()
+    #ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
+    #ana.solve()
+    check_pass(cfg, "live_in", "This pass requires live variable information")
     func_addr = cfg.entry()
     e = cfg[func_addr]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
