@@ -1,6 +1,6 @@
 // Graph props:
 //  addr: 10
-//  estimated_args: {$r1}
+//  estimated_params: {$r1}
 //  name: start
 //  trailing_jumps: True
 

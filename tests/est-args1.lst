@@ -1,4 +1,4 @@
 #xform: analyze_live_vars
-#xform: estimate_args
+#xform: estimate_params
 20     func($r1)
 30     return
