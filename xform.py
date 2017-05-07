@@ -465,12 +465,12 @@ def estimate_params(cfg):
     cfg.props["estimated_params"] = args
 
 
-# Precisely compute func arguments
-def collect_args(cfg):
+# Precisely compute func params
+def collect_params(cfg):
     func_addr = cfg.entry()
     e = cfg[func_addr]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
-    progdb.update_cfg_prop(cfg, "args", args)
+    progdb.update_cfg_prop(cfg, "params", args)
 
 
 # Collect regs which are live after a function call. Intersection of
