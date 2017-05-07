@@ -90,6 +90,28 @@ def update_funcdb(cfg):
                 assert False, repr(x)
             func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
+#
+# Updated funcs tracking
+#
+
+UPDATED_FUNCS = set()
+
+def clear_updated():
+    UPDATED_FUNCS.clear()
+
+def mark_updated(func):
+    UPDATED_FUNCS.add(func)
+
+def update_cfg_prop(cfg, prop, new_val):
+    if cfg.props.get(prop) != new_val:
+        mark_updated(cfg.props["name"])
+        print("%s: %s updated from %s to %s" % (cfg.props["name"], prop,
+            utils.repr_stable(cfg.props.get(prop)), utils.repr_stable(new_val)))
+    cfg.props[prop] = new_val
+
+#
+# Struct database functions
+#
 
 def set_struct_types(data):
     global struct_types
