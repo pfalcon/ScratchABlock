@@ -1,6 +1,6 @@
 #xform: cfg_single_exit
 #xform: analyze_live_vars
-#xform: estimate_args
+#xform: estimate_params
 10 start:
 10     $r0 = 1
 20 20:
