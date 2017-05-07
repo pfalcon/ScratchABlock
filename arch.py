@@ -19,8 +19,8 @@ ALL_REGS = {REG("a0"), REG("sp")} | reg_range(2, 15)
 def call_args(addr):
     if isinstance(addr, ADDR):
         addr = addr.addr
-        if addr in progdb.FUNC_DB and "args" in progdb.FUNC_DB[addr]:
-            return progdb.FUNC_DB[addr]["args"]
+        if addr in progdb.FUNC_DB and "params" in progdb.FUNC_DB[addr]:
+            return progdb.FUNC_DB[addr]["params"]
     return reg_range(2, 7)
 
 def call_ret(addr):

@@ -30,7 +30,7 @@ def set_funcdb(db):
 
 REG_PROPS = [
     "callsites_live_out", "modifieds", "preserveds", "reach_exit", "reach_exit_maybe",
-    "args", "estimated_params", "returns",
+    "params", "estimated_params", "returns",
 ]
 
 def preprocess_funcdb(FUNC_DB):
@@ -71,7 +71,7 @@ def update_funcdb(cfg):
     func_props = FUNC_DB_BY_ADDR.setdefault(cfg.props["addr"], {})
     func_props["label"] = cfg.props["name"]
 
-    for prop in ("args", "estimated_params", "modifieds", "preserveds", "reach_exit", "reach_exit_maybe", "calls_live_out"):
+    for prop in ("params", "estimated_params", "modifieds", "preserveds", "reach_exit", "reach_exit_maybe", "calls_live_out"):
         if prop in cfg.props:
             func_props[prop] = cfg.props[prop]
 
