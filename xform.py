@@ -450,10 +450,10 @@ def analyze_reach_defs(cfg):
     ana.solve()
 
 
-# Regs in live_in set on function entry are estimated args
+# Regs in live_in set on function entry are estimated params
 # (may miss something, e.g. if value in a reg is passed thru
 # (without referencing it) to another function).
-def estimate_args(cfg):
+def estimate_params(cfg):
     #ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
     #ana.solve()
     check_pass(cfg, "live_in", "This pass requires live variable information")
@@ -461,7 +461,7 @@ def estimate_args(cfg):
     e = cfg[func_addr]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
     args -= set([REG("sp")])
-    cfg.props["estimated_args"] = args
+    cfg.props["estimated_params"] = args
 
 
 # Precisely compute func arguments
