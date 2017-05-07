@@ -347,7 +347,7 @@ def insert_initial_regs(cfg):
 def insert_args(cfg):
     entry_addr = cfg.entry()
     first_bblock = cfg[entry_addr]["val"]
-    for i, reg in enumerate(sorted(list(arch.call_args(cfg.props["name"])))):
+    for i, reg in enumerate(sorted(list(arch.call_params(cfg.props["name"])))):
         first_bblock.items.insert(i, Inst(reg, "=", [REG("arg_" + reg.name)], addr=entry_addr + ".arg%d" % i))
 
 
