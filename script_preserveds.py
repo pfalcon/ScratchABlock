@@ -34,4 +34,4 @@ def apply(cfg):
     cfg.props["modifieds"] = cfg.props["reach_exit"] - cfg.props["preserveds"]
 
     analyze_live_vars(cfg)
-    estimate_args(cfg)
+    estimate_params(cfg)
