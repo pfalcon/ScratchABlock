@@ -8,6 +8,7 @@ from dce import *
 from xform_expr import *
 from utils import set_union
 import arch
+import progdb
 
 
 log = logging.getLogger(__name__)
@@ -471,7 +472,7 @@ def collect_args(cfg):
     func_addr = cfg.entry()
     e = cfg[func_addr]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
-    cfg.props["args"] = args
+    progdb.update_cfg_prop(cfg, "args", args)
 
 
 # Collect regs which are live after a function call. Intersection of
