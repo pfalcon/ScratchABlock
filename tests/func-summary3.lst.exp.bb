@@ -1,6 +1,6 @@
 // Graph props:
 //  addr: 05
-//  estimated_args: {$a2}
+//  estimated_params: {$a2}
 //  modifieds: {$a3, $save}
 //  name: func
 //  preserveds: {$a2}
