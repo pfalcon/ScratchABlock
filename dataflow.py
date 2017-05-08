@@ -221,12 +221,6 @@ def make_du_chains(cfg):
                 if r in mapping:
                     mapping[r].comments["uses"].append(inst.addr)
 
-            if inst.dest:
-                if is_mem(inst.dest):
-                    for r in inst.dest.regs():
-                        if r in mapping:
-                            mapping[r].comments["uses"].append(inst.addr)
-
             for dest in inst.defs(regs_only=False):
                 mapping[dest] = inst
                 inst.comments["uses"] = []

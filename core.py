@@ -478,6 +478,9 @@ class Inst:
         for a in self.args:
             for r in a.regs():
                 uses.add(r)
+        if is_mem(self.dest):
+            for r in self.dest.regs():
+                uses.add(r)
         return uses
 
 
