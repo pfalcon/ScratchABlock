@@ -544,7 +544,7 @@ class Parser:
                         block.add(inst)
 
             if last_block:
-                print("Warning: function was not properly terminated")
+                print("Warning: function %s was not properly terminated" % self.cfg.props["name"])
                 # block may be None e.g. if last instruction was call,
                 # and function abruptly ended without return.
                 if block:
