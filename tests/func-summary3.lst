@@ -1,7 +1,7 @@
 #script: script_preserveds
-05 func:
-05  $save = $a2
-10  $a3 = $a2 + 1
-15  $a2 = 10
-17  $a2 = $save
-20  return
+15 func:
+15  $save = $a2
+20  $a3 = $a2 + 1
+25  $a2 = 10
+27  $a2 = $save
+30  return
