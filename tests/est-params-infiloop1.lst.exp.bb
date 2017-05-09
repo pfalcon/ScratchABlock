@@ -2,6 +2,7 @@
 //  addr: 10
 //  estimated_params: {$r1}
 //  name: start
+//  noreturn: True
 //  trailing_jumps: True
 
 // Predecessors: []
