@@ -130,6 +130,9 @@ def cfg_single_exit(cfg):
         cfg.add_edge(e, exitb.addr)
 
     if not exits:
+        # Infinite loop
+        cfg.props["noreturn"] = True
+
         old_entry_node = cfg.node(entry_addr)
 
         # Duplicate the original entry node as "entry.real"
