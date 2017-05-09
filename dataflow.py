@@ -203,8 +203,9 @@ class LiveVarAnalysis(GenKillAnalysis):
                 for r in inst.uses(self.g):
                     if r not in kill:
                         gen.add(r)
-                if inst.dest:
-                    kill.add(inst.dest)
+
+                for dest in inst.defs(regs_only=False):
+                    kill.add(dest)
 
             info[self.node_prop_kill] = kill
             info[self.node_prop_gen] = gen
