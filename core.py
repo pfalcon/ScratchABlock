@@ -321,8 +321,12 @@ class TYPE(SimpleExpr):
 
 class EXPR:
     "A recursive expression."
-    def __init__(self, op, args):
+    def __init__(self, op, *args):
         self.op = op
+        if isinstance(args[0], list):
+            args = args[0]
+        else:
+            args = list(args)
         self.args = args
 
     def __repr__(self):
