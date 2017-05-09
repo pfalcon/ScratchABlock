@@ -1,0 +1,12 @@
+#script: script_preserveds
+11 func:
+11  $sp -= 0x10
+15  *(u32*)$sp = $a2
+20  $a3 = $a2 + 1
+25  $a2 = 10
+30  call foo
+35  $a2 += 1
+40  call bar
+45  $a2 = *(u32*)$sp
+50  $sp += 0x10
+55  return
