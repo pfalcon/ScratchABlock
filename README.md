@@ -60,12 +60,18 @@ Python2 versions). For unit testing, "nose" package is required:
 https://pypi.python.org/pypi/nose (expected executable name is
 `nosetests3`).
 
+ScratchABlock uses the *PseudoC* assembler as its IR. It is an assembler
+language expressed as much as possible using the familiar C language
+syntax. The idea is that any C programmer would understand it intuitively
+([example](tests/ifelse2.lst)), but there is an ongoing effort to
+[specify PseudoC more formally](docs/PseudoC-spec.md).
+
 Source code and interfacing scripts are in the root of the repository.
 The most important scripts are:
 
 * `apply_xform.py` - A central driver, allows to apply a sequence of
 transformations (or in general, a high-level analysis/transformation
-algorithm) to a single file or a directory of files.
+algorithms) to a single file or a directory of files.
 
 * `run_tests` - The regregression testsuite runner. The majority of
 testsuite is high-level, consisting of running apply_xform.py with
