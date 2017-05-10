@@ -32,6 +32,34 @@ operation it's important that register's contents are interpreted as a
 signed value, it's explicitly cast just for that operation (see below).
 
 
+### Types
+
+PseudoC uses a very simple type system, consisting of signed and unsigned
+integers, represented in a form contracted from `<stdint.h>`:
+
+* Unsigned: `u8`, `u16`, `u32`, `u64`, etc.
+* Signed: `i8`, `i16`, `i32`, `i64`, etc.
+
+The sizes of types (in bits) are generally expected to be powers of 2,
+up to word length of a CPU, but syntax allows arbitrary sizes.
+
+For memory references (see below), there can be pointers to the types
+above, e.g. `u8*`.
+
+Types appear in few places in PseudoC program:
+
+* Declaring types of CPU registers (tentative).
+* When access memory, to cast numeric value in a register into a pointer
+  to a type of needed size.
+* To mark places where signed variants of operations are needed (or
+  vice-versa, unsigned). In this usage, l-values remain l-values after
+  cast, unlike C. E.g. `(i32)$r0 >>= 1` performs arithmetic shift right
+  on a register `$r0`.
+* For narrowing or widening values, where this usage has normal C
+  semantics, e.g. `$r32 = (i16)$r32`, assuming `$r32` is 32-bit, will
+  truncate it to 16 bits, then sign-extend the value to full 32 bits.
+
+
 ### Symbolic addresses
 
 Addresses of memory locations are represented by an identifier. The
