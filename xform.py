@@ -415,6 +415,40 @@ def collect_func_refs(cfg):
     cfg.props["func_refs"] = refs
 
 
+def collect_mem_refs(cfg, pred, prop_name="mem_refs"):
+    """Collect references to non-symbolic memory address (ones represented
+    by VALUE objects). This is useful e.g. to see which function accesses
+    which MMIO addresses. Takes a predicate telling which addresses should
+    be captured and property name to store summary.
+    """
+    refs = []
+
+    def collect(inst):
+
+        def collect_mmio(expr):
+            if expr and is_mem(expr):
+                mem = expr.expr
+                if is_value(mem) and pred(mem.val):
+                    refs.append(mem)
+                elif is_expr(mem):
+                    if mem.op != "+":
+                        #print(mem.op, expr)
+                        return
+                    # TODO: This means that MMIO accessed as array
+                    for a in mem.args:
+                        if is_value(a) and pred(a.val):
+                            #refs.append(a)
+                            refs.append(mem)
+                            break
+
+        inst.foreach_subexpr(collect_mmio)
+
+    foreach_inst(cfg, collect)
+    if refs:
+        #cfg.props[prop_name] = refs
+        cfg.props[prop_name] = sorted(list(set(refs)))
+
+
 def collect_reach_exit(cfg):
     all_defs1 = foreach_bblock(cfg, lambda b: b.defs(True), set_union)
     exit = cfg.exit()
