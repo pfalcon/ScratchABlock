@@ -13,6 +13,7 @@ argp.add_argument("file", help="function database file (YAML)")
 argp.add_argument("--select", help="fields to select")
 argp.add_argument("--where", help="condition of rows to select")
 argp.add_argument("--sort", action="store_true", help="sort resultset")
+argp.add_argument("--html", action="store_true", help="output HTML")
 args = argp.parse_args()
 
 with open(args.file) as f:
@@ -44,9 +45,21 @@ for addr, props in FUNC_DB.items():
 if args.sort:
     res.sort()
 
+if args.html:
+    print("<html><body><table border='1' cellspacing='0'>")
+
 for row in res:
     if isinstance(row, dict):
-        print(row)
+        if args.html:
+            print("<tr><td>" + row + "</td></tr>")
+        else:
+            print(row)
     else:
         row = [str(x) for x in row]
-        print(": ".join(row))
+        if args.html:
+            print("<tr><td>" + "</td><td>".join(row) + "</td></tr>")
+        else:
+            print(": ".join(row))
+
+if args.html:
+    print("</table></body></html>")
