@@ -58,6 +58,30 @@ def remove_trailing_jumps_bblock(bblock, remove_returns=False):
         del bblock.items[last_jump:]
 
 
+def remove_unreachable_entries(cfg):
+    # Remove disconnected graph nodes.
+    entries = cfg.entries()
+    if len(entries) == 1:
+        return
+    for e in entries:
+        if e == cfg.props["addr"]:
+            continue
+
+        def remove_component(e):
+            if cfg.pred(e):
+                return
+            succ = cfg.succ(e)
+            try:
+                cfg.remove_node(e)
+            except KeyError:
+                # Already removed
+                pass
+            for e in succ:
+                remove_component(e)
+
+        remove_component(e)
+
+
 # Remove any jumps to jumps, replacing destination of first jump
 # to be destination of 2nd.
 # This "simplifies" graph, but makes it irregular. This is useful
