@@ -11,7 +11,7 @@ import yamlutils
 
 import utils
 import core
-from core import is_addr, is_value, is_expr
+from core import is_addr, is_value, is_expr, EXPR
 
 
 FUNC_DB = {}
