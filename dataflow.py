@@ -139,7 +139,7 @@ class ReachDefAnalysis(GenKillAnalysis):
         entry's in set is initialized to a set of all defined locations with
         None address, representing non-initialized location."""
         entry = self.g.entries()
-        assert len(entry) == 1
+        assert len(entry) == 1, len(entry)
         entry = entry[0]
         if self.inst_level:
             all_defs = foreach_bblock(self.g, lambda b: b.def_addrs(self.regs_only), set.union)
