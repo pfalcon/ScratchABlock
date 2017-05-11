@@ -5,6 +5,8 @@ from xform import *
 def apply(cfg):
     # Various algos below require single-exit CFG
 #    cfg_single_exit(cfg)
+    # And single entry
+    remove_unreachable_entries(cfg)
 
     analyze_reach_defs(cfg)
     const_propagation(cfg)
