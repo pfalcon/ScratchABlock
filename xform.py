@@ -312,6 +312,13 @@ def bblock_expr_propagation(bblock):
     bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR))
 
 
+def simplify_inst(inst):
+    if not (inst.dest and inst.op == "="):
+        return
+    assert len(inst.args) == 1
+    inst.args[0] = simplify_expr(inst.args[0])
+
+
 def collect_state_in(cfg):
     # This is pretty backwards actually. It uses ReachDef information,
     # but post-processes it pretty heavily, and instead should be done
