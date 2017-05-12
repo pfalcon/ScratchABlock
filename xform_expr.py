@@ -54,6 +54,12 @@ def expr_sub_to_add(e):
             return EXPR("+", [e.args[0], expr_neg(e.args[1])])
 
 
+def expr_commutative_normalize(e):
+    if e.op not in ("+", "&", "|", "^"):
+        return
+    e.args.sort()
+
+
 def expr_associative_add(e):
     "Turn (a + b) + c into a + b + c."
     if is_expr(e) and e.op == "+":
@@ -84,9 +90,22 @@ def expr_simplify_add(e):
             return VALUE(val, base)
 
 
+def expr_simplify_xor(e):
+    if is_expr(e) and e.op == "^":
+        assert is_expr_2args(e)
+
+        if e.args[0] == e.args[1]:
+            return VALUE(0)
+
+        expr_commutative_normalize(e)
+        if is_value(e.args[1]) and e.args[1].val == 0:
+            return e.args[0]
+
+
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_associative_add)
     new_expr = expr_xform(new_expr, expr_simplify_add)
+    new_expr = expr_xform(new_expr, expr_simplify_xor)
     return new_expr
 
 
