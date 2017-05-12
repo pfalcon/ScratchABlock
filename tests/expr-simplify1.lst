@@ -1,0 +1,9 @@
+#xform_inst: simplify_inst
+10     $r1 = $r0 + 0
+11     $r3 = 0 + $r2
+12     $r5 = 1 + $r4
+20     $r7 = $r6 ^ $r6
+21     $r9 = $r8 ^ 0
+22     $r11 = 0 ^ $r10
+
+100    return
