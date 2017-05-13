@@ -18,3 +18,4 @@ shift
 
 $DIR/apply_xform.py --script script_callgraph --format none $funcdir
 $DIR/funcdb_dot.py $funcdir/funcdb.yaml -o $funcdir/callgraph.dot "$@"
+$DIR/funcdb_util.py called_by $funcdir/funcdb.yaml
