@@ -102,10 +102,23 @@ def expr_simplify_xor(e):
             return e.args[0]
 
 
+def expr_simplify_lshift(e):
+    if is_expr(e) and e.op == "<<":
+        assert is_expr_2args(e)
+
+        if is_value(e.args[1]):
+            val = e.args[1].val
+            # Try to convert usages which are realistic address calculations,
+            # otherwise we may affect bitfield, etc. expressions.
+            if val < 5:
+                return EXPR("*", [e.args[0], VALUE(1 << val, 10)])
+
+
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_associative_add)
     new_expr = expr_xform(new_expr, expr_simplify_add)
     new_expr = expr_xform(new_expr, expr_simplify_xor)
+    new_expr = expr_xform(new_expr, expr_simplify_lshift)
     return new_expr
 
 
