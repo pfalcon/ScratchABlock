@@ -1,0 +1,5 @@
+#xform_inst: simplify_inst
+10     $a2 = $a3 << 2
+10     $a2 = $a3 << 8
+
+100    return
