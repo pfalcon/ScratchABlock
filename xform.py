@@ -407,7 +407,7 @@ def rewrite_stack_vars(bblock, rewrite_to=CVAR):
 
     for i, inst in enumerate(bblock.items):
         if inst.dest:
-            inst.dest = mem2loc(inst.dest) or inst.dest
+            inst.dest = expr_xform(inst.dest, mem2loc)
 
         for arg_no, arg in enumerate(inst.args):
             inst.args[arg_no] = expr_xform(arg, mem2loc)
