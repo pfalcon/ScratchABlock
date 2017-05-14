@@ -401,7 +401,7 @@ def insert_params(cfg):
 def rewrite_stack_vars(bblock, rewrite_to=CVAR):
     "Rewrite memory references relative to sp0 to local variables."
     def mem2loc(m):
-        if is_mem(m) and set(m.regs()) == {REG("sp_0")}:
+        if is_mem(m) and is_expr(m.expr) and set(m.expr.regs()) == {REG("sp_0")}:
             name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
             return rewrite_to(name)
 
