@@ -247,7 +247,7 @@ def expr_subst(expr, subst_dict):
         new_expr = simplify_expr(new_expr)
         return new_expr
 
-    assert 0, (expr, type(expr))
+    assert 0, repr((expr, type(expr)))
 
 
 def kill_subst_uses(subst, kill_var):
