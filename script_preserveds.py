@@ -2,7 +2,9 @@ from xform import *
 from dataflow import *
 
 def apply(cfg):
-    # Various algos below require single-exit CFG
+    # Various algos below require single-entry CFG
+    remove_unreachable_entries(cfg)
+    # And single exit
     cfg_single_exit(cfg)
 
     foreach_bblock(cfg, sub_const_to_add)
