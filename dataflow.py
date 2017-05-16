@@ -191,7 +191,15 @@ class LiveVarAnalysis(GenKillAnalysis):
 
         for node, info in self.g.iter_nodes():
             info[self.node_prop_in] = set()
-            info[self.node_prop_out] = set()
+            if node == exit:
+                if "modifieds" in self.g.props:
+                    info[self.node_prop_out] = self.g.props["modifieds"]
+                elif "reach_exit" in self.g.props:
+                    info[self.node_prop_out] = self.g.props["reach_exit"]
+                else:
+                    info[self.node_prop_out] = set()
+            else:
+                info[self.node_prop_out] = set()
 
             bblock = info["val"]
 
