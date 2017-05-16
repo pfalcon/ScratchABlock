@@ -35,5 +35,15 @@ def apply(cfg):
 
     cfg.props["modifieds"] = cfg.props["reach_exit"] - cfg.props["preserveds"]
 
+    #
+    # Argument estimation part
+    #
+
+    # Reanalyze live vars for DCE
+    analyze_live_vars(cfg)
+    # Eliminate any preservation assignments, and thus liveness of preserved regs
+    foreach_bblock(cfg, dead_code_elimination)
+
+    # Reanalyze live vars for argument estimation
     analyze_live_vars(cfg)
     estimate_params(cfg)
