@@ -33,6 +33,16 @@ def expr_xform(e, func):
         e = EXPR(e.op, new)
         return func(e) or e
 
+    if isinstance(e, COND):
+        new1 = expr_xform(e.arg1, func)
+        new2 = expr_xform(e.arg2, func)
+        if new1:
+            e.arg1 = new1
+        if new2:
+            e.arg2 = new2
+        # TODO: we don't call against entire COND, which may limit transformations performed
+        return e
+
     return func(e) or e
 
 
