@@ -160,7 +160,7 @@ class Graph:
 
     def entry(self):
         e = self.entries()
-        assert len(e) == 1, "Num entries: %d" % len(e)
+        assert len(e) == 1, "Entries: %r" % e
         return e[0]
 
     def exits(self):
