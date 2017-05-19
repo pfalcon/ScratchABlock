@@ -1,0 +1,38 @@
+#!/bin/sh
+set -e
+
+failed() {
+    echo "TESTS FAILED!"
+    exit 1
+}
+
+run_test() {
+    name=$1
+    rm -f $name/funcdb.yaml
+    script=$(cat $name/script)
+
+    # First we just need to figure out what functions call which, that's
+    # exactly what script_callgraph does.
+    ./apply_xform.py --script script_callgraph --format none $name
+    ./funcdb_util.py called_by $name/funcdb.yaml
+
+    ./apply_xform.py --script script_preserveds $name
+
+    ./apply_xform.py --script $script $name
+
+    ./funcdb_util.py returns $name/funcdb.yaml
+
+    # Now actually check the expected results
+    diff -u $name/funcdb.yaml.exp $name/funcdb.yaml
+}
+
+if [ -n "$1" ]; then
+    run_test $1
+    exit
+fi
+
+for test in $(find -type d -path './tests/interproc-*' | sort); do
+    echo $test
+    $0 $test || failed
+done
+
