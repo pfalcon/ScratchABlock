@@ -24,6 +24,10 @@ run_test() {
 
     # Now actually check the expected results
     diff -u $name/funcdb.yaml.exp $name/funcdb.yaml
+    if [ -f $name/callgraph.dot.exp ]; then
+        ./funcdb_dot.py $name/funcdb.yaml -o $name/callgraph.dot
+        diff -u $name/callgraph.dot.exp $name/callgraph.dot
+    fi
 }
 
 if [ -n "$1" ]; then
