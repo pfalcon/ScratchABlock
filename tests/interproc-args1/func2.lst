@@ -1,0 +1,5 @@
+200 func2:
+200  $a2 = 10
+210  call func1
+215  $a3 = $a2 + 1
+220  return

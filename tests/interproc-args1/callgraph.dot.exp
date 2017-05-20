@@ -1,0 +1,3 @@
+digraph G {
+func2 -> func1
+}
