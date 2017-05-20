@@ -1,0 +1,3 @@
+200 func2:
+210  call func1
+220  return
