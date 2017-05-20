@@ -18,7 +18,7 @@ run_test() {
 
     ./apply_xform.py --script script_preserveds $name
 
-    ./apply_xform.py --script $script $name
+    ./apply_xform.py --script $script --iter $name
 
     ./funcdb_util.py returns $name/funcdb.yaml
 
