@@ -1,0 +1,19 @@
+'110':
+  label: func1
+  called_by: [func2]
+  calls: []
+  estimated_params: [a2]
+  func_refs: []
+  modifieds: [a2]
+  params: [a2]
+  preserveds: []
+  reach_exit: [a2]
+'200':
+  label: func2
+  calls: [func1]
+  estimated_params: []
+  func_refs: []
+  modifieds: [a2, a3]
+  params: []
+  preserveds: []
+  reach_exit: [a2, a3]
