@@ -20,8 +20,6 @@ run_test() {
 
     ./apply_xform.py --script $script --iter $name
 
-    ./funcdb_util.py returns $name/funcdb.yaml
-
     # Now actually check the expected results
     diff -u $name/funcdb.yaml.exp $name/funcdb.yaml
     if [ -f $name/callgraph.dot.exp ]; then
