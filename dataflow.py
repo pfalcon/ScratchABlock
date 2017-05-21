@@ -192,7 +192,7 @@ class LiveVarAnalysis(GenKillAnalysis):
         for node, info in self.g.iter_nodes():
             info[self.node_prop_in] = set()
             if node == exit:
-                if self.g.props.get("name") == "main":
+                if self.g.props.get("noreturn") or self.g.props.get("name") == "main":
                     info[self.node_prop_out] = set()
                 else:
                     import progdb
