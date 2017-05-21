@@ -561,7 +561,7 @@ def collect_call_live_out(cfg):
 
     def collect(node):
         bb = node["val"]
-        if bb[-1].op == "call":
+        if bb.items and bb[-1].op == "call":
             inst = bb[-1]
             arg = inst.args[0]
             if is_addr(arg):
