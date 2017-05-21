@@ -572,6 +572,13 @@ def collect_call_live_out(cfg):
     foreach_node(cfg, collect)
 
 
+def clear_call_live_out():
+    import progdb
+    for addr, props in progdb.FUNC_DB.items():
+        if "callsites_live_out" in props:
+            props["callsites_live_out"] = set()
+
+
 def collect_returns():
     import progdb
     for addr, props in progdb.FUNC_DB.items():
