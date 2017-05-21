@@ -572,6 +572,13 @@ def collect_call_live_out(cfg):
     foreach_node(cfg, collect)
 
 
+def collect_returns():
+    import progdb
+    for addr, props in progdb.FUNC_DB.items():
+        if "modifieds" in props and "callsites_live_out" in props:
+            props["returns"] = set(props["modifieds"]) & set(props["callsites_live_out"])
+
+
 def repr_output(cfg):
     import core
     core.SimpleExpr.simple_repr = False
