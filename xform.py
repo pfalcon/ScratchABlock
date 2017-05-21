@@ -566,7 +566,8 @@ def collect_call_live_out(cfg):
             arg = inst.args[0]
             if is_addr(arg):
                 func = arg.addr
-                progdb.FUNC_DB.setdefault(func, {}).setdefault("callsites_live_out", set()).update(node["live_out"])
+                regs = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in node["live_out"])
+                progdb.FUNC_DB.setdefault(func, {}).setdefault("callsites_live_out", set()).update(regs)
 
     foreach_node(cfg, collect)
 
