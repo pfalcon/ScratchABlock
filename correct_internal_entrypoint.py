@@ -9,17 +9,10 @@ def process_file(fname):
 
     with open(fname) as f:
         l = f.readline()
-        l = l.strip()
-        addr, label = l.split(None, 1)
-        assert label[-1] == ":", "File %s must start with a label" % fname
-        if not label.startswith("loc_"):
+        if not l.startswith("; Entry point: "):
             return
-
-        for l in f:
-            l = l.strip()
-            addr, label = l.split(None, 1)
-            if label[-1] == ":" and not label.startswith("loc_"):
-                func_name = label[:-1]
+        l = l.strip()
+        head, func_name = l.rsplit(None, 1)
 
     assert func_name
     print("Processing:", fname)
@@ -27,6 +20,10 @@ def process_file(fname):
     os.rename(fname, fname + ".bak")
 
     with open(fname + ".bak") as f, open(fname, "w") as f_out:
+        l = f.readline()
+        assert l[0] == ";"
+        # Don't write this line
+
         l = f.readline()
         addr, rest = l.split(None, 1)
         f_out.write("%s.0 %s:\n" % (addr, func_name))
