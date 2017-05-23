@@ -75,7 +75,7 @@ def update_funcdb(cfg):
         if prop in cfg.props:
             func_props[prop] = cfg.props[prop]
 
-    for prop in ("calls", "func_refs", "mmio_refs"):
+    for prop in ("calls", "calls_indir", "func_refs", "mmio_refs"):
         if prop in cfg.props:
             def ext_repr(x):
                 if is_addr(x):
@@ -87,7 +87,7 @@ def update_funcdb(cfg):
                         if is_value(x.args[1]):
                             x = EXPR("+", [x.args[1], x.args[0]])
                     return str(x)
-                assert False, repr(x)
+                return str(x)
             func_props[prop] = sorted([ext_repr(x) for x in cfg.props[prop]])
 
 #
