@@ -430,15 +430,20 @@ def collect_preserveds(cfg):
 # Requires expr_propagation
 def collect_calls(cfg):
     calls = []
+    calls_indir = []
 
     def collect(inst):
         if inst.op == "call":
             arg = inst.args[0]
             if is_addr(arg):
                 calls.append(arg)
+            else:
+                calls_indir.append(arg)
 
     foreach_inst(cfg, collect)
     cfg.props["calls"] = calls
+    if calls_indir:
+        cfg.props["calls_indir"] = calls_indir
 
 
 # While collect_calls collects direct calls, this pass
