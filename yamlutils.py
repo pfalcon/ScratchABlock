@@ -2,6 +2,7 @@ from collections import OrderedDict
 
 import yaml
 
+import core
 import utils
 
 
@@ -10,6 +11,9 @@ def set_representer(dumper, data):
 
 
 yaml.add_representer(set, set_representer)
+
+
+yaml.add_representer(tuple, lambda dumper, data: dumper.represent_list(data))
 
 
 # Workaround pyyaml idiocy of forcibly sort dicts by key
@@ -30,3 +34,6 @@ def dict_representer(dumper, data):
     return dumper.represent_dict(DictRenderWrapper(ordered))
 
 yaml.add_representer(dict, dict_representer)
+
+yaml.add_representer(core.REG, lambda dumper, data: dumper.represent_str(data.name))
+yaml.add_representer(core.ADDR, lambda dumper, data: dumper.represent_str(data.addr))
