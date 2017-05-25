@@ -464,6 +464,8 @@ class Parser:
 
     def _parse_bblocks(self, f):
             self.cfg = Graph()
+            # TODO: not stored in props to avoid modifying tests
+            self.cfg.filename = self.fname
             self.cfg.props["name"] = None
             self.cfg.props["trailing_jumps"] = True
             block = None
