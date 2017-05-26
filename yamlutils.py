@@ -6,6 +6,9 @@ import core
 import utils
 
 
+yaml.Dumper.ignore_aliases = lambda self, data: True
+
+
 def set_representer(dumper, data):
     return dumper.represent_list(sorted(list(data), key=utils.natural_sort_key))
 
