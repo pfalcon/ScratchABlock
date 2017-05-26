@@ -34,7 +34,13 @@ def dict_representer(dumper, data):
     if "label" in data:
         ordered["label"] = data["label"]
     ordered.update(sorted(data.items()))
-    return dumper.represent_dict(DictRenderWrapper(ordered))
+
+    #return dumper.represent_dict(DictRenderWrapper(ordered))
+    flow_style = None
+    if len(str(data)) > 50:
+        flow_style = False
+    return dumper.represent_mapping('tag:yaml.org,2002:map', DictRenderWrapper(ordered), flow_style)
+
 
 yaml.add_representer(dict, dict_representer)
 
