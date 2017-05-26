@@ -37,3 +37,4 @@ yaml.add_representer(dict, dict_representer)
 
 yaml.add_representer(core.REG, lambda dumper, data: dumper.represent_str(data.name))
 yaml.add_representer(core.ADDR, lambda dumper, data: dumper.represent_str(data.addr))
+yaml.add_representer(core.MEM, lambda dumper, data: dumper.represent_str(str(data)))
