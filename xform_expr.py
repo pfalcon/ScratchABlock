@@ -95,6 +95,7 @@ def expr_simplify_add(e):
                 new_args.append(VALUE(val, base))
             if len(new_args) == 1:
                 return new_args[0]
+            new_args.sort()
             return EXPR("+", new_args)
         else:
             return VALUE(val, base)
