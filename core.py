@@ -104,7 +104,7 @@ class SimpleExpr:
 
     def regs(self):
         "Get registers referenced by the expression"
-        return []
+        return set()
 
     def side_effect(self):
         return False
@@ -148,7 +148,7 @@ class REG(SimpleExpr):
         return hash(self.name)
 
     def regs(self):
-        return [self]
+        return {self}
 
 
 class VALUE(SimpleExpr):
@@ -642,7 +642,10 @@ class COND:
         return hash(self.op) ^ hash(self.arg1) ^ hash(self.arg2)
 
     def regs(self):
-        return [x for x in (self.arg1, self.arg2) if isinstance(x, REG)]
+        res = set()
+        for x in (self.arg1, self.arg2):
+            res |= x.regs()
+        return res
 
     def foreach_subexpr(self, func):
         def do(a):
