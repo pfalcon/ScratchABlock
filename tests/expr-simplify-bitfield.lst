@@ -1,0 +1,9 @@
+#xform_inst: simplify_inst
+10     $a2 = bitfield($a2, /*lsb*/0, /*sz*/8)
+11     $a2 = bitfield($a2, /*lsb*/0, /*sz*/16)
+12     $a2 = bitfield($a2, /*lsb*/0, /*sz*/32)
+20     $a2 = bitfield($a2, /*lsb*/0, /*sz*/9)
+21     $a2 = bitfield($a2, /*lsb*/1, /*sz*/8)
+20     $a2 = bitfield($a2, /*lsb*/0, /*sz*/24)
+
+100    return
