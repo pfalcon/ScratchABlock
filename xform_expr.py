@@ -134,6 +134,24 @@ def expr_simplify_bitfield(e):
             if type:
                 return EXPR("CAST", [TYPE(type), e.args[1]])
 
+def expr_simplify_cast(e):
+    if is_expr(e) and e.op == "CAST":
+        assert is_expr_2args(e)
+
+        if is_value(e.args[1]):
+            val = e.args[1].val
+
+            tname = e.args[0].name
+            is_signed = tname[0] == "i"
+            bits = int(tname[1:])
+            mask = (1 << bits) - 1
+            val &= mask
+            if is_signed:
+                if val & (1 << (bits - 1)):
+                    val -= mask + 1
+
+            return VALUE(val, e.args[1].base)
+
 
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_associative_add)
@@ -141,6 +159,7 @@ def simplify_expr(expr):
     new_expr = expr_xform(new_expr, expr_simplify_xor)
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
     new_expr = expr_xform(new_expr, expr_simplify_bitfield)
+    new_expr = expr_xform(new_expr, expr_simplify_cast)
     return new_expr
 
 
