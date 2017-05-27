@@ -175,13 +175,14 @@ class LiveVarAnalysis(GenKillAnalysis):
     join_op = staticmethod(set_union)
     prop_prefix = "live"
 
-    def __init__(self, cfg, skip_calls=False):
+    def __init__(self, cfg, skip_calls=False, underestimate=False):
         """If skip_calls is True, skip call instructions. This is useful
         to estimate current function's argument registers (using unspecific
         call-conventions driven .uses() for a call instruction may/will make
         all call-conventions arg registers live for function entry)."""
         super().__init__(cfg)
         self.skip_calls = skip_calls
+        self.underestimate = underestimate
 
     def init(self):
         "In and out sets of all nodes is set to empty."
@@ -192,7 +193,9 @@ class LiveVarAnalysis(GenKillAnalysis):
         for node, info in self.g.iter_nodes():
             info[self.node_prop_in] = set()
             if node == exit:
-                if self.g.props.get("noreturn") or self.g.props.get("name") == "main":
+                if self.underestimate:
+                    info[self.node_prop_out] = set()
+                elif self.g.props.get("noreturn") or self.g.props.get("name") == "main":
                     info[self.node_prop_out] = set()
                 else:
                     import progdb
@@ -216,9 +219,13 @@ class LiveVarAnalysis(GenKillAnalysis):
             for inst in bblock.items:
                 if inst.op == "call" and self.skip_calls:
                     continue
-                for r in inst.uses(self.g):
-                    if r not in kill:
-                        gen.add(r)
+
+                # If we underestimate liveness, assume function
+                # calls don't use anything, only kill liveness below.
+                if inst.op != "call" or not self.underestimate:
+                    for r in inst.uses(self.g):
+                        if r not in kill:
+                            gen.add(r)
 
                 for dest in inst.defs(regs_only=False):
                     kill.add(dest)
