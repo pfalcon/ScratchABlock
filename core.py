@@ -698,6 +698,8 @@ class CFGPrinter:
     """Print BBlocks in a CFG. Various printing params can be overriden
     via methods."""
 
+    header_reg_prefix = "$"
+
     def __init__(self, cfg, stream=sys.stdout):
         self.cfg = cfg
         self.stream = stream
@@ -734,6 +736,7 @@ class CFGPrinter:
             for k in sorted(self.node_props.keys()):
                 v = self.node_props[k]
                 v = utils.repr_stable(v)
+                v = v.replace("$", self.header_reg_prefix)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
         if self.bblock_props:
@@ -745,6 +748,7 @@ class CFGPrinter:
                     v = repr_state(v)
                 else:
                     v = utils.repr_stable(v)
+                v = v.replace("$", self.header_reg_prefix)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
 
