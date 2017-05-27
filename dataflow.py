@@ -226,6 +226,11 @@ class LiveVarAnalysis(GenKillAnalysis):
                     for r in inst.uses(self.g):
                         if r not in kill:
                             gen.add(r)
+                else:
+                    # We still need to account for reg uses in indirect call expression
+                    for r in inst.args[0].regs():
+                        if r not in kill:
+                            gen.add(r)
 
                 for dest in inst.defs(regs_only=False):
                     kill.add(dest)
