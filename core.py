@@ -743,8 +743,8 @@ class CFGPrinter:
                 v = self.bblock_props[k]
                 if k.startswith("state_"):
                     v = repr_state(v)
-                elif isinstance(v, dict):
-                    v = utils.repr_stable_dict(v)
+                else:
+                    v = utils.repr_stable(v)
                 print("//  %s: %s" % (k, v), file=self.stream)
 
 
