@@ -699,6 +699,7 @@ class CFGPrinter:
     via methods."""
 
     header_reg_prefix = "$"
+    addr_in_header = False
 
     def __init__(self, cfg, stream=sys.stdout):
         self.cfg = cfg
@@ -729,6 +730,8 @@ class CFGPrinter:
 
 
     def print_header(self):
+        if self.addr_in_header:
+            print("// %s" % self.addr, file=self.stream)
         print("// Predecessors: %s" % sorted(self.cfg.pred(self.addr)), file=self.stream)
 
         if self.node_props:
