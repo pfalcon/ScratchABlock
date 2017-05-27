@@ -475,7 +475,7 @@ class Inst:
         """Return set of all registers used by this instruction. Function
         calls (and maybe SFUNCs) require special treatment."""
         if self.op == "call":
-            return arch.call_uses(self.args[0])
+            return self.args[0].regs() | arch.call_uses(self.args[0])
         if self.op == "return":
             return arch.ret_uses(cfg)
         uses = set()
