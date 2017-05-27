@@ -1,0 +1,17 @@
+#xform_inst: simplify_inst
+10     $a2 = (i16)100
+11     $a2 = (i16)0xffff
+12     $a2 = (u16)100
+13     $a2 = (u16)0xffff
+14     $a2 = (u16)0x1ffff
+
+20     $a2 = (i8)100
+21     $a2 = (i8)0xffff
+22     $a2 = (u8)100
+23     $a2 = (u8)0xffff
+24     $a2 = (u8)0x1ffff
+
+30     $a2 = (i32)0xffffffff
+31     $a2 = (i32)0xfffffff
+
+100    return
