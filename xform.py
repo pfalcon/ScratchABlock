@@ -274,13 +274,10 @@ def bblock_propagation(bblock, propagated_types):
 
         args = inst.args
 
-        all_args_const = True
         for arg_no, arg in enumerate(args):
             repl = expr_subst(arg, state)
             if repl:
                 args[arg_no] = repl
-            if not isinstance(args[arg_no], VALUE):
-                all_args_const = False
 
         for dest in inst.defs():
             # Calling kill_subst_uses isn't really needed for const propagation
