@@ -10,6 +10,8 @@ from utils import set_union
 import arch
 import progdb
 
+import copy
+
 
 log = logging.getLogger(__name__)
 
@@ -263,16 +265,17 @@ def kill_subst_uses(subst, kill_var):
     return subst
 
 
-def bblock_propagation(bblock, propagated_types):
+def bblock_propagation(bblock, propagated_types, subst_insts=True):
     state = bblock.props.get("state_in", {})
     for i, inst in enumerate(bblock.items):
 
-        if isinstance(inst.dest, MEM):
-            new = expr_subst(inst.dest, state)
+        n_dest = inst.dest
+        if isinstance(n_dest, MEM):
+            new = expr_subst(n_dest, state)
             if new:
-                inst.dest = new
+                n_dest = new
 
-        args = inst.args
+        args = copy.deepcopy(inst.args)
 
         for arg_no, arg in enumerate(args):
             repl = expr_subst(arg, state)
@@ -285,28 +288,39 @@ def bblock_propagation(bblock, propagated_types):
             # and higher.
             state = kill_subst_uses(state, dest)
 
-        if inst.op == "=" and isinstance(inst.args[0], propagated_types):
-            assert inst.dest
-            state[inst.dest] = inst.args[0]
+        if inst.op == "=" and isinstance(args[0], propagated_types):
+            assert n_dest
+            state[n_dest] = args[0]
+
+        if subst_insts:
+            if inst.op == "if":
+                # Replace in-place because of if statement/out-edges label shared COND
+                assert is_cond(inst.args[0])
+                inst.args[0].arg1 = args[0].arg1
+                inst.args[0].op = args[0].op
+                inst.args[0].arg2 = args[0].arg2
+            else:
+                inst.args = args
+            inst.dest = n_dest
 
     bblock.props["state_out"] = state
 
 
-def bblock_const_propagation(bblock):
+def bblock_const_propagation(bblock, subst_insts=True):
     "Propagate only constant values"
-    bblock_propagation(bblock, (VALUE, ADDR))
+    bblock_propagation(bblock, (VALUE, ADDR), subst_insts)
 
-def bblock_copy_propagation(bblock):
+def bblock_copy_propagation(bblock, subst_insts=True):
     "Propagate constants and register copies"
-    bblock_propagation(bblock, (VALUE, ADDR, REG))
+    bblock_propagation(bblock, (VALUE, ADDR, REG), subst_insts)
 
-def bblock_mem_propagation(bblock):
+def bblock_mem_propagation(bblock, subst_insts=True):
     "Propagate constants and register copies"
-    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM))
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM), subst_insts)
 
-def bblock_expr_propagation(bblock):
+def bblock_expr_propagation(bblock, subst_insts=True):
     "Propagate constants and register copies"
-    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR))
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR), subst_insts)
 
 
 def simplify_inst(inst):
@@ -353,9 +367,10 @@ def collect_state_in(cfg):
 def propagate(cfg, bblock_propagator):
     check_pass(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:
-        foreach_bblock(cfg, bblock_propagator)
+        foreach_bblock(cfg, lambda bb: bblock_propagator(bb, False))
         if not collect_state_in(cfg):
             break
+    foreach_bblock(cfg, lambda bb: bblock_propagator(bb, True))
 
 
 def const_propagation(cfg):
