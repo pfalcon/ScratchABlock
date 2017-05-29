@@ -150,6 +150,20 @@ def cfg_single_entry(cfg):
     assert len(cfg.entries()) >= 1
 
 
+# Unconditionally add a new empty entry node, to hold anything needed later
+def cfg_preheader(cfg):
+    first = cfg.first_node
+    if 1: #cfg.pred(first):
+        entryb = BBlock("0entry")
+        entryb.cfg = cfg
+        cfg.add_node(entryb.addr, val=entryb)
+        cfg.add_edge(entryb.addr, first)
+        cfg.first_node = entryb.addr
+
+    # Can still have multiple entries at this point
+    assert len(cfg.entries()) >= 1
+
+
 # Make sure that CFG has a single exit, as required for some algorithms.
 # Note that this doesn't do anything to former individual exit BBlocks,
 # so they likely still end with "return" instructions.
