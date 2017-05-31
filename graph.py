@@ -152,11 +152,10 @@ class Graph:
         return self._edges.items()
 
     def entries(self):
-        # TODO: Will also return single disconnected nodes
+        # Will also return single disconnected nodes (which are entries
+        # by all means).
         entries = [n for n in self._nodes if not self._pred[n]]
-        if entries:
-            return entries
-        return [self.first_node]
+        return entries
 
     def entry(self):
         e = self.entries()
