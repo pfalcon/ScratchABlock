@@ -1,5 +1,4 @@
 digraph G {
-"ENTRY" -> "10"
 "10" [label="BBlock\n10"]
 "20" [label="BBlock\n20"]
 "30" [label="BBlock\n30"]
