@@ -1,6 +1,8 @@
 from core import *
 import arch
 
+import xform_expr_infer
+
 
 def is_expr_2args(e):
     return is_expr(e) and len(e.args) == 2
@@ -65,6 +67,8 @@ def expr_sub_to_add(e):
 
 
 def expr_commutative_normalize(e):
+    if not is_expr(e):
+        return
     if e.op not in ("+", "&", "|", "^"):
         return
     e.args.sort()
@@ -99,18 +103,6 @@ def expr_simplify_add(e):
             return EXPR("+", new_args)
         else:
             return VALUE(val, base)
-
-
-def expr_simplify_xor(e):
-    if is_expr(e) and e.op == "^":
-        assert is_expr_2args(e)
-
-        if e.args[0] == e.args[1]:
-            return VALUE(0)
-
-        expr_commutative_normalize(e)
-        if is_value(e.args[1]) and e.args[1].val == 0:
-            return e.args[0]
 
 
 def expr_simplify_lshift(e):
@@ -156,10 +148,12 @@ def expr_simplify_cast(e):
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_associative_add)
     new_expr = expr_xform(new_expr, expr_simplify_add)
-    new_expr = expr_xform(new_expr, expr_simplify_xor)
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
     new_expr = expr_xform(new_expr, expr_simplify_bitfield)
     new_expr = expr_xform(new_expr, expr_simplify_cast)
+
+    expr_commutative_normalize(new_expr)
+    new_expr = expr_xform(new_expr, xform_expr_infer.simplify)
     return new_expr
 
 
