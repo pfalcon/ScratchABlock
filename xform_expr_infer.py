@@ -30,10 +30,19 @@ def _uni(ex, pat, ctx):
                     _uni(ex.args[i], pat.args[i], ctx)
             else:
                 raise Failed
+        elif isinstance(ex, MEM):
+            if ex.type == pat.type:
+                _uni(ex.expr, pat.expr, ctx)
+            else:
+                raise Failed
+        elif isinstance(ex, REG):
+            _uni(ex.name, pat.name, ctx)
+        elif isinstance(ex, ADDR):
+            _uni(ex.addr, pat.addr, ctx)
         else:
             if ex == pat:
                 return True
-            raise Failed
+            raise Failed(str((ex, pat)))
 
     else:
         raise Failed
