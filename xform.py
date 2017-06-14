@@ -407,10 +407,15 @@ def insert_sp0(cfg):
 
 
 # Generalization of insert_sp0
+# For each register live on entry to function, insert to function pre-header
+# assignment of $r = $r_0, where $r_0 represents an input register, whereas $r
+# is a work register. Overall, this implements poor-man's (but very practical)
+# SSA subset.
 # Requires analyze_live_vars
 def insert_initial_regs(cfg):
     entry_addr = cfg.entry()
 #    used_regs = reversed(sorted([x[0] for x in cfg[entry_addr]["reachdef_in"]]))
+    check_pass(cfg, "live_in", "This pass requires live variable information")
     used_regs = cfg[entry_addr]["live_in"]
     first_bblock = cfg[entry_addr]["val"]
     for i, r in enumerate(sorted(list(used_regs))):
