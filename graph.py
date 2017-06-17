@@ -215,9 +215,9 @@ class Graph:
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
         entries = self.entries()
-        assert len(entries) == 1
-        node = entries[0]
-        return self._number_postorder(node, 1)
+        num = 1
+        for e in entries:
+            num = self._number_postorder(e, num)
 
     def iter_postorder(self):
         return sorted(self._nodes.items(), key=lambda x: x[1]["dfsno"])
