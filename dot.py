@@ -3,7 +3,7 @@ import re
 
 # Simple module to output graph as .dot file, which can be viewed
 # with dot or xdot.py tools.
-def dot(graph, out=sys.stdout, directed=None):
+def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
     if directed is None:
         directed = graph.directed
     if directed:
@@ -14,13 +14,17 @@ def dot(graph, out=sys.stdout, directed=None):
         edge = "--"
 
     out.write("%s G {\n" % header)
-    for e in graph.entries():
-        out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
+    if is_cfg:
+        for e in graph.entries():
+            out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
 
     for addr, info in graph.iter_sorted_nodes():
-        obj = info["val"]
-        typ = type(obj).__name__
-        label = "%s\\n%s" % (typ, addr)
+        obj = info.get("val")
+        if obj is not None:
+            typ = type(obj).__name__
+            label = "%s\\n%s" % (typ, addr)
+        else:
+            label = addr
         if "dfsno" in info:
             label += "(#%s)" % info["dfsno"]
         if "idom" in info:
@@ -30,7 +34,7 @@ def dot(graph, out=sys.stdout, directed=None):
     for (fr, to), data in sorted(graph.iter_edges()):
         label = data.get("cond")
         succ = graph.succ(fr)
-        if label is None and len(succ) == 2:
+        if is_cfg and label is None and len(succ) == 2:
             label = "else"
         if label:
             out.write('"%s" %s "%s" [label="%s"]\n' % (fr, edge, to, label))
