@@ -1,4 +1,8 @@
-from core import BBlock
+from core import BBlock, CFGPrinter
+
+
+def dump(cfg):
+    CFGPrinter(cfg).print()
 
 
 def swap_if_branches(cfg, node):
