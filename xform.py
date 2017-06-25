@@ -369,7 +369,7 @@ def collect_state_in(cfg):
             if len(val_set) == 1:
                 state[var] = val_set.pop()
             elif len(val_set) > 1:
-                log.warn("%s: in value set for %s are: %s" % (bblock_addr, var, val_set))
+                log.debug("%s: in value set for %s are: %s" % (bblock_addr, var, val_set))
         if state != org_state:
             log.debug("CHANGED: %s: %r ==VS== %r" % (node_props["val"], org_state, state))
             node_props["val"].props["state_in"] = state
