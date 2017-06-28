@@ -618,6 +618,15 @@ class COND:
         "<=": ">",
     }
 
+    SWAP = {
+        "==": "==",
+        "!=": "!=",
+        ">":  "<",
+        "<":  ">",
+        ">=": "<=",
+        "<=": ">=",
+    }
+
     def __init__(self, arg1, op, arg2):
         self.arg1 = arg1
         self.op = op
@@ -625,6 +634,15 @@ class COND:
 
     def neg(self):
         return self.__class__(self.arg1, self.NEG[self.op], self.arg2)
+
+    def swap(self):
+        "Swap arguments in-place."
+        self.arg1, self.arg2 = self.arg2, self.arg1
+        self.op = self.SWAP[self.op]
+
+    def normalize(self):
+        if is_value(self.arg1) and not is_value(self.arg2):
+            self.swap()
 
     def list(self):
         return [self]
