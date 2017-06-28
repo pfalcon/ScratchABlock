@@ -1,0 +1,5 @@
+#xform: normalize_cond
+10 if (5 < $a1) goto 20
+11  $a2 = 1
+20 20:
+20  $a3 = 3
