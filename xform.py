@@ -378,6 +378,16 @@ def collect_state_in(cfg):
     return changed
 
 
+def normalize_cond(cfg):
+    "Normalize conditions so constants were on the right side."
+
+    def norm(inst):
+        if inst.op == "if":
+            inst.args[0].normalize()
+
+    foreach_inst(cfg, norm)
+
+
 def propagate(cfg, bblock_propagator):
     check_pass(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:
