@@ -43,7 +43,7 @@ class BBlock:
         return defs
 
     def defs(self, regs_only=True):
-        """Return set of all variable defined in this basic block."""
+        """Return set of all variables defined in this basic block."""
         defs = set()
         for i in self.items:
             defs |= i.defs(regs_only)
