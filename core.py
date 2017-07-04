@@ -656,6 +656,13 @@ class COND:
     def __eq__(self, other):
         return type(self) == type(other) and self.op == other.op and self.arg1 == other.arg1 and self.arg2 == other.arg2
 
+    def __contains__(self, other):
+        if other in self.arg1:
+            return True
+        if other in self.arg2:
+            return True
+        return False
+
     def __hash__(self):
         return hash(self.op) ^ hash(self.arg1) ^ hash(self.arg2)
 
