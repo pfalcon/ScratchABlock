@@ -348,7 +348,10 @@ class EXPR:
     # Render this expr's arg, wrapped in parens if needed
     @staticmethod
     def strarg(expr, arg):
-        s = str(arg)
+        if isinstance(arg, (set, frozenset)):
+            s = utils.repr_stable(arg)
+        else:
+            s = str(arg)
         preced_my = EXPR.preced(expr)
         preced_arg = EXPR.preced(arg)
         if preced_arg > preced_my:
@@ -616,6 +619,7 @@ class COND:
         "<":  ">=",
         ">=": "<",
         "<=": ">",
+        "in": "not in",
     }
 
     SWAP = {
