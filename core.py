@@ -673,7 +673,8 @@ class COND:
     def regs(self):
         res = set()
         for x in (self.arg1, self.arg2):
-            res |= x.regs()
+            if not isinstance(x, frozenset):
+                res |= x.regs()
         return res
 
     def foreach_subexpr(self, func):
