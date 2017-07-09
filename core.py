@@ -655,6 +655,8 @@ class COND:
         return "(%s %s %s)" % (EXPR.strarg(self, self.arg1), self.op, EXPR.strarg(self, self.arg2))
 
     def __repr__(self):
+        if self.op in ("in", "not in"):
+            return "COND(%r %s %s)" % (self.arg1, self.op, utils.repr_stable(self.arg2))
         return "COND(%r %s %r)" % (self.arg1, self.op, self.arg2)
 
     def __eq__(self, other):
