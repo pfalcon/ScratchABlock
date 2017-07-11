@@ -229,6 +229,13 @@ class Graph:
         # TODO: not optimal
         return copy.deepcopy(self)
 
+    def __eq__(self, other):
+        if self._nodes != other._nodes:
+            return False
+        if self._edges != other._edges:
+            return False
+        return True
+
 
 def find_all_nodes_on_path(cfg, from_n, to_n):
     """Find set of nodes which lie on all paths from from_n to to_n.
