@@ -627,9 +627,10 @@ def clear_call_live_out():
 
 def collect_returns():
     import progdb
+    import arch
     for addr, props in progdb.FUNC_DB.items():
         if "modifieds" in props and "callsites_live_out" in props:
-            props["returns"] = set(props["modifieds"]) & set(props["callsites_live_out"])
+            props["returns"] = arch.ret_filter(set(props["modifieds"]) & set(props["callsites_live_out"]))
 
 
 def repr_output(cfg):
