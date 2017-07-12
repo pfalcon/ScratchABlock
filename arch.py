@@ -26,6 +26,21 @@ def call_params(addr):
 def call_ret(addr):
     return reg_range(2, 5)
 
+def ret_filter(regs):
+    # Simple filter
+    #return regs & reg_range(2, 5)
+
+    # Ordered filter: if we know that returns should use a2, a3, a4, a5
+    # in order, then if we have a2, a4 as potential returns, we known that
+    # a4 is spurious.
+    res = set()
+    for r in sorted(reg_range(2, 5)):
+        if r in regs:
+            res.add(r)
+        else:
+            return res
+    return res
+
 def call_save(addr):
     return reg_range(12, 15) | {REG("sp")}
 
