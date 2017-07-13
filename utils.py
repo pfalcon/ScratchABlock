@@ -82,7 +82,7 @@ def repr_stable_seq(d):
 def repr_stable(v):
     if isinstance(v, dict):
         return repr_stable_dict(v)
-    elif isinstance(v, set):
+    elif isinstance(v, (set, frozenset)):
         return repr_stable_set(v)
     elif isinstance(v, (list, tuple)):
         return repr_stable_seq(v)
