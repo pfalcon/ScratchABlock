@@ -29,6 +29,15 @@ def check_pass(cfg, prop_name, err_msg):
         assert 0, err_msg
 
 
+def remove_sfunc(bblock, name):
+    for i, inst in enumerate(bblock.items):
+        if inst.op == "SFUNC" and inst.args[0].args[0].name == name:
+            dead = Inst(None, "DEAD", [])
+            dead.addr = inst.addr
+            bblock.items[i] = dead
+            bblock.items[i].comments["org_inst"] = inst
+
+
 def remove_trailing_jumps(cfg):
     remove_returns = False
     exits = cfg.exits()
