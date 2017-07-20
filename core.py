@@ -354,7 +354,8 @@ class EXPR:
             s = str(arg)
         preced_my = EXPR.preced(expr)
         preced_arg = EXPR.preced(arg)
-        if preced_arg > preced_my:
+        non_assoc = expr.op in {"-", "/"}
+        if preced_arg > preced_my or (preced_arg == preced_my and non_assoc):
             s = "(%s)" % s
         else:
             # Common cases of confusing precedence in C, where parens is usually
