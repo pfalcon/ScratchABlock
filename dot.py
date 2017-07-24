@@ -64,6 +64,12 @@ def parse(f, graph):
 
 cnt = 1
 
+
+def save_dot(cfg, suffix):
+    with open(cfg.filename + ".dot" + suffix, "w") as out:
+        dot(cfg, out)
+
+
 def debug_dot(g):
     global cnt
     with open("_graph.%02d.dot" % cnt, "w") as f:
