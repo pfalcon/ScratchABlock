@@ -190,16 +190,23 @@ def match_ifelse(cfg):
 # }
 #
 # , then to be recognized by match_if_else_ladder
+
+def match_if_else_inv_ladder_recursive(block):
+    if isinstance(block, IfElse):
+        assert len(block.branches) == 2, "Must be applied before match_if_else_ladder"
+        if_block = block.branches[0][IFELSE_BRANCH]
+        else_block = block.branches[1][IFELSE_BRANCH]
+        if isinstance(if_block, IfElse) and not isinstance(else_block, IfElse):
+            block.swap_branches()
+        if_block = block.branches[0][IFELSE_BRANCH]
+        else_block = block.branches[1][IFELSE_BRANCH]
+        match_if_else_inv_ladder_recursive(if_block)
+        match_if_else_inv_ladder_recursive(else_block)
+
 def match_if_else_inv_ladder(cfg):
     for v, node_props in cfg.iter_nodes():
         block = node_props["val"]
-        if isinstance(block, IfElse):
-            assert len(block.branches) == 2, "Must be applied before match_if_else_ladder"
-            if_block = block.branches[0][IFELSE_BRANCH]
-            else_block = block.branches[1][IFELSE_BRANCH]
-            if isinstance(if_block, IfElse) and not isinstance(else_block, IfElse):
-                block.swap_branches()
-                return True
+        match_if_else_inv_ladder_recursive(block)
 
 
 #
