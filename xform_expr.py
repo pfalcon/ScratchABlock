@@ -157,6 +157,25 @@ def simplify_expr(expr):
     return new_expr
 
 
+def expr_struct_access(m):
+    import progdb
+    structs = progdb.get_struct_types()
+    struct_addrs = progdb.get_struct_instances()
+
+    if is_mem(m) and is_value(m.expr):
+        addr = m.expr.val
+        for (start, end), struct_name in struct_addrs.items():
+            if start <= addr < end:
+                offset = addr - start
+                field = structs[struct_name][offset]
+                return SFIELD(struct_name, hex(start), field)
+
+
+def struct_access_expr(expr):
+    new_expr = expr_xform(expr, expr_struct_access)
+    return new_expr
+
+
 # Should transform inplace
 def simplify_cond(e):
     if is_expr_2args(e.arg1) and e.arg1.op == "+" and is_value(e.arg1.args[1]) and is_value(e.arg2):

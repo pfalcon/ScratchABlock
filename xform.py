@@ -353,6 +353,13 @@ def simplify_inst(inst):
     inst.args[0] = simplify_expr(inst.args[0])
 
 
+def struct_access_inst(inst):
+    if not (inst.dest and inst.op == "="):
+        return
+    assert len(inst.args) == 1
+    inst.args[0] = struct_access_expr(inst.args[0])
+
+
 def collect_state_in(cfg):
     # This is pretty backwards actually. It uses ReachDef information,
     # but post-processes it pretty heavily, and instead should be done

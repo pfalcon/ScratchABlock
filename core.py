@@ -277,6 +277,20 @@ class MEM(SimpleExpr):
         return self.expr.regs()
 
 
+class SFIELD(SimpleExpr):
+
+    def __init__(self, type, addr, field):
+        self.type = type
+        self.addr = addr
+        self.field = field
+
+    def __repr__(self):
+        return self.comment + "SFIELD(%s, %s, %s)" % (self.type, self.addr, self.field)
+
+    def __str__(self):
+        return self.comment + "((%s*)%s)->%s" % (self.type, self.addr, self.field)
+
+
 class SFUNC(SimpleExpr):
 
     def __init__(self, name):
