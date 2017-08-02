@@ -1,0 +1,7 @@
+#xform_bblock: bblock_expr_propagation
+#xform_inst: struct_access_inst
+#struct: {"my_struct": {0: "field1", 0x20: "field2"}}
+#struct_addr: {0x10000000: "my_struct"}
+10     $r0 = 0x10000010
+15     $r1 = *(u32*)($r0 + 0x10)
+20     return
