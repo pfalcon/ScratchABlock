@@ -47,4 +47,3 @@ def apply(cfg):
 
     # Reanalyze live vars for argument estimation
     analyze_live_vars(cfg)
-    estimate_args(cfg)
