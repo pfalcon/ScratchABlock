@@ -34,7 +34,7 @@ with open("cg-current.dot", "w") as out:
 
 CFG_MAP = collections.defaultdict(dict)
 
-import script_prepare
+import script_i_prepare
 
 for full_name in glob.glob(sys.argv[1] + "/*.lst"):
     p = Parser(full_name)
@@ -43,7 +43,7 @@ for full_name in glob.glob(sys.argv[1] + "/*.lst"):
     CFG_MAP["org"][cfg.props["name"]] = cfg
 
     cfg2 = cfg.copy()
-    script_prepare.apply(cfg2)
+    script_i_prepare.apply(cfg2)
     CFG_MAP["pre"][cfg2.props["name"]] = cfg2
 
 #print(CFG_MAP)
@@ -82,25 +82,25 @@ def process_preorder(cg, func, xform_pass):
         process_preorder(cg, callee, xform_pass)
 
 
-import script_func_args
-import script_func_returns
+import script_i_func_args
+import script_i_func_returns
 
 cnt = 1
 
 while True:
     print("=== Iteration %d ===" % cnt)
     old_funcdb = copy.deepcopy(progdb.FUNC_DB)
-    script_func_returns.init()
+    script_i_func_returns.init()
 
     for e in callgraph.entries():
         print("Processing root", e)
-        process_postorder(callgraph, e, script_func_args)
+        process_postorder(callgraph, e, script_i_func_args)
 
     progdb.save_funcdb(sys.argv[1] + "/funcdb.yaml.out%d" % cnt)
 
     for e in callgraph.entries():
         print("Processing root", e)
-        process_preorder(callgraph, e, script_func_returns)
+        process_preorder(callgraph, e, script_i_func_returns)
 
     progdb.save_funcdb(sys.argv[1] + "/funcdb.yaml.out%d_" % cnt)
 
