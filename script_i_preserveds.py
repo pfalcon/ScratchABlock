@@ -2,13 +2,7 @@ from xform import *
 from dataflow import *
 
 def apply(cfg):
-    # Various algos below require single-entry CFG
-    remove_unreachable_entries(cfg)
-    # And single exit
-    cfg_single_exit(cfg)
-
-    foreach_bblock(cfg, sub_const_to_add)
-#    insert_sp0(cfg)
+    # script_i_prepare was run before this
 
     # Need to do before DCE and even before insert_initial_regs
     collect_reach_exit(cfg)
