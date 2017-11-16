@@ -214,6 +214,11 @@ class Graph:
     def number_postorder(self):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
+        return self._number_postorder(self.first_node, 1)
+
+    def number_postorder_forest(self):
+        "Number nodes in depth-first search post-order order."
+        self.reset_numbering()
         entries = self.entries()
         num = 1
         for e in entries:
