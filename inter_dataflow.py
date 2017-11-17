@@ -29,7 +29,7 @@ for addr, props in progdb.FUNC_DB_BY_ADDR.items():
         if callee in callgraph:
             callgraph.add_edge(props["label"], callee)
 
-callgraph.number_postorder()
+callgraph.number_postorder_forest()
 with open("cg-current.dot", "w") as out:
     dot.dot(callgraph, out, is_cfg=False)
 
