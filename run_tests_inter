@@ -14,6 +14,7 @@ run_test() {
     # First we just need to figure out what functions call which, that's
     # exactly what script_callgraph does.
     ./apply_xform.py --script script_callgraph --format none $name
+    ./apply_xform.py --script script_callgraph_func_refs --format none $name
     ./funcdb_util.py called_by $name/funcdb.yaml
 
     ./apply_xform.py --script script_preserveds $name
