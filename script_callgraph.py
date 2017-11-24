@@ -1,5 +1,5 @@
-# Minimal processing required to collect calls addresses (and
-# indirect function references) for call graph generation.
+# Minimal processing required to collect calls addresses for
+# call graph generation.
 from xform import *
 
 def apply(cfg):
@@ -17,4 +17,7 @@ def apply(cfg):
     #expr_propagation(cfg)
 
     collect_calls(cfg)
-    collect_func_refs(cfg)
+
+    # Won't work here, because we might not have all funcs in funcdb,
+    # need 2nd pass in script_callgraph_func_refs.py
+    #collect_func_refs(cfg)
