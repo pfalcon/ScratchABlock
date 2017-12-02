@@ -31,7 +31,7 @@ def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
     argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
     argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
-    argp.add_argument("--script", help="apply script from file")
+    argp.add_argument("--script", action="append", help="apply script from file")
     argp.add_argument("--iter", action="store_true", help="apply transform iteratively until no changes to funcdb")
     argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in current/input dir)")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
@@ -77,8 +77,9 @@ def handle_file_unprotected(args):
             dot.dot(cfg, f)
 
     if args.script:
-        mod = __import__(args.script)
-        mod.apply(cfg)
+        for s in args.script:
+            mod = __import__(s)
+            mod.apply(cfg)
     elif hasattr(p, "script"):
         for op_type, op_name in p.script:
             if op_type == "xform:":
@@ -148,9 +149,10 @@ def one_iter(input, output):
         # funcdb property is calculated as a union, but we want to find
         # its lower bound, we need to reset it to empty set at each
         # iteration.
-        mod = __import__(args.script)
-        if hasattr(mod, "init"):
-            mod.init()
+        for s in args.script:
+            mod = __import__(s)
+            if hasattr(mod, "init"):
+                mod.init()
 
     if os.path.isdir(input):
         if output and not os.path.isdir(output):
