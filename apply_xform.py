@@ -137,7 +137,7 @@ def handle_file_unprotected(args):
 def one_iter(input, output):
     global FUNC_DB, FUNC_DB_ORG
 
-    if os.path.exists(args.funcdb):
+    if args.funcdb != "none" and os.path.exists(args.funcdb):
         progdb.load_funcdb(args.funcdb)
 
     FUNC_DB = progdb.FUNC_DB_BY_ADDR
@@ -173,7 +173,7 @@ def one_iter(input, output):
 
 
     changed = FUNC_DB != FUNC_DB_ORG
-    if changed:
+    if changed and args.funcdb != "none":
         progdb.save_funcdb(args.funcdb)
 
     return changed
