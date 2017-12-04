@@ -72,6 +72,16 @@ a) No noticeable performance gains; b) LLVM's MCJIT is too heavyweight".
 grounded in its PHP nature. The point is, oftentimes it's easier to use
 something else, even if adhoc, than a bloated pseudo-standard like LLIR).
 
+Creton IL
+---------
+
+* https://cretonne.readthedocs.io/en/latest/langref.html
+* https://cretonne.readthedocs.io/en/latest/compare-llvm.html
+
+Didn't exist when ScratchABlock was started. Uses an interesting syntactic
+sugar for Phi functions: instead of having them explicitly, it has "basic
+block parameters", in a way very similar to function parameters, and
+every jump specifies actual values for these "parameters".
 
 References
 ----------
