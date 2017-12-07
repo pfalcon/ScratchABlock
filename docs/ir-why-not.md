@@ -72,6 +72,14 @@ a) No noticeable performance gains; b) LLVM's MCJIT is too heavyweight".
 grounded in its PHP nature. The point is, oftentimes it's easier to use
 something else, even if adhoc, than a bloated pseudo-standard like LLIR).
 
+QBE IL
+------
+
+http://c9x.me/compile/doc/il.html
+
+I watched QBE project for a while, but only recently figured that its
+intermediate language is well documented.
+
 Creton IL
 ---------
 
