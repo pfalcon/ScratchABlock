@@ -91,6 +91,25 @@ sugar for Phi functions: instead of having them explicitly, it has "basic
 block parameters", in a way very similar to function parameters, and
 every jump specifies actual values for these "parameters".
 
+C--
+---
+
+http://www.cs.tufts.edu/~nr/c--/
+http://www.cs.tufts.edu/~nr/c--/extern/man2.pdf
+
+Unlike many entries in this list with comments like "wasn't known to me
+before ScratchABlock was started" or "didn't exist before ScratchABlock
+was started", C-- was (remotely) known to me for a long-long time. Actually,
+I heard about it yet when there was no Interwebs and the program exchange
+was happening via floppy disks, i.e. at the end of 20th century, which,
+checking the C-- timeline, was soon after C-- was initially appeared
+(1997). Given this, I guess it's fair to say that C-- was a meta-mental
+model of ScratchABlock IR, and ScratchABlock IR is the closest to C--.
+
+C-- has different aims and purpose though, for example it supports garbage
+collection interface, exception handling, etc. Overall, featureset and
+usecases for C-- and ScratchABlock definitely overlap, but are different.
+
 References
 ----------
 * http://indefinitestudies.org/2009/04/03/a-quick-survey-on-intermediate-representations-for-program-analysis/
