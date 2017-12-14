@@ -55,3 +55,13 @@ these criteria are indeed heuristic - there can be some functions
 for which they are not true. Thus, a human should be able to select
 which heuristics to use, easily oversee results achieved, and be
 able to override them on a case by case basis.
+
+5. Preserveds set is calculated in regards to function parameters.
+It may seem strange that a register which isn't defined locally
+(i.e. never explicitly saved/restored) is in preserveds set, but
+that means that it's a parameter, which serves as an arguments to
+another function, and that another function doesn't modify it, so
+it's really preserved for the current function. More involved
+example is that function has 2 paths: one modifying parameter
+register, but ending with infinite loop, while another path truly
+preserves that register, so this is signified in preserveds.
