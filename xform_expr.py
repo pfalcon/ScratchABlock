@@ -36,13 +36,9 @@ def expr_xform(e, func):
         return func(e) or e
 
     if isinstance(e, COND):
-        new1 = expr_xform(e.arg1, func)
-        new2 = expr_xform(e.arg2, func)
-        if new1:
-            e.arg1 = new1
-        if new2:
-            e.arg2 = new2
-        # TODO: we don't call against entire COND, which may limit transformations performed
+        new = expr_xform(e.expr, func)
+        if new:
+            e.expr = new
         return e
 
     return func(e) or e
@@ -178,7 +174,8 @@ def struct_access_expr(expr):
 
 # Should transform inplace
 def simplify_cond(e):
-    if is_expr_2args(e.arg1) and e.arg1.op == "+" and is_value(e.arg1.args[1]) and is_value(e.arg2):
-        arg1 = e.arg1
-        e.arg1 = arg1.args[0]
-        e.arg2 = add_vals(expr_neg(arg1.args[1]), e.arg2)
+    if e.is_relation():
+        arg1 = e.expr.args[0]
+        arg2 = e.expr.args[1]
+        if is_expr_2args(arg1) and arg1.op == "+" and is_value(arg1.args[1]) and is_value(arg2):
+            e.expr = EXPR(e.expr.op, arg1.args[0], add_vals(expr_neg(arg1.args[1]), arg2))
