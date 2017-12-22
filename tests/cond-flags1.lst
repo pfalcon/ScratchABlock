@@ -1,0 +1,15 @@
+# This test shows how to deal with condition flags
+#
+#xform_bblock: bblock_expr_propagation
+#xform: analyze_live_vars
+#xform_bblock: dead_code_elimination
+
+# cmp eax, ebx
+10 $Z = $eax == $ebx
+11 $C = $eax < $ebx
+
+# je foo
+20 if ($Z) goto 40
+30 $ecx = 1
+40 40:
+40 return
