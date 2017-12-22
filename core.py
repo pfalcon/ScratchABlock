@@ -351,12 +351,14 @@ class EXPR:
         if is_expr(e):
             # See e.g. http://en.cppreference.com/w/c/language/operator_precedence
             return {
+                "+=": 14, "-=": 14, "*=": 14, "/=": 14, "%=": 14,
+                "<<=": 14, ">>=": 14, "&=": 14, "|=": 14, "^=": 14,
                 "||": 12, "&&": 11, "|": 10, "^": 9, "&": 8,
                 "==": 7, "!=": 7, ">": 6, "<": 6, ">=": 6, "<=": 6,
                 "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3,
                 # All the below is highest precedence
                 "CAST": 1, "SFUNC": 1, "NEG": 1,
-            }.get(e.op, 100)
+            }[e.op]
         return 1
 
     # Render this expr's arg, wrapped in parens if needed
