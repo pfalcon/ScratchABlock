@@ -1,3 +1,4 @@
+#xform: booleanize_cond
 #xform_bblock: remove_trailing_jumps_bblock
 #xform: match_dowhile
 10 repeat:

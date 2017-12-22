@@ -1,3 +1,4 @@
+#xform: booleanize_cond
 #xform_bblock: sub_const_to_add
 #xform_bblock: bblock_expr_propagation
 05  $a1 = $a2 - 5
