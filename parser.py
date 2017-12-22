@@ -131,35 +131,9 @@ class Parser:
     def parse_cond(self, lex):
         self.lex = lex
         lex.expect("(")
-        if lex.match("!"):
-            arg1 = self.parse_expr()
-            cond = "=="
-            arg2 = VALUE(0, 10)
-        else:
-            arg1 = self.parse_expr()
-            lex.ws()
-            if lex.peek() == "&":
-                lex.expect("&")
-                assert lex.ident() == "BIT"
-                lex.expect("(")
-                bit_no = self.parse_expr()
-                lex.expect(")")
-                arg1 = EXPR("&", [arg1, EXPR("<<", [VALUE(1, 10), bit_no])])
-            if lex.peek() == ")":
-                cond = "!="
-                arg2 = VALUE(0, 10)
-            else:
-                matched = False
-                for cond in ("==", "!=", ">=", "<=", ">", "<"):
-                    if lex.match(cond):
-                        matched = True
-                        break
-                if not matched:
-                    self.error("Expected a comparison operator: " + lex.l)
-                arg2 = self.parse_expr()
+        e = self.parse_expr()
         lex.expect(")")
-        return COND(arg1, cond, arg2)
-
+        return COND(e)
 
     # Get line from a file, expanding any "macro-like" features,
     # like "if (cond) $r0 = $r1"
