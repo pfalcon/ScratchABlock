@@ -285,6 +285,9 @@ class Parser:
             if is_value(e):
                 return VALUE(-e.val, e.base)
             return EXPR("NEG", [e])
+        elif self.lex.match("!"):
+            e = self.parse_primary()
+            return EXPR("!", [e])
         elif self.lex.isident():
             id = self.lex.ident()
             if self.lex.peek() == "(":
@@ -326,8 +329,13 @@ class Parser:
     def parse_shift(self):
         return self.parse_level(("<<", ">>"), self.parse_add)
 
+    def parse_lt_gt(self):
+        return self.parse_level(("<", "<=", ">=", ">"), self.parse_shift)
+    def parse_eq(self):
+        return self.parse_level(("==", "!="), self.parse_lt_gt)
+
     def parse_band(self):
-        return self.parse_level(("&",), self.parse_shift)
+        return self.parse_level(("&",), self.parse_eq)
     def parse_bxor(self):
         return self.parse_level(("^",), self.parse_band)
     def parse_bor(self):
