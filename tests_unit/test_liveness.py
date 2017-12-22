@@ -23,7 +23,7 @@ def test_nielson_2_1_4():
     make_inst(g, 1, "x", "=", 2)
     make_inst(g, 2, "y", "=", 4)
     make_inst(g, 3, "x", "=", 1)
-    make_inst(g, 4, None, "if", COND(REG("x"), ">", REG("y")))
+    make_inst(g, 4, None, "if", COND(EXPR(">", REG("x"), REG("y"))))
     make_inst(g, 5, "z", "=", REG("y"))
     make_inst(g, 6, "z", "*", REG("y"), REG("y"))
     make_inst(g, 7, "x", "=", REG("z"))
