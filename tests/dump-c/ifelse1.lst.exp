@@ -1,6 +1,6 @@
 void fun_10()
 {
-  if ($a1 == 0) goto l30;
+  if (!$a1) goto l30;
   $a2 = 1;
   goto l40;
 
