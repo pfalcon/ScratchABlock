@@ -220,6 +220,8 @@ $bigreg += $small1 * $small2
 
 ### Macro-like special functions
 
+(Not yet implemented.)
+
 Special functions described above in general allow for concise
 representation of cumbersome constructs, e.g.:
 
@@ -228,6 +230,86 @@ representation of cumbersome constructs, e.g.:
 if (lt()) goto label
 ```
 
+### Conditional flags
+
+(Macros and pragmas are not yet implemented.)
+
+The idea of dealing with conditional flags as use in conditional jump
+instructions used in many architectures is to maintain and assign
+explicitly to virtual registers representing conditinal flags. For
+example, x86's Z flag can be named ``$Z``, ``$z``, ``$flags_z``, etc.
+Potentially, it can be named even ``$flags.Z`` (i.e. structure field
+syntax, likely, bitfield).
+
+As an example, x86 ``cmp eax, ebx`` instruction's effect on Z flag could
+be represented as:
+
+```c
+$cmp = $eax - $ebx
+$Z = $cmp == 0
+```
+
+Of course, this instruction sets more flags, e.g. effect on Z, C, and S
+flags could be represented as:
+
+```c
+$cmp = $eax - $ebx
+$Z = $eax == $ebx
+$C = $eax < $ebx
+$S = (i32)$cmp < 0
+```
+
+An instruction which sets flags may overwrite a source register, but its
+original value may be needed to properly calculate flags, so it may need
+to be preserved, e.g. for ``sub eax, ebx``:
+
+```c
+$eax_ = $eax
+$ebx_ = $ebx
+$eax = $eax - $ebx
+$Z = $eax_ == $ebx_
+$C = $eax_ < $ebx_
+$S = (i32)$eax < 0
+```
+
+As can be seen, such conversion can lead to quite verbose PseudoC
+instruction sequences. Many superfluous assignments will be removed
+by further processing (expression propagation and dead code elimination),
+but input PseudoC is still very verbose. As human-readability is one
+of the main goals of the format, there are still further ideas how
+to make it less verbose:
+
+1. Implicit macros. Perhaps, these would be activated by "pragma", and
+could automatically add assignments to save original contents of the
+registers, e.g.:
+
+```c
+#pragma save_org_regs
+$eax = $eax - $ebx
+$ecx = $eax + $ebx
+```
+
+would translate (during parsing) to:
+
+```c
+$eax_ = $eax
+$ebx_ = $ebx
+$eax = $eax - $ebx
+$eax_ = $eax
+$ebx_ = $ebx
+$ecx = $eax + $ebx
+```
+
+2. Macro to set flags, e.g. x86 ``sub eax, ebx`` and ``add ecx, edx``
+could be converted to:
+
+```c
+#pragma save_org_regs
+SUBFLAGS($eax, $ebx)
+$eax = $eax - $ebx
+ADDFLAGS($ecx, $edx)
+$ecx = $ecx + $edx
+```
 
 Instruction addresses (interpreted symbolically)
 ------------------------------------------------
