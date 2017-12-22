@@ -1,5 +1,5 @@
-10  if (($a1 & BIT(10)) != 0) goto 40
+10  if ($a1 & BIT(10)) goto 40
 20  if (($a2 & BIT(2)) == 0) goto 40
-30  if (($a3 & BIT($a0)) != 0) goto 40
+30  if ($a3 & BIT($a0)) goto 40
 40 40:
 40  $a3 = 0
