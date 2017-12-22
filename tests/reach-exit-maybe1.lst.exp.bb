@@ -12,7 +12,7 @@
 //  reachdef_out: {($a2, None), ($a3, None), ($a4, None)}
 10:
 if ($a1 == 0) goto 30
-Exits: [(COND($a1 == 0), '30'), (None, '20')]
+Exits: [(COND(EXPR(==[$a1, 0])), '30'), (None, '20')]
 
 // Predecessors: ['10']
 // Node props:

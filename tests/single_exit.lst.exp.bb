@@ -6,7 +6,7 @@
 // Predecessors: []
 10:
 if ($a1 != 0) goto 20
-Exits: [(COND($a1 != 0), '20'), (None, '11')]
+Exits: [(COND(EXPR(!=[$a1, 0])), '20'), (None, '11')]
 
 // Predecessors: ['10']
 11:
@@ -16,7 +16,7 @@ Exits: [(None, 'single_exit')]
 // Predecessors: ['10']
 20:
 if ($a1 != 1) goto 30
-Exits: [(COND($a1 != 1), '30'), (None, '22')]
+Exits: [(COND(EXPR(!=[$a1, 1])), '30'), (None, '22')]
 
 // Predecessors: ['20']
 22:

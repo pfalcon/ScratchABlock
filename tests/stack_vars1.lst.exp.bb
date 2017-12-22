@@ -19,7 +19,7 @@ $a0 = 5
 $a2 = loc16_u32
 *(u8*)loc16_u32 = 10
 if (*(u8*)loc16_u32 == 11) goto 40
-Exits: [(COND(*(u8*)CVAR(loc16_u32) == 11), '40')]
+Exits: [(COND(EXPR(==[*(u8*)CVAR(loc16_u32), 11])), '40')]
 
 // Predecessors: ['10']
 // Node props:
