@@ -9,7 +9,7 @@
 05:
 $a0 = 100
 if ($a1 == 100) goto 20
-Exits: [(COND($a1 == 100), '20'), (None, '11')]
+Exits: [(COND(EXPR(==[$a1, 100])), '20'), (None, '11')]
 
 // Predecessors: ['05']
 // BBlock props:

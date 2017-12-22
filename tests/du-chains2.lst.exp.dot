@@ -4,6 +4,6 @@ digraph G {
 "30" [label="BBlock\n30"]
 "40" [label="BBlock\n40"]
 "10" -> "30" [label="else"]
-"10" -> "40" [label="($r0 == 5)"]
+"10" -> "40" [label="(EXPR(==[REG(r0), VALUE(0x5)]))"]
 "30" -> "40"
 }

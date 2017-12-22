@@ -12,8 +12,8 @@
 10:
 /*10*/ $a = [VALUE(0x1)] # {'uses': ['20', '30', '40']}
 /*20*/ $b = [REG(a)] # {'uses': []}
-/*25*/ if([COND(REG(r0) == VALUE(0x5)), ADDR(40)])
-Exits: [(COND(REG(r0) == VALUE(0x5)), '40'), (None, '30')]
+/*25*/ if([COND(EXPR(==[REG(r0), VALUE(0x5)])), ADDR(40)])
+Exits: [(COND(EXPR(==[REG(r0), VALUE(0x5)])), '40'), (None, '30')]
 
 // Predecessors: ['10']
 // Node props:

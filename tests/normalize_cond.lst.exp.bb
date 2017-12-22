@@ -6,7 +6,7 @@
 // Predecessors: []
 10:
 if ($a1 > 5) goto 20
-Exits: [(COND($a1 > 5), '20'), (None, '11')]
+Exits: [(COND(EXPR(>[$a1, 5])), '20'), (None, '11')]
 
 // Predecessors: ['10']
 11:
