@@ -649,62 +649,55 @@ class COND:
         "<=": ">=",
     }
 
-    def __init__(self, arg1, op, arg2):
-        self.arg1 = arg1
-        self.op = op
-        self.arg2 = arg2
+    def __init__(self, expr):
+        self.expr = expr
 
     def neg(self):
-        return self.__class__(self.arg1, self.NEG[self.op], self.arg2)
+        op = self.expr.op
+        if op in self.NEG:
+            return self.__class__(EXPR(self.NEG[op], self.expr.args))
+        elif op == "!":
+            return self.__class__(self.expr.args[0])
+        else:
+            return self.__class__(EXPR("!", self.expr))
 
     def swap(self):
         "Swap arguments in-place."
-        self.arg1, self.arg2 = self.arg2, self.arg1
-        self.op = self.SWAP[self.op]
+        self.expr.args[0], self.expr.args[1] = self.expr.args[1], self.expr.args[0]
+        self.expr.op = self.SWAP[self.expr.op]
 
     def normalize(self):
-        if is_value(self.arg1) and not is_value(self.arg2):
+        if is_value(self.expr.args[0]) and not is_value(self.expr.args[1]):
             self.swap()
+
+    def is_relation(self):
+        return is_expr(self.expr) and self.expr.op in self.NEG
 
     def list(self):
         return [self]
 
     def __str__(self):
-        return "(%s %s %s)" % (EXPR.strarg(self, self.arg1), self.op, EXPR.strarg(self, self.arg2))
+        return "(%s)" % self.expr
 
     def __repr__(self):
-        if self.op in ("in", "not in"):
-            return "COND(%r %s %s)" % (self.arg1, self.op, utils.repr_stable(self.arg2))
-        return "COND(%r %s %r)" % (self.arg1, self.op, self.arg2)
+#        if self.op in ("in", "not in"):
+#            return "COND(%r %s %s)" % (self.arg1, self.op, utils.repr_stable(self.arg2))
+        return "COND(%r)" % self.expr
 
     def __eq__(self, other):
-        return type(self) == type(other) and self.op == other.op and self.arg1 == other.arg1 and self.arg2 == other.arg2
+        return type(self) == type(other) and self.expr == other.expr
 
     def __contains__(self, other):
-        if other in self.arg1:
-            return True
-        if other in self.arg2:
-            return True
-        return False
+        return other in self.expr
 
     def __hash__(self):
-        return hash(self.op) ^ hash(self.arg1) ^ hash(self.arg2)
+        return hash(self.expr) ^ hash(self.__class__)
 
     def regs(self):
-        res = set()
-        for x in (self.arg1, self.arg2):
-            if not isinstance(x, frozenset):
-                res |= x.regs()
-        return res
+        return self.expr.regs()
 
     def foreach_subexpr(self, func):
-        def do(a):
-            if is_expr(a):
-                a.foreach_subexpr(func)
-            else:
-                func(a)
-        do(self.arg1)
-        do(self.arg2)
+        self.expr.foreach_subexpr(func)
 
 
 class CompoundCond:
