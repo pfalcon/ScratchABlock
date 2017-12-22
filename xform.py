@@ -246,13 +246,10 @@ def expr_subst(expr, subst_dict):
         # This performs substituations in-place, because the same
         # COND instance is referenced in inst (to be later removed
         # by remove_trailing_jumps) and in out edges in CFG.
-        new1 = expr_subst(expr.arg1, subst_dict)
-        if new1:
-            expr.arg1 = new1
-        new2 = expr_subst(expr.arg2, subst_dict)
-        if new2:
-            expr.arg2 = new2
-        simplify_cond(expr)
+        new = expr_subst(expr.expr, subst_dict)
+        if new:
+            expr.expr = new
+            simplify_cond(expr)
         return
 
     if isinstance(expr, EXPR):
@@ -318,10 +315,7 @@ def bblock_propagation(bblock, propagated_types, subst_insts=True):
         if subst_insts:
             if inst.op == "if":
                 # Replace in-place because of if statement/out-edges label shared COND
-                assert is_cond(inst.args[0])
-                inst.args[0].arg1 = args[0].arg1
-                inst.args[0].op = args[0].op
-                inst.args[0].arg2 = args[0].arg2
+                inst.args[0].expr = args[0].expr
             else:
                 inst.args = args
             inst.dest = n_dest
