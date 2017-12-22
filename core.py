@@ -357,7 +357,7 @@ class EXPR:
                 "==": 7, "!=": 7, ">": 6, "<": 6, ">=": 6, "<=": 6,
                 "<<": 5, ">>": 5, "+": 4, "-": 4, "*": 3, "/": 3, "%": 3,
                 # All the below is highest precedence
-                "CAST": 1, "SFUNC": 1, "NEG": 1,
+                "CAST": 1, "SFUNC": 1, "NEG": 1, "!": 1,
             }[e.op]
         return 1
 
@@ -391,6 +391,7 @@ class EXPR:
 
         DICT = {
             "NEG": "-",
+            "!": "!",
         }
         if self.op in DICT:
             assert len(self.args) == 1
