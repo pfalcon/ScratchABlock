@@ -107,6 +107,8 @@ def expr_simplify_lshift(e):
 
         if is_value(e.args[1]):
             val = e.args[1].val
+            if val == 0:
+                return e.args[0]
             # Try to convert usages which are realistic address calculations,
             # otherwise we may affect bitfield, etc. expressions.
             if val < 5:
