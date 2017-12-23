@@ -29,6 +29,10 @@ def check_pass(cfg, prop_name, err_msg):
         assert 0, err_msg
 
 
+def number_postorder(cfg):
+    cfg.number_postorder()
+
+
 def remove_sfunc(bblock, name):
     for i, inst in enumerate(bblock.items):
         if inst.op == "SFUNC" and inst.args[0].args[0].name == name:
