@@ -97,6 +97,15 @@ def remove_unreachable_entries(cfg):
         remove_component(e)
 
 
+def remove_unreachable_nodes(cfg):
+    "Remove CFG nodes not reachable from entry."
+    assert "dfsno" in cfg[cfg.first_node], "Need number_postorder"
+
+    for node, info in list(cfg.iter_nodes()):
+        if info["dfsno"] is None:
+            cfg.remove_node(node)
+
+
 # Remove any jumps to jumps, replacing destination of first jump
 # to be destination of 2nd.
 # This "simplifies" graph, but makes it irregular. This is useful
