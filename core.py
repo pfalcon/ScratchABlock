@@ -498,7 +498,8 @@ class Inst:
         if self.op == "call":
             return self.args[0].regs() | arch.call_uses(self.args[0])
         if self.op == "return":
-            return arch.ret_uses(cfg)
+            if not self.args:
+                return arch.ret_uses(cfg)
         uses = set()
         for a in self.args:
             for r in a.regs():
