@@ -10,4 +10,4 @@ def apply(cfg):
     script_preserveds.apply(cfg)
     collect_call_live_out(cfg)
     collect_returns()
-    collect_args(cfg)
+    collect_params(cfg)
