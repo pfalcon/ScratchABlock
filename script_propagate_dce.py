@@ -13,7 +13,7 @@ def apply(cfg):
     #mem_propagation(cfg)
     expr_propagation(cfg)
 
-    estimate_args(cfg)
+    estimate_params(cfg)
     analyze_live_vars(cfg)
     foreach_bblock(cfg, dead_code_elimination)
 
