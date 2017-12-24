@@ -481,7 +481,7 @@ class Parser:
                         # label
                         if self.cfg.props["name"] is None:
                             # First label is function name
-                            if block is None and last_block is None:
+                            if block is None and self.cfg.is_empty():
                                 self.cfg.props["name"] = l[:-1]
                                 self.cfg.props["addr"] = addr
 
