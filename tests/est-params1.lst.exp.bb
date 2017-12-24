@@ -5,6 +5,15 @@
 
 // Predecessors: []
 // Node props:
+//  live_gen: set()
+//  live_in: {$r1}
+//  live_kill: set()
+//  live_out: {$r1}
+0entry:
+Exits: [(None, '20')]
+
+// Predecessors: ['0entry']
+// Node props:
 //  live_gen: {$r1}
 //  live_in: {$r1}
 //  live_kill: set()

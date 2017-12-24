@@ -1,9 +1,11 @@
 digraph G {
-"ENTRY" -> "10"
+"ENTRY" -> "0entry"
+"0entry" [label="BBlock\n0entry"]
 "10" [label="BBlock\n10"]
 "10.real" [label="BBlock\n10.real"]
 "20" [label="BBlock\n20"]
 "single_exit" [label="BBlock\nsingle_exit"]
+"0entry" -> "10"
 "10" -> "10.real" [label="else"]
 "10" -> "single_exit" [label="0x0"]
 "10.real" -> "20"

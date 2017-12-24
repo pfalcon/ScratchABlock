@@ -1,4 +1,5 @@
 #xform: cfg_single_exit
+#xform: cfg_preheader
 #xform: analyze_live_vars
 #xform: estimate_params
 10 start:
