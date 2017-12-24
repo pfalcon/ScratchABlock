@@ -46,7 +46,10 @@ test_decomp() {
     for f in tests/decomp/*.lst; do
         echo $f
         ./apply_xform.py --log-level=ERROR --script script_decompile --funcdb=none --format=c $f > $f.out|| failed
+        ./apply_xform.py --log-level=ERROR --script script_decompile --funcdb=none --format=c \
+            --no-dead --no-comments $f > $f.out.clean || failed
         diff -u $f.exp $f.out || failed
+        diff -u $f.exp.clean $f.out.clean || failed
     done
 }
 
