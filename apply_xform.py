@@ -37,6 +37,7 @@ def parse_args():
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
         help="output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
+    argp.add_argument("--no-comments", action="store_true", help="don't output decompilation comments (annotations)")
     argp.add_argument("--no-graph-header", action="store_true", help="don't output graph properties")
     argp.add_argument("--annotate-calls", action="store_true", help="annotate calls if uses/defs")
     argp.add_argument("--repr", action="store_true", help="dump __repr__ format of instructions and other objects")
@@ -107,6 +108,9 @@ def handle_file_unprotected(args):
         out = open(args.output, "w")
     else:
         out = sys.stdout
+
+    if args.no_comments:
+        Inst.show_comments = False
 
     if args.format == "bblocks":
         p = CFGPrinter(cfg, out)
