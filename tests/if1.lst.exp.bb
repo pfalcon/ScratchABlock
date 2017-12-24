@@ -1,6 +1,5 @@
 // Graph props:
-//  addr: 20
-//  name: 20
+//  name: None
 //  trailing_jumps: True
 
 // Predecessors: []
