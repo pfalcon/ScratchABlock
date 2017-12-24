@@ -44,6 +44,7 @@ def apply(cfg):
     propagate(cfg)
 
     # Estimate args only at the beginning of processing
+    analyze_live_vars(cfg)
     estimate_params(cfg)
 
     dce(cfg)
