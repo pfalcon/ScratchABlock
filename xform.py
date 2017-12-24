@@ -630,7 +630,11 @@ def estimate_params(cfg):
     #ana.solve()
     check_pass(cfg, "live_in", "This pass requires live variable information")
     func_addr = cfg.entry()
-    e = cfg[func_addr]
+    assert func_addr == "0entry", "cfg_preheader pass required"
+    real_entry = cfg.succ(func_addr)
+    assert len(real_entry) == 1
+    real_entry = real_entry[0]
+    e = cfg[real_entry]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
     args -= set([REG("sp")])
     cfg.props["estimated_params"] = args
