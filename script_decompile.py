@@ -35,6 +35,8 @@ def apply(cfg):
     # Data flow
     #
 
+    # Various algos below don't work with no explicit entry in CFG
+    cfg_preheader(cfg)
     # Various algos below require single-exit CFG
     cfg_single_exit(cfg)
 
