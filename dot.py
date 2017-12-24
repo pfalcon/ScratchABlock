@@ -27,6 +27,8 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
             label = addr
         if "dfsno" in info:
             label += "(#%s)" % info["dfsno"]
+        if info.get("dfsno_exit"):
+            label += "(e#%s)" % info["dfsno_exit"]
         if "idom" in info:
             label += "\nidom: %s" % info["idom"]
         out.write('"%s" [label="%s"]\n' % (addr, label))
