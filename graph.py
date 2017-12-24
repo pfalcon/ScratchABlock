@@ -211,10 +211,29 @@ class Graph:
         num += 1
         return num
 
+    def _number_postorder_bidi(self, node, num, prop_name, next_func):
+        self.set_node_attr(node, prop_name, True)
+        next_nodes = next_func(node)
+        # TODO: If not using reverse, numbering changes to less natural, but
+        # algos which depend on postorder should not?
+        next_nodes.sort(reverse=True)
+        for n in next_nodes:
+            if not self.get_node_attr(n, prop_name, None):
+                num = self._number_postorder_bidi(n, num, prop_name, next_func)
+        self.set_node_attr(node, prop_name, num)
+        #print("Setting %s to %s" % (node, num))
+        num += 1
+        return num
+
     def number_postorder(self):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
         return self._number_postorder(self.first_node, 1)
+
+    def number_postorder_from_exit(self, node):
+        "Number nodes in depth-first search post-order, from exit."
+        self.reset_numbering("dfsno_exit")
+        return self._number_postorder_bidi(node, 1, "dfsno_exit", self.pred)
 
     def number_postorder_forest(self):
         "Number nodes in depth-first search post-order order."
