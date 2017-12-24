@@ -5,6 +5,7 @@
 #
 import os.path
 import copy
+import logging
 
 import yaml
 import yamlutils
@@ -13,6 +14,8 @@ import utils
 import core
 from core import is_addr, is_value, is_expr, EXPR
 
+
+log = logging.getLogger(__name__)
 
 FUNC_DB = {}
 FUNC_DB_BY_ADDR = {}
@@ -105,7 +108,7 @@ def mark_updated(func):
 def update_cfg_prop(cfg, prop, new_val):
     if cfg.props.get(prop) != new_val:
         mark_updated(cfg.props["name"])
-        print("%s: %s updated from %s to %s" % (cfg.props["name"], prop,
+        log.info("%s: %s updated from %s to %s" % (cfg.props["name"], prop,
             utils.repr_stable(cfg.props.get(prop)), utils.repr_stable(new_val)))
     cfg.props[prop] = new_val
 
