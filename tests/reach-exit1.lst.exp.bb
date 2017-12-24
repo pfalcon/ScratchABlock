@@ -1,6 +1,5 @@
 // Graph props:
-//  addr: 30
-//  name: 30
+//  name: None
 //  reach_exit: {$a2, $a3, $a4}
 //  trailing_jumps: True
 
