@@ -579,7 +579,7 @@ class Inst:
 
         tail = self.trail
         if self.show_comments and comments:
-            tail += " # " + utils.repr_stable_dict(comments)
+            tail += " " + self.comment + " " + utils.repr_stable_dict(comments)
 
         if self.op == "return":
             args = ", ".join([str(a) for a in self.args])
