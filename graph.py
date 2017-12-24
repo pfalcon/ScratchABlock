@@ -197,20 +197,6 @@ class Graph:
         for n, info in self._nodes.items():
             info["dfsno"] = None
 
-    def _number_postorder(self, node, num):
-        self.set_node_attr(node, "dfsno", True)
-        succ = self.succ(node)
-        # TODO: If not using reverse, numbering changes to less natural, but
-        # algos which depend on postorder should not?
-        succ.sort(reverse=True)
-        for n in succ:
-            if not self.get_node_attr(n, "dfsno", None):
-                num = self._number_postorder(n, num)
-        self.set_node_attr(node, "dfsno", num)
-        #print("Setting %s to %s" % (node, num))
-        num += 1
-        return num
-
     def _number_postorder_bidi(self, node, num, prop_name, next_func):
         self.set_node_attr(node, prop_name, True)
         next_nodes = next_func(node)
@@ -228,7 +214,7 @@ class Graph:
     def number_postorder(self):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
-        return self._number_postorder(self.first_node, 1)
+        return self._number_postorder_bidi(self.first_node, 1, "dfsno", self.succ)
 
     def number_postorder_from_exit(self, node):
         "Number nodes in depth-first search post-order, from exit."
