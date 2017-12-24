@@ -32,7 +32,9 @@ def dump_c(cfg, stream=sys.stdout):
     for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
         bblock = info["val"]
         if func_start:
-            label = cfg.parser.label_from_addr(bblock.addr)
+            label = cfg.props["name"]
+            if not label:
+                label = cfg.parser.label_from_addr(bblock.addr)
             if label[0].isdigit():
                 label = "fun_" + label
             if ("estimated_params" in cfg.props):
