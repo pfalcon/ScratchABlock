@@ -6,7 +6,7 @@ from core import *
 import cfgutils
 
 
-_log = logging.getLogger(__file__)
+_log = logging.getLogger(__name__)
 
 
 def split_bblock(cfg, n):
@@ -60,7 +60,7 @@ def match_seq(cfg):
         if cfg.degree_out(v) == 1:
             succ = cfg.succ(v)[0]
             if cfg.degree_in(succ) == 1:
-                print("seq:", v, succ)
+                _log.info("seq: %s %s", v, succ)
                 newb = Seq(cfg.node(v)["val"], cfg.node(succ)["val"])
                 cfg.add_node(v, val=newb)
                 cfg.move_succ(succ, v)
@@ -85,7 +85,7 @@ def match_if(cfg):
 
             c = cfg.succ(b)[0]
             if c == a:
-                print("if:", v, b, c)
+                _log.info("if: %s, %s, %s", v, b, c)
                 v = split_bblock(cfg, v)
                 if_header = cfg.node(v)["val"]
                 t_block = cfg.node(b)["val"]
@@ -159,7 +159,7 @@ def match_ifelse(cfg):
                 if common:
                     f_v_s = common
 
-                    print("ifelse:", v, t_v, f_v, f_v_s[0])
+                    _log.info("ifelse: %s, %s, %s, %s", v, t_v, f_v, f_v_s[0])
                     v = split_bblock(cfg, v)
                     if_header = cfg.node(v)["val"]
                     t_block = cfg.node(t_v)["val"]
@@ -274,7 +274,7 @@ def match_infloop(cfg):
         if cfg.degree_out(v) == 1:
             for s in cfg.succ(v):
                 if s == v:
-                    print("infloop:", v)
+                    _log.info("infloop: %s", v)
                     b = cfg.node(v)["val"]
                     newb = Loop(b)
                     cfg.add_node(v, val=newb)
@@ -303,7 +303,7 @@ def match_dowhile(cfg):
         if cfg.degree_out(v) == 2:
             for s in cfg.succ(v):
                 if s == v:
-                    print("dowhile:", v)
+                    _log.info("dowhile: %s", v)
                     b = cfg.node(v)["val"]
                     newb = DoWhile(b, cfg.edge(v, v).get("cond"))
                     cfg.add_node(v, val=newb)
@@ -333,7 +333,7 @@ def match_while(cfg):
             succ = cfg.sorted_succ(v)
             back_cand = cfg.succ(succ[0])
             if len(back_cand) == 1 and back_cand[0] == v:
-                print("while:", v, succ[0])
+                _log.info("while: %s, %s", v, succ[0])
                 b = cfg.node(succ[0])["val"]
                 newb = While(b, cfg.edge(v, succ[0]).get("cond"))
                 cfg.add_node(v, val=newb)
@@ -364,7 +364,7 @@ def match_control_and(cfg):
                 succ2 = cfg.sorted_succ(v2)
                 assert len(succ2) == 2
                 if succ1[0] == succ2[0]:
-                    print("and", v, v2)
+                    _log.info("and %s, %s", v, v2)
                     newb = ControlAnd(v, cfg.edge(v, succ1[0]).get("cond"), cfg.edge(v2, succ1[0]).get("cond"))
                     cfg.add_node(v, val=newb)
                     cfg.set_edge(v, succ1[0], cond=newb.cond)
