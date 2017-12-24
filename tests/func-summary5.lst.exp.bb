@@ -30,7 +30,7 @@ $a7 = $a7_0
 // $loc_16_u32 = $a2_0 (dead)
 $a3 = $a2_0 + 1
 $a2 = 10
-call foo # {'defs': [$a0, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11], 'uses': [$a2, $a3, $a4, $a5, $a6, $a7]}
+call foo // {'defs': [$a0, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11], 'uses': [$a2, $a3, $a4, $a5, $a6, $a7]}
 Exits: [(None, '35')]
 
 // Predecessors: ['11']
@@ -48,7 +48,7 @@ Exits: [(None, '35')]
 //  state_out: {$loc_16_u32=$a2_0, $sp=$sp_0 - 0x10}
 35:
 $a2 += 1
-call bar # {'defs': [$a0, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11], 'uses': [$a2, $a3, $a4, $a5, $a6, $a7]}
+call bar // {'defs': [$a0, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11], 'uses': [$a2, $a3, $a4, $a5, $a6, $a7]}
 Exits: [(None, '45')]
 
 // Predecessors: ['35']
