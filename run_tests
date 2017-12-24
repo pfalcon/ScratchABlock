@@ -5,10 +5,12 @@ failed() {
     exit 1
 }
 
-echo "=== test_unit ==="
-nosetests3 --version || nose_missing=1
-if [ -z "$nose_missing" ]; then
-    nosetests3 -v || failed
+if [ -z "$1" -o "$1" == "unit" ]; then
+    echo "=== test_unit ==="
+    nosetests3 --version || nose_missing=1
+    if [ -z "$nose_missing" ]; then
+        nosetests3 -v || failed
+    fi
 fi
 
 test_roundtrip() {
@@ -54,10 +56,20 @@ test_decomp() {
 }
 
 find tests -name '*.out*' -exec rm {} \;
-test_roundtrip
-test_dump_c
-test_xform
-test_decomp
+
+if [ -z "$1" -o "$1" == "roundtrip" ]; then
+    test_roundtrip
+fi
+if [ -z "$1" -o "$1" == "dump_c" ]; then
+    test_dump_c
+fi
+if [ -z "$1" -o "$1" == "xform" ]; then
+    test_xform
+fi
+if [ -z "$1" -o "$1" == "decomp" ]; then
+    test_decomp
+fi
+
 echo "TESTS PASSED"
 if [ -n "$nose_missing" ]; then
     echo
