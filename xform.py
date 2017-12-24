@@ -33,6 +33,10 @@ def number_postorder(cfg):
     cfg.number_postorder()
 
 
+def number_postorder_from_exit(cfg):
+    cfg.number_postorder_from_exit("single_exit")
+
+
 def remove_sfunc(bblock, name):
     for i, inst in enumerate(bblock.items):
         if inst.op == "SFUNC" and inst.args[0].args[0].name == name:
