@@ -3,7 +3,7 @@ from dataflow import *
 
 def apply(cfg):
     # Various algos below don't work with no explicit entry in CFG
-    cfg_single_entry(cfg)
+    cfg_preheader(cfg)
     # Also don't work with >1 entries
     remove_unreachable_entries(cfg)
     # Also don't work unless there's a single exit
