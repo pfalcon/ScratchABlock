@@ -14,8 +14,7 @@ def test_nodes_on_path_trivial_loop():
     g = Graph()
     g.add_node("a")
     g.add_edge("a", "a")
-    # number_postorder() requires proper single-entry graph
-    g._number_postorder("a", 1)
+    g.number_postorder("a")
     res = find_all_nodes_on_path(g, "a", "a")
     assert res == set(["a"]), res
 
@@ -23,8 +22,7 @@ def test_nodes_on_path_disconnected():
     g = Graph()
     g.add_node("a")
     g.add_node("b")
-    # number_postorder() requires proper single-entry graph
-    g._number_postorder("a", 1)
+    g.number_postorder("a")
     res = find_all_nodes_on_path(g, "a", "b")
     assert res == set()
 
@@ -36,8 +34,7 @@ def test_nodes_on_path():
     g.add_node("d")
     g.add_edge("a", "b")
     g.add_edge("a", "c")
-    # number_postorder() requires proper single-entry graph
-    g._number_postorder("a", 1)
+    g.number_postorder("a")
     res = find_all_nodes_on_path(g, "a", "d")
     assert res == set(), res
 
@@ -53,8 +50,7 @@ def test_nodes_on_path():
 
     g.add_edge("d", "a")
     # number_postorder() requires proper single-entry graph
-    g.reset_numbering()
-    g._number_postorder("a", 1)
+    g.number_postorder("a")
     res = find_all_nodes_on_path(g, "a", "d")
     assert res == set(["a", "b", "c"]), res
 
