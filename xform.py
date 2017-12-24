@@ -20,7 +20,7 @@ def apply_iterative(func, args):
     cnt = 0
     while func(*args):
         cnt += 1
-    print("Ran %s %d times" % (func, cnt))
+    log.info("Ran %s %d times" % (func, cnt))
 
 
 def check_pass(cfg, prop_name, err_msg):
