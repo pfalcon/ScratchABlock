@@ -11,6 +11,15 @@
 //  live_in: {$r1}
 //  live_kill: set()
 //  live_out: {$r1}
+0entry:
+Exits: [(None, '10')]
+
+// Predecessors: ['0entry']
+// Node props:
+//  live_gen: set()
+//  live_in: {$r1}
+//  live_kill: set()
+//  live_out: {$r1}
 10:
 if 0x0 goto single_exit
 goto 10.real

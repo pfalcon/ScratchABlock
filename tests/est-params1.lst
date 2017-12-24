@@ -1,3 +1,4 @@
+#xform: cfg_preheader
 #xform: analyze_live_vars
 #xform: estimate_params
 20     func($r1)
