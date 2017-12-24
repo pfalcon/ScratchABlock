@@ -41,10 +41,20 @@ test_xform() {
     done
 }
 
+test_decomp() {
+    echo "=== test_decomp ==="
+    for f in tests/decomp/*.lst; do
+        echo $f
+        ./apply_xform.py --log-level=ERROR --script script_decompile --funcdb=none --format=c $f > $f.out|| failed
+        diff -u $f.exp $f.out || failed
+    done
+}
+
 find tests -name '*.out*' -exec rm {} \;
 test_roundtrip
 test_dump_c
 test_xform
+test_decomp
 echo "TESTS PASSED"
 if [ -n "$nose_missing" ]; then
     echo
