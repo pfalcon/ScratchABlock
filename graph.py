@@ -211,10 +211,12 @@ class Graph:
         num += 1
         return num
 
-    def number_postorder(self):
+    def number_postorder(self, node=None):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
-        return self._number_postorder_bidi(self.first_node, 1, "dfsno", self.succ)
+        if node is None:
+            node = self.first_node
+        return self._number_postorder_bidi(node, 1, "dfsno", self.succ)
 
     def number_postorder_from_exit(self, node):
         "Number nodes in depth-first search post-order, from exit."
