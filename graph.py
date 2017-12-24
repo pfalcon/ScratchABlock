@@ -193,9 +193,9 @@ class Graph:
         for i, info in self.iter_sorted_nodes():
             print("%s\t%s" % (i, info))
 
-    def reset_numbering(self):
+    def reset_numbering(self, prop="dfsno"):
         for n, info in self._nodes.items():
-            info["dfsno"] = None
+            info[prop] = None
 
     def _number_postorder_bidi(self, node, num, prop_name, next_func):
         self.set_node_attr(node, prop_name, True)
