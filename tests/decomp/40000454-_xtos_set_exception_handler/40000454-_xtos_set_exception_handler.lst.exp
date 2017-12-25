@@ -1,0 +1,32 @@
+// Estimated params: [$a2, $a3]
+void _xtos_set_exception_handler()
+{
+  // $sp = $sp_0; // {'uses': []} (dead);
+  if ($a2 < 0x40) {
+    // $a9 = 0x0; // {'uses': ['40000481.0']} (dead);
+    // $a6 = _xtos_c_wrapper_handler; // {'uses': ['40000477.0']} (dead);
+    $a4 = _xtos_unhandled_exception; // {'uses': ['4000047c']}
+    // $a8 = _xtos_exc_handler_table_; // {'uses': ['40000470']} (dead);
+    // $a10 = _xtos_p_none; // {'uses': ['4000046d.0', '40000474', '4000047e']} (dead);
+    // $a11 = _xtos_c_handler_table; // {'uses': ['4000046b']} (dead);
+    // $a5 = $a2 << 2; // {'uses': ['4000046b', '40000470', '4000047c']} (dead);
+    // $a11 = _xtos_c_handler_table + $a2 * 4; // {'uses': ['40000472', '4000047a']} (dead);
+    if ($a3 == 0) {
+      $a3 = _xtos_p_none; // {'uses': ['40000474', '4000047a']}
+    }
+    $a5 = _xtos_exc_handler_table_ + $a2 * 4; // {'uses': []}
+    $a2 = *(u32*)(_xtos_c_handler_table + $a2 * 4); // {'uses': []}
+    // $a7 = $a3 - _xtos_p_none; // {'uses': ['40000477']} (dead);
+    if ($a3 - _xtos_p_none != 0) {
+      $a4 = _xtos_c_wrapper_handler; // {'uses': ['4000047c']}
+    }
+    *(u32*)(_xtos_c_handler_table + $a2 * 4) = $a3; // {'uses': []}
+    *(u32*)$a5 = $a4; // {'uses': []}
+    // $a10 = $a2 - _xtos_p_none; // {'uses': ['40000481']} (dead);
+    if ($a2 - _xtos_p_none == 0) {
+      $a2 = 0x0; // {'uses': []}
+    }
+  } else {
+    $a2 = 0x0; // {'uses': []}
+  }
+}
