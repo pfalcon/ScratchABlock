@@ -5,6 +5,10 @@ E = EXPR
 V = VALUE
 R = REG
 
+def NEG(e):
+    return EXPR("NEG", e)
+
+
 def test_sub_const_to_add():
     e = E("-", [V(2), V(1)])
     e2 = expr_xform(e, expr_sub_const_to_add)
@@ -25,6 +29,16 @@ def test_sub_const_to_add():
     e = E("-", [E("-", [V(3), V(2)]), V(1)])
     e2 = expr_xform(e, expr_sub_const_to_add)
     assert e2 == E("+", [E("+", [V(3), V(-2)]), V(-1)])
+
+
+def test_sub_to_add():
+    e = E("-", R("r0"), R("r1"))
+    e2 = expr_xform(e, expr_sub_to_add)
+    assert e2 == E("+", R("r0"), NEG(R("r1"))), e2
+
+    e = E("-", V(32), E("-", V(32), R("r1")))
+    e2 = expr_xform(e, expr_sub_to_add)
+    assert e2 == E("+", V(32), E("+", V(-32), R("r1"))), e2
 
 
 def test_associative_add():
