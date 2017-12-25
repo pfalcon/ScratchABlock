@@ -42,4 +42,21 @@ $a3 = $a2_0 + 1
 // $a2 = 10 (dead)
 // $a2 = $a2_0 (dead)
 return
+Exits: [(None, '_EXIT_')]
+
+// Predecessors: ['15']
+// Node props:
+//  live_gen: set()
+//  live_in: {$a3, $save}
+//  live_kill: set()
+//  live_out: {$a3, $save}
+//  reachdef_gen: set()
+//  reachdef_in: {($a2, '15'), ($a3, '15'), ($save, '15')}
+//  reachdef_kill: set()
+//  reachdef_out: {($a2, '15'), ($a3, '15'), ($save, '15')}
+// BBlock props:
+//  state_in: {$a2=$a2_0, $a3=$a2_0 + 1, $save=$a2_0}
+//  state_out: {$a2=$a2_0, $a3=$a2_0 + 1, $save=$a2_0}
+_EXIT_:
+return
 Exits: []

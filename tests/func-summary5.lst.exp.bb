@@ -84,4 +84,21 @@ Exits: [(None, '45')]
 // $a2 = $a2_0 (dead)
 // $sp = $sp_0 (dead)
 return
+Exits: [(None, '_EXIT_')]
+
+// Predecessors: ['45']
+// Node props:
+//  live_gen: set()
+//  live_in: {$a0, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11}
+//  live_kill: set()
+//  live_out: {$a0, $a3, $a4, $a5, $a6, $a7, $a8, $a9, $a10, $a11}
+//  reachdef_gen: set()
+//  reachdef_in: {($a0, '35'), ($a2, '45'), ($a3, '35'), ($a4, '35'), ($a5, '35'), ($a6, '35'), ($a7, '35'), ($a8, '35'), ($a9, '35'), ($a10, '35'), ($a11, '35'), ($loc_16_u32, '11'), ($sp, '45')}
+//  reachdef_kill: set()
+//  reachdef_out: {($a0, '35'), ($a2, '45'), ($a3, '35'), ($a4, '35'), ($a5, '35'), ($a6, '35'), ($a7, '35'), ($a8, '35'), ($a9, '35'), ($a10, '35'), ($a11, '35'), ($loc_16_u32, '11'), ($sp, '45')}
+// BBlock props:
+//  state_in: {$a2=$a2_0, $loc_16_u32=$a2_0, $sp=$sp_0}
+//  state_out: {$a2=$a2_0, $loc_16_u32=$a2_0, $sp=$sp_0}
+_EXIT_:
+return
 Exits: []
