@@ -5,7 +5,9 @@ def apply(cfg):
     cfg_single_exit(cfg)
 
     foreach_bblock(cfg, sub_const_to_add)
-    insert_sp0(cfg)
+
+    analyze_live_vars(cfg)
+    insert_initial_regs(cfg)
 
     analyze_reach_defs(cfg)
     #const_propagation(cfg)
