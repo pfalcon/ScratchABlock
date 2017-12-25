@@ -53,13 +53,26 @@ def add_vals(a, b):
 def expr_neg(expr):
     if is_value(expr):
         return VALUE(-expr.val, expr.base)
-    assert 0
+    if is_expr(expr):
+        if expr.op == "NEG":
+            return expr.args[0]
+        if expr.op == "+":
+            new_args = [expr_neg(x) for x in expr.args]
+            return EXPR("+", new_args)
+
+    return EXPR("NEG", expr)
 
 
 def expr_sub_const_to_add(e):
     if is_expr_2args(e):
         if e.op == "-" and is_value(e.args[1]):
             return EXPR("+", [e.args[0], expr_neg(e.args[1])])
+
+
+def expr_sub_to_add(e):
+    if is_expr(e) and e.op == "-":
+        new_args = [expr_neg(x) for x in e.args[1:]]
+        return EXPR("+", [e.args[0]] + new_args)
 
 
 def expr_commutative_normalize(e):
@@ -144,7 +157,8 @@ def expr_simplify_cast(e):
 
 
 def simplify_expr(expr):
-    new_expr = expr_xform(expr, expr_associative_add)
+    new_expr = expr_xform(expr, expr_sub_to_add)
+    new_expr = expr_xform(new_expr, expr_associative_add)
     new_expr = expr_xform(new_expr, expr_simplify_add)
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
     new_expr = expr_xform(new_expr, expr_simplify_bitfield)
