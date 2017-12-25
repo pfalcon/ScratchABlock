@@ -1,0 +1,23 @@
+40000454 _xtos_set_exception_handler:
+40000454     if ($a2 >= 0x40) goto loc_40000486
+40000457     $a9 = 0x0
+40000459     $a6 = _xtos_c_wrapper_handler
+4000045c     $a4 = _xtos_unhandled_exception
+4000045f     $a8 = _xtos_exc_handler_table_
+40000462     $a10 = _xtos_p_none
+40000465     $a11 = _xtos_c_handler_table
+40000468     $a5 = $a2 << 2
+4000046b     $a11 += $a5
+4000046d     if ($a3 == 0) $a3 = $a10
+40000470     $a5 += $a8
+40000472     $a2 = *(u32*)$a11
+40000474     $a7 = $a3 - $a10
+40000477     if ($a7 != 0) $a4 = $a6
+4000047a     *(u32*)$a11 = $a3
+4000047c     *(u32*)$a5 = $a4
+4000047e     $a10 = $a2 - $a10
+40000481     if ($a10 == 0) $a2 = $a9
+40000484     return
+40000486 loc_40000486:
+40000486     $a2 = 0x0
+40000488     return

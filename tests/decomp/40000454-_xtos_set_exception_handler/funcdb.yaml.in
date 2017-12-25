@@ -1,0 +1,3 @@
+'40000454':
+  label: _xtos_set_exception_handler
+  returns: [a2]
