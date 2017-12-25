@@ -229,6 +229,49 @@ def cfg_single_exit(cfg):
         cfg.add_edge(entry_addr, new_entry_addr)
 
 
+# This pass finds infinite loops, and adds virtual exit edges from
+# them (effectively turning infinite loops into "do {...} while (1)"
+# loops) to a special "_DEADEND_" node, which in turn is connected to
+# the single exit node. Using intermediate deadend node will allow
+# later to remove these virtual edges easily, and also to have a
+# single adhoc rule for live var analysis, that live-out of DEADEND
+# is empty.
+def cfg_infloops_exit(cfg):
+
+    deadend_nodes = []
+
+    for addr, info in cfg.iter_nodes():
+        # We're interested only in nodes unreachable from exit
+        if info["dfsno_exit"]:
+            continue
+
+        succ = cfg.succ(addr)
+        if not succ:
+            continue
+        my_dfs = info["dfsno"]
+        deadend = True
+        for s in succ:
+            if cfg[s]["dfsno"] < my_dfs:
+                deadend = False
+                break
+        if deadend:
+            #print("deadend:", addr)
+            deadend_nodes.append(addr)
+
+    if deadend_nodes:
+        # Add intermediate node, so later we can remove it, and all
+        # extra edges are gone
+        bb = BBlock("_DEADEND_")
+        bb.cfg = cfg
+        cfg.add_node("_DEADEND_", val=bb)
+        cfg.add_edge("_DEADEND_", "single_exit", cond=VALUE(0, 10))
+        for d in deadend_nodes:
+            cfg.add_edge(d, "_DEADEND_", cond=VALUE(0, 10))
+
+        # Graph was modified
+        return True
+
+
 def sub_const_to_add(bblock):
     "Replace all subtractions of constant with adds."
 
