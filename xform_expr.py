@@ -56,7 +56,7 @@ def expr_neg(expr):
     assert 0
 
 
-def expr_sub_to_add(e):
+def expr_sub_const_to_add(e):
     if is_expr_2args(e):
         if e.op == "-" and is_value(e.args[1]):
             return EXPR("+", [e.args[0], expr_neg(e.args[1])])
