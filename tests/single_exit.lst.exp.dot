@@ -5,12 +5,12 @@ digraph G {
 "20" [label="BBlock\n20"]
 "22" [label="BBlock\n22"]
 "30" [label="BBlock\n30"]
-"single_exit" [label="BBlock\nsingle_exit"]
+"_EXIT_" [label="BBlock\n_EXIT_"]
 "10" -> "11" [label="else"]
 "10" -> "20" [label="($a1 != 0)"]
-"11" -> "single_exit"
+"11" -> "_EXIT_"
 "20" -> "22" [label="else"]
 "20" -> "30" [label="($a1 != 1)"]
-"22" -> "single_exit"
-"30" -> "single_exit"
+"22" -> "_EXIT_"
+"30" -> "_EXIT_"
 }
