@@ -34,7 +34,7 @@ def number_postorder(cfg):
 
 
 def number_postorder_from_exit(cfg):
-    cfg.number_postorder_from_exit("single_exit")
+    cfg.number_postorder_from_exit("_EXIT_")
 
 
 def remove_sfunc(bblock, name):
@@ -196,9 +196,9 @@ def cfg_preheader(cfg):
 def cfg_single_exit(cfg):
     exits = cfg.exits()
 
-    exitb = BBlock("single_exit")
+    exitb = BBlock("_EXIT_")
     exitb.cfg = cfg
-    exitb.add(Inst(None, "return", [], addr="single_exit"))
+    exitb.add(Inst(None, "return", [], addr=exitb.addr))
     cfg.add_node(exitb.addr, val=exitb)
     for e in exits:
         cfg.add_edge(e, exitb.addr)
@@ -243,7 +243,7 @@ def cfg_infloops_exit(cfg):
         bb = BBlock("_DEADEND_")
         bb.cfg = cfg
         cfg.add_node("_DEADEND_", val=bb)
-        cfg.add_edge("_DEADEND_", "single_exit", cond=VALUE(0, 10))
+        cfg.add_edge("_DEADEND_", "_EXIT_", cond=VALUE(0, 10))
         for d in deadend_nodes:
             cfg.add_edge(d, "_DEADEND_", cond=VALUE(0, 10))
 
