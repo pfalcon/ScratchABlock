@@ -2,7 +2,7 @@
 void fun_05()
 {
   $ecx = 0;
-  if ($eax != $ebx) {
+  if ($eax_0 != $ebx_0) {
     $ecx = 1;
   }
   uses($ecx);
