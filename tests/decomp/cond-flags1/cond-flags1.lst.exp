@@ -1,11 +1,12 @@
 // Estimated params: [$eax, $ebx]
 void fun_05()
 {
-  // $sp = $sp_0; // {'uses': []} (dead);
+  // $eax = $eax_0; // {'uses': []} (dead);
+  // $ebx = $ebx_0; // {'uses': []} (dead);
   $ecx = 0; // {'uses': ['40']}
-  // $Z = $eax == $ebx; // {'uses': ['20']} (dead);
-  // $C = $eax < $ebx; // {'uses': []} (dead);
-  if ($eax != $ebx) {
+  // $Z = $eax_0 == $ebx_0; // {'uses': ['20']} (dead);
+  // $C = $eax_0 < $ebx_0; // {'uses': []} (dead);
+  if ($eax_0 != $ebx_0) {
     $ecx = 1; // {'uses': ['40']}
   }
   uses($ecx);
