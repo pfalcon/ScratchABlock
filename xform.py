@@ -125,7 +125,7 @@ def remove_jump_over_jump(cfg):
         if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v)["val"].items:
             cfg.move_pred(v, cfg.succ(v)[0])
             cfg.remove_node(v)
-            print("jump_over_jump: removed node:", v)
+            log.info("jump_over_jump: removed node: %s", v)
             return True
 
 # If possible, make a single back-edge to a loop header, by introducing
@@ -137,10 +137,10 @@ def loop_single_entry(cfg):
             back_preds = list(filter(lambda x: v <= x, preds))
             if len(back_preds) < 2:
                 continue
-            print("loop_single_entry: node:", v)
-            print("back_preds:", back_preds)
+            log.info("loop_single_entry: node: %s", v)
+            log.info("back_preds: %s", back_preds)
             back_jumps = list(filter(lambda x: cfg.degree_out(x) == 1, back_preds))
-            print("back_jumps:", back_jumps)
+            log.info("back_jumps: %s", back_jumps)
             # find existing landing site
             landing_site = None
             for p in back_jumps:
@@ -149,12 +149,12 @@ def loop_single_entry(cfg):
                     landing_site = p
             if not landing_site:
                 farthest = max(back_preds)
-                print("farthest", farthest)
+                log.info("farthest: %s", farthest)
                 newb = BBlock(farthest + "_1")
                 cfg.add_node(newb.addr, val=newb)
                 cfg.add_edge(newb.addr, v)
                 landing_site = newb.addr
-            print("landing_site:", landing_site)
+            log.info("landing_site: %s", landing_site)
             for p in back_preds:
                 if p != landing_site:
                     e = cfg.edge(p, v).get("cond")
