@@ -1,5 +1,8 @@
-#xform: cfg_single_exit
 #xform: cfg_preheader
+#xform: cfg_single_exit
+#xform: number_postorder_from_exit
+#xform: number_postorder
+#xform: cfg_infloops_exit
 #xform: analyze_live_vars
 #xform: estimate_params
 10 start:
