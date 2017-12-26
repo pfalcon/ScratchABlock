@@ -167,7 +167,7 @@ def cfg_single_entry(cfg):
     first = cfg.first_node
     if cfg.pred(first):
         # First (== entry) node has a backedge
-        entryb = BBlock("0entry")
+        entryb = BBlock(".ENTRY")
         entryb.cfg = cfg
         cfg.add_node(entryb.addr, val=entryb)
         cfg.add_edge(entryb.addr, first)
@@ -180,7 +180,7 @@ def cfg_single_entry(cfg):
 def cfg_preheader(cfg):
     first = cfg.first_node
     if 1: #cfg.pred(first):
-        entryb = BBlock("0entry")
+        entryb = BBlock(".ENTRY")
         entryb.cfg = cfg
         cfg.add_node(entryb.addr, val=entryb)
         cfg.add_edge(entryb.addr, first)
@@ -652,7 +652,7 @@ def estimate_params(cfg):
     #ana.solve()
     check_pass(cfg, "live_in", "This pass requires live variable information")
     func_addr = cfg.entry()
-    assert func_addr == "0entry", "cfg_preheader pass required"
+    assert func_addr == ".ENTRY", "cfg_preheader pass required"
     real_entry = cfg.succ(func_addr)
     assert len(real_entry) == 1
     real_entry = real_entry[0]
