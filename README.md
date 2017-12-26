@@ -1,4 +1,4 @@
-**Q**: Why is there need for yet another decompiler, especially a
+**Q**: Why is there a need for yet another decompiler, especially a
 crippled one?
 
 **A**: A sad truth is that most decompilers out there are crippled. Many
@@ -66,14 +66,14 @@ ScratchABlock uses the *PseudoC* assembler as its IR. It is an assembler
 language expressed as much as possible using the familiar C language
 syntax. The idea is that any C programmer would understand it intuitively
 ([example](tests/ifelse2.lst)), but there is an ongoing effort to
-[specify PseudoC more formally](docs/PseudoC-spec.md).
+[document PseudoC more formally](docs/PseudoC-spec.md).
 
 Source code and interfacing scripts are in the root of the repository.
 The most important scripts are:
 
 * `apply_xform.py` - A central driver, allows to apply a sequence of
-transformations (or in general, a high-level analysis/transformation
-algorithms) to a single file or a directory of files.
+transformations (or in general, high-level analysis/transformation
+scripts) to a single file or a directory of files ("project directory").
 
 * `run_tests` - The regregression testsuite runner. The majority of
 testsuite is high-level, consisting of running apply_xform.py with
@@ -92,19 +92,19 @@ applicable) CFG in .dot format. Looking at these testcases, trying
 to modify them and seeing the outcome is the best way to learn how
 ScratchABlock works.
 
-* `docs` - A growing collection of documentation. Currently there's a
-specification of the PseudoC assembler language serving as intermediate
-representation (IR) for ScratchABlock and a survey why another
-existing IR was not selected.
+* `docs` - A growing collection of documentation. For example, there's a
+[specification](docs/PseudoC-spec.md) of the PseudoC assembler language
+serving as the intermediate representation (IR) for ScratchABlock and
+a [survey](docs/ir-why-not.md) why another existing IR was not selected.
 
 The current approach of ScratchABlock is to grow a collection of
 relatively loosely-coupled algorithms for program analysis and
 transformation, have them covered with tests, and allow easy user
 access to them. The magic of decompilation consists of applying these
 algorithms in the rights order and right number of times. Then, to
-improve performance of the decompilation, the passes usually require
+improve the performance of decompilation, these passes usually require
 more tight coupling. Exploring those directions is the next
-priority after implementing inventory of the passes as described
+priority after implementing the inventory of passes as described
 above.
 
 Algorithms and transformations implemented by ScratchABlock:
