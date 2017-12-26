@@ -13,10 +13,10 @@
 //  live_in: {$r1}
 //  live_kill: set()
 //  live_out: {$r1}
-0entry:
+.ENTRY:
 Exits: [(None, '10')]
 
-// Predecessors: ['0entry']
+// Predecessors: ['.ENTRY']
 // Node props:
 //  dfsno: 2
 //  dfsno_exit: None

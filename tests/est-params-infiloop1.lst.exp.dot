@@ -1,11 +1,10 @@
 digraph G {
-"ENTRY" -> "0entry"
-"0entry" [label="BBlock\n0entry(#3)"]
+".ENTRY" [label="BBlock\n.ENTRY(#3)"]
 "10" [label="BBlock\n10(#2)"]
 "20" [label="BBlock\n20(#1)"]
 "_DEADEND_" [label="BBlock\n_DEADEND_"]
 "_EXIT_" [label="BBlock\n_EXIT_(#None)(e#1)"]
-"0entry" -> "10"
+".ENTRY" -> "10"
 "10" -> "20"
 "20" -> "20" [label="else"]
 "20" -> "_DEADEND_" [label="0"]

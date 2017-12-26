@@ -9,10 +9,10 @@
 //  live_in: {$r1}
 //  live_kill: set()
 //  live_out: {$r1}
-0entry:
+.ENTRY:
 Exits: [(None, '20')]
 
-// Predecessors: ['0entry']
+// Predecessors: ['.ENTRY']
 // Node props:
 //  live_gen: {$r1}
 //  live_in: {$r1}

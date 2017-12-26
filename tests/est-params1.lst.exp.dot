@@ -1,6 +1,5 @@
 digraph G {
-"ENTRY" -> "0entry"
-"0entry" [label="BBlock\n0entry"]
+".ENTRY" [label="BBlock\n.ENTRY"]
 "20" [label="BBlock\n20"]
-"0entry" -> "20"
+".ENTRY" -> "20"
 }
