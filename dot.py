@@ -15,8 +15,10 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
 
     out.write("%s G {\n" % header)
     if is_cfg:
-        for e in sorted(graph.entries()):
-            out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
+        entries = graph.entries()
+        if entries and (len(entries) > 1 or entries[0] != ".ENTRY"):
+            for e in sorted(entries):
+                out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
 
     for addr, info in graph.iter_sorted_nodes():
         obj = info.get("val")
