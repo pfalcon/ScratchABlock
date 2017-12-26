@@ -13,25 +13,25 @@
 //  live_in: {$a2_0}
 //  live_kill: set()
 //  live_out: {$a2_0}
-//  reachdef_gen: {($a2, '0entry')}
+//  reachdef_gen: {($a2, '.ENTRY')}
 //  reachdef_in: {($a2, None), ($a3, None)}
-//  reachdef_kill: {($a2, '0entry'), ($a2, '10'), ($a2, None)}
-//  reachdef_out: {($a2, '0entry'), ($a3, None)}
+//  reachdef_kill: {($a2, '10'), ($a2, '.ENTRY'), ($a2, None)}
+//  reachdef_out: {($a2, '.ENTRY'), ($a3, None)}
 // BBlock props:
 //  state_out: {$a2=$a2_0}
-0entry:
+.ENTRY:
 // $a2 = $a2_0 (dead)
 Exits: [(None, '10')]
 
-// Predecessors: ['0entry']
+// Predecessors: ['.ENTRY']
 // Node props:
 //  live_gen: {$a2_0}
 //  live_in: {$a2_0}
 //  live_kill: {$a2, $a3}
 //  live_out: {$a2, $a3}
 //  reachdef_gen: {($a2, '10'), ($a3, '10')}
-//  reachdef_in: {($a2, '0entry'), ($a3, None)}
-//  reachdef_kill: {($a2, '0entry'), ($a2, '10'), ($a2, None), ($a3, '10'), ($a3, None)}
+//  reachdef_in: {($a2, '.ENTRY'), ($a3, None)}
+//  reachdef_kill: {($a2, '10'), ($a2, '.ENTRY'), ($a2, None), ($a3, '10'), ($a3, None)}
 //  reachdef_out: {($a2, '10'), ($a3, '10')}
 // BBlock props:
 //  state_in: {$a2=$a2_0}
