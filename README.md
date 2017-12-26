@@ -75,6 +75,14 @@ The most important scripts are:
 transformations (or in general, high-level analysis/transformation
 scripts) to a single file or a directory of files ("project directory").
 
+* `inter_dataflow.py` - Interprocedural (global) dataflow analysis driver
+  (WIP).
+
+* `script_*.py` - High-level analysis/transformation scripts for
+   `apply_xform.py` (`--script` switch).
+
+* `script_i_*.py` - Analysis scripts for `inter_dataflow.py`.
+
 * `run_tests` - The regregression testsuite runner. The majority of
 testsuite is high-level, consisting of running apply_xform.py with
 different passes on file(s) and checking the expected results.
