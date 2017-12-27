@@ -341,7 +341,7 @@ def match_while(cfg):
         if cfg.degree_out(v) == 2:
             succ = cfg.sorted_succ(v)
             back_cand = cfg.succ(succ[0])
-            if len(back_cand) == 1 and back_cand[0] == v:
+            if len(back_cand) == 1 and back_cand[0] == v and cfg.degree_in(succ[0]) == 1:
                 log.info("while: %s, %s", v, succ[0])
                 b = cfg.node(succ[0])["val"]
                 newb = While(b, cfg.edge(v, succ[0]).get("cond"))
