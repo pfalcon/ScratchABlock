@@ -349,6 +349,28 @@ def match_while(cfg):
                 cfg.remove_node(succ[0])
                 return True
 
+#
+# if (cond) {
+#   do {...} while (cond);
+# }
+#
+# =>
+#
+# while (cond) {...}
+#
+def match_if_dowhile(cfg):
+    for addr, info in cfg.iter_nodes():
+        bblock = info["val"]
+        if type(bblock) is IfElse:
+            subs = bblock.subblocks()
+            if len(subs) == 1 and type(subs[0]) is DoWhile:
+                if_cond = bblock.branches[0][0]
+                dowhile_cond = subs[0].cond
+                #print(if_cond, if_cond == dowhile_cond)
+                while_bb = While(subs[0].items[0], if_cond)
+                info["val"] = while_bb
+                return True
+
 
 class ControlAnd(BBlock):
     def __init__(self, addr, cond1, cond2):
