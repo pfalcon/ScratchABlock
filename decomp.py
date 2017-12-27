@@ -259,6 +259,9 @@ class Loop(BBlock):
         super().__init__(b.addr)
         self.items = [b]
 
+    def subblocks(self):
+        return self.items
+
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
 
@@ -288,6 +291,9 @@ class DoWhile(BBlock):
         self.cond = cond
         self.items = [b]
 
+    def subblocks(self):
+        return self.items
+
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
 
@@ -316,6 +322,9 @@ class While(BBlock):
         super().__init__(b.addr)
         self.cond = cond
         self.items = [b]
+
+    def subblocks(self):
+        return self.items
 
     def __repr__(self):
         return "%s(%s)" % (self.__class__.__name__, self.items[0])
