@@ -1,0 +1,52 @@
+sub_5FAC:
+$r5 = *(u32*)($r2 - 0x158)
+$r10 = *(u32*)$r5
+$cr0.eq = (i32)$r10 == (i32)0x0
+$cr0.lt = (i32)$r10 < (i32)0x0
+$cr0.gt = (i32)$r10 > (i32)0x0
+if ($cr0.eq) goto loc_600C
+
+loc_5FBC:
+$r8 = *(u32*)($r10 + 0x10)
+$r9 = 0x0
+$cr0.eq = (u32)$r8 == (u32)0x0
+$cr0.lt = (u32)$r8 < (u32)0x0
+$cr0.gt = (u32)$r8 > (u32)0x0
+if (!$cr0.gt) goto loc_6000
+
+loc_5FCC:
+$r11 = $r10 + 0x58
+$r12 = $r10 + 0x34
+
+loc_5FD4:
+$ea = ($r12 + 0x3c)
+$r5 = *(u32*)$ea
+$r12 = $ea
+$cr0.eq = (u32)$r5 == (u32)$r3
+$cr0.lt = (u32)$r5 < (u32)$r3
+$cr0.gt = (u32)$r5 > (u32)$r3
+if (!$cr0.eq) goto loc_5FF0
+
+loc_5FE0:
+$r5 = *(u32*)($r11 + 0x4)
+$r6 = $r4 | $r5
+*(u32*)($r11 + 0x4) = $r6
+$r8 = *(u32*)($r10 + 0x10)
+
+loc_5FF0:
+$r9 = $r9 + 0x1
+$r11 = $r11 + 0x3c
+$cr0.eq = (u32)$r9 == (u32)$r8
+$cr0.lt = (u32)$r9 < (u32)$r8
+$cr0.gt = (u32)$r9 > (u32)$r8
+if ($cr0.lt) goto loc_5FD4
+
+loc_6000:
+$r10 = *(u32*)$r10
+$cr0.eq = (i32)$r10 == (i32)0x0
+$cr0.lt = (i32)$r10 < (i32)0x0
+$cr0.gt = (i32)$r10 > (i32)0x0
+if (!$cr0.eq) goto loc_5FBC
+
+loc_600C:
+return
