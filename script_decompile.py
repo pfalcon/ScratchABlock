@@ -21,13 +21,21 @@ def dce(cfg):
 
 
 def structure(cfg):
-    apply_iterative(match_seq, (cfg,))
-    apply_iterative(match_if, (cfg,))
-    apply_iterative(match_ifelse, (cfg,))
-    apply_iterative(match_seq, (cfg,))
-    apply_iterative(match_ifelse, (cfg,))
-    apply_iterative(match_if_else_inv_ladder, (cfg,))
-    apply_iterative(match_if_else_ladder, (cfg,))
+
+    def _(res):
+        return 1 if res else 0
+
+    cnt = 1
+    while cnt:
+        cnt = 0
+        cnt += _(match_seq(cfg))
+        cnt += _(match_if(cfg))
+        cnt += _(match_ifelse(cfg))
+        cnt += _(match_if_else_inv_ladder(cfg))
+        cnt += _(match_if_else_ladder(cfg))
+        cnt += _(match_while(cfg))
+        cnt += _(match_dowhile(cfg))
+        cnt += _(match_if_dowhile(cfg))
 
 
 def apply(cfg):
