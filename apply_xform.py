@@ -138,11 +138,16 @@ def handle_file_unprotected(args):
     return cfg
 
 
-def one_iter(input, output):
+def one_iter(input, output, iter_no):
     global FUNC_DB, FUNC_DB_ORG
 
-    if args.funcdb != "none" and os.path.exists(args.funcdb):
-        progdb.load_funcdb(args.funcdb)
+    if args.funcdb != "none":
+        dbs = []
+        if iter_no == 0 and os.path.exists(args.funcdb + ".in"):
+            dbs.append(args.funcdb + ".in")
+        if os.path.exists(args.funcdb):
+            dbs.append(args.funcdb)
+        progdb.load_funcdb(*dbs)
 
     FUNC_DB = progdb.FUNC_DB_BY_ADDR
     FUNC_DB_ORG = copy.deepcopy(FUNC_DB)
@@ -205,7 +210,7 @@ if __name__ == "__main__":
 
     iter_no = 0
     while True:
-        changed = one_iter(input, output)
+        changed = one_iter(input, output, iter_no)
         if not changed or not args.iter:
             break
         if args.debug:
