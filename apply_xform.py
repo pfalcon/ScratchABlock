@@ -23,6 +23,9 @@ import progdb
 import copy
 
 
+_log = logging.getLogger(__name__)
+
+
 FUNC_DB = {}
 FUNC_DB_ORG = {}
 
@@ -33,7 +36,7 @@ def parse_args():
     argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
     argp.add_argument("--script", action="append", help="apply script from file")
     argp.add_argument("--iter", action="store_true", help="apply transform iteratively until no changes to funcdb")
-    argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in current/input dir)")
+    argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in input file's dir)")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
         help="output format (default: %(default)s)")
     argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
@@ -200,10 +203,13 @@ if __name__ == "__main__":
     if not args.funcdb:
         if os.path.isdir(args.file):
             # For an input as directory, use this *input* directory
-            args.funcdb = args.file + "/funcdb.yaml"
+            proj_dir = args.file
         else:
-            # For a single file, use *current* directory
-            args.funcdb = "funcdb.yaml"
+            # For a single file, use containing directory
+            proj_dir = os.path.dirname(args.file) or "."
+
+        args.funcdb = proj_dir + "/funcdb.yaml"
+        _log.info("Using funcdb: %s", args.funcdb)
 
     input = args.file
     output = args.output
