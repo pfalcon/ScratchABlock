@@ -367,6 +367,8 @@ def match_if_dowhile(cfg):
                 if_cond = bblock.branches[0][0]
                 dowhile_cond = subs[0].cond
                 #print(if_cond, if_cond == dowhile_cond)
+                if if_cond != dowhile_cond:
+                    continue
                 while_bb = While(subs[0].items[0], if_cond)
                 info["val"] = while_bb
                 return True
