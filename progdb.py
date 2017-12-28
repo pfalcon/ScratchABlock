@@ -50,11 +50,15 @@ def postprocess_funcdb(FUNC_DB):
                 props[prop] = sorted([x.name for x in props[prop]], key=utils.natural_sort_key)
 
 
-def load_funcdb(fname):
-    with open(fname) as f:
-        FUNC_DB = yaml.load(f)
-        preprocess_funcdb(FUNC_DB)
-        set_funcdb(FUNC_DB)
+def load_funcdb(*fnames):
+    FUNC_DB = {}
+    for fname in fnames:
+        with open(fname) as f:
+            db = yaml.load(f)
+            FUNC_DB.update(db)
+
+    preprocess_funcdb(FUNC_DB)
+    set_funcdb(FUNC_DB)
 
 
 def save_funcdb(fname, backup=True):
