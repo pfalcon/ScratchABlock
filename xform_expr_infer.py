@@ -28,7 +28,8 @@ def _uni(ex, pat, ctx):
 
     elif type(ex) is type(pat):
         if isinstance(ex, EXPR):
-            if ex.op == pat.op and len(ex.args) == len(pat.args):
+            if len(ex.args) == len(pat.args):
+                _uni(ex.op, pat.op, ctx)
                 for i in range(len(ex.args)):
                     _uni(ex.args[i], pat.args[i], ctx)
             else:
