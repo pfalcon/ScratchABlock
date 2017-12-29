@@ -1,8 +1,6 @@
 from core import *
 import arch
 
-import xform_expr_infer
-
 
 def is_expr_2args(e):
     return is_expr(e) and len(e.args) == 2
@@ -165,6 +163,7 @@ def simplify_expr(expr):
     new_expr = expr_xform(new_expr, expr_simplify_cast)
 
     expr_commutative_normalize(new_expr)
+    import xform_expr_infer
     new_expr = expr_xform(new_expr, xform_expr_infer.simplify)
     return new_expr
 
