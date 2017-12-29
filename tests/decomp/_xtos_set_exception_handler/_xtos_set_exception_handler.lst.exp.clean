@@ -8,12 +8,12 @@ void _xtos_set_exception_handler()
       $a3 = _xtos_p_none;
     }
     $a2 = *(u32*)(_xtos_c_handler_table + $a2_0 * 4);
-    if ($a3 + -_xtos_p_none != 0) {
+    if ($a3 != _xtos_p_none) {
       $a4 = _xtos_c_wrapper_handler;
     }
     *(u32*)(_xtos_c_handler_table + $a2_0 * 4) = $a3;
     *(u32*)(_xtos_exc_handler_table_ + $a2_0 * 4) = $a4;
-    if (*(u32*)(_xtos_c_handler_table + $a2_0 * 4) + -_xtos_p_none == 0) {
+    if (*(u32*)(_xtos_c_handler_table + $a2_0 * 4) == _xtos_p_none) {
       $a2 = 0x0;
     }
   } else {
