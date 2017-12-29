@@ -1,0 +1,17 @@
+// Estimated params: [$a2]
+void fun_bfffd0eb()
+{
+  // $a2 = $a2_0; // {'uses': []} (dead);
+  if ($a2_0 == 0x3) {
+    $a2 = 0xb; // {'uses': []}
+  } else if ($a2_0 != 0x6) {
+    // $a4 = $a2_0 - 0xc; // {'uses': ['0000000d']} (dead);
+    // $a3 = 0xd; // {'uses': ['0000000d.0']} (dead);
+    $a2 = 0x0; // {'uses': []}
+    if ($a2_0 == 0xc) {
+      $a2 = 0xd; // {'uses': []}
+    }
+  } else {
+    $a2 = 0xc; // {'uses': []}
+  }
+}

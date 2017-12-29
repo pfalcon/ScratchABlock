@@ -1,0 +1,14 @@
+// Estimated params: [$a2]
+void fun_bfffd0eb()
+{
+  if ($a2_0 == 0x3) {
+    $a2 = 0xb;
+  } else if ($a2_0 != 0x6) {
+    $a2 = 0x0;
+    if ($a2_0 == 0xc) {
+      $a2 = 0xd;
+    }
+  } else {
+    $a2 = 0xc;
+  }
+}
