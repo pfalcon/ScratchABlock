@@ -163,7 +163,7 @@ class VALUE(SimpleExpr):
         return self.comment + "VALUE(%#x)" % self.val
 
     def __str__(self):
-        if self.base == 16:
+        if isinstance(self.val, int) and self.base == 16:
             val = "%#x" % self.val
         else:
             val = str(self.val)
