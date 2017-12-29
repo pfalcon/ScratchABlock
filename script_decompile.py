@@ -38,6 +38,13 @@ def structure(cfg):
         cnt += _(match_if_dowhile(cfg))
 
 
+# Apply arch-specific transformations
+def arch_specific(cfg):
+    # Remove Xtensa memw instructions. TODO: should instead be used to
+    # recover volatile types.
+    foreach_bblock(cfg, remove_sfunc, name="memw")
+
+
 def apply(cfg):
     #
     # Data flow
@@ -67,6 +74,8 @@ def apply(cfg):
 
     remove_trailing_jumps(cfg)
     remove_jump_over_jump(cfg)
+
+    arch_specific(cfg)
 
     cfg.number_postorder()
     compute_idom(cfg)
