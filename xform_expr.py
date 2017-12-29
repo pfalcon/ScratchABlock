@@ -189,8 +189,10 @@ def struct_access_expr(expr):
 
 # Should transform inplace
 def simplify_cond(e):
+    # TODO: Replaced with inference rule, remove
     if e.is_relation():
         arg1 = e.expr.args[0]
         arg2 = e.expr.args[1]
         if is_expr_2args(arg1) and arg1.op == "+" and is_value(arg1.args[1]) and is_value(arg2):
+            assert 0, "Should be replaced by fb730b7de49"
             e.expr = EXPR(e.expr.op, arg1.args[0], add_vals(expr_neg(arg1.args[1]), arg2))
