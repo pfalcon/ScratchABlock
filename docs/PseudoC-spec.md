@@ -65,7 +65,7 @@ Types appear in few places in PseudoC program:
 Addresses of memory locations are represented by an identifier. The
 value of this identifier is a memory address. In other words, symbol's
 value is an address constant. Note that in general, there're no numeric
-addresses in a correct PseudoC program - i.e., PsuedoC already assumes
+addresses in a correct PseudoC program - i.e., PseudoC already assumes
 that numeric data / addresses were already properly classified.
 
 
@@ -157,7 +157,7 @@ $a0 = csr(2)
 ```
 
 Note that this syntax is NOT used to represent calls to
-functions/procedures defined in the PsuedoC code.
+functions/procedures defined in the PseudoC code.
 
 
 ### Accessing memory
