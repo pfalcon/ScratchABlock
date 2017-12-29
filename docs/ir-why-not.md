@@ -22,6 +22,10 @@ mind, and take for granted that single machine instructions is
 converted to number of IR instructions. That alone makes them not
 human-friendly, but they also feature over-explicit, verbose syntax.
 
+VEX is [used by angr](https://docs.angr.io/docs/ir.html). They also
+[explain](https://docs.angr.io/docs/faq.html#why-did-you-choose-vex-instead-of-another-ir-such-as-llvm-reil-bap-etc)
+why they didn't choose LLVM IR, etc.
+
 Radare2 ESIL
 ------------
 
@@ -113,3 +117,4 @@ usecases for C-- and ScratchABlock definitely overlap, but are different.
 References
 ----------
 * http://indefinitestudies.org/2009/04/03/a-quick-survey-on-intermediate-representations-for-program-analysis/
+* [angr FAQ: Why did you choose VEX instead of another IR (such as LLVM, REIL, BAP, etc)?](https://docs.angr.io/docs/faq.html#why-did-you-choose-vex-instead-of-another-ir-such-as-llvm-reil-bap-etc)
