@@ -81,10 +81,22 @@ RULES.append((
 
 
 def simplify(ex):
-    for pat, prod in RULES:
-        #print("Trying", pat)
+    for r in RULES:
+        pat = r[0]
+        if len(r) == 2:
+            test = None
+            prod = r[1]
+        else:
+            test = r[1]
+            prod = r[2]
+        #print("Trying", repr(pat))
         try:
             ctx = uni(ex, pat)
+            #print("Matched")
+            if test:
+                if not test(ctx):
+                    continue
+                #print("Test passed")
         except Failed:
             #print("Failed")
             continue
