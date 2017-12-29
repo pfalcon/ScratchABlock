@@ -1,4 +1,5 @@
 from core import *
+from xform_expr import expr_neg
 
 
 # Capturing var
@@ -79,6 +80,12 @@ RULES.append((
     lambda W: W["x"]
 ))
 
+RULES.append((
+    EXPR(V("rel_op"), EXPR("+", V("x1"), V("x2")), VALUE(0)),
+    lambda W: W["rel_op"] in ("==", "!=", "<", "<=", ">=", ">"),
+    lambda W: EXPR(W["rel_op"], W["x1"], expr_neg(W["x2"]))
+))
+
 
 def simplify(ex):
     for r in RULES:
@@ -107,4 +114,8 @@ if __name__ == "__main__":
     ex = EXPR("-", REG("a1"), REG("a1"))
     ex = EXPR("^", REG("a1"), REG("a1"))
     ex = EXPR("^", REG("a1"), VALUE(1))
+    ex = EXPR("==", EXPR("+", REG("a1"), EXPR("NEG", REG("a2"))), VALUE(0))
+    ex = EXPR("!=", EXPR("+", REG("a1"), EXPR("NEG", REG("a2"))), VALUE(0))
+    ex = EXPR("<", EXPR("+", REG("a1"), EXPR("NEG", REG("a2"))), VALUE(0))
+    print(ex, repr(ex))
     print(simplify(ex))
