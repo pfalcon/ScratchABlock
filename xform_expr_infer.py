@@ -44,6 +44,8 @@ def _uni(ex, pat, ctx):
             _uni(ex.name, pat.name, ctx)
         elif isinstance(ex, ADDR):
             _uni(ex.addr, pat.addr, ctx)
+        elif isinstance(ex, VALUE):
+            _uni(ex.val, pat.val, ctx)
         else:
             if ex == pat:
                 return True
@@ -78,6 +80,16 @@ RULES.append((
 RULES.append((
     EXPR("^", V("x"), VALUE(0)),
     lambda W: W["x"]
+))
+
+RULES.append((
+    EXPR("&", VALUE(V("x1")), VALUE(V("x2"))),
+    lambda W: VALUE(W["x1"] & W["x2"])
+))
+
+RULES.append((
+    EXPR("-", VALUE(V("x1")), VALUE(V("x2"))),
+    lambda W: VALUE(W["x1"] - W["x2"])
 ))
 
 RULES.append((
