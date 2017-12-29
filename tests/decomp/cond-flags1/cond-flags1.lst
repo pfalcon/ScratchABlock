@@ -1,8 +1,4 @@
 # This test shows how to deal with condition flags
-#
-#xform_bblock: bblock_expr_propagation
-#xform: analyze_live_vars
-#xform_bblock: dead_code_elimination
 
 05 05:
 05  $ecx = 0
