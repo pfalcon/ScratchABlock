@@ -608,7 +608,7 @@ class Inst:
             e = copy(self.args[0])
             args = e.args
             op = e.op
-            if not op[0].isalpha():
+            if not (op == "!" or op[0].isalpha()):
                 # Infix operator
                 assert len(args) >= 2, repr(args)
                 if self.dest == args[0]:
