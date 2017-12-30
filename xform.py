@@ -329,10 +329,12 @@ def bblock_propagation(bblock, propagated_types, subst_insts=True):
     for i, inst in enumerate(bblock.items):
 
         n_dest = inst.dest
+        kill_n_dest = False
         if isinstance(n_dest, MEM):
             new = expr_subst(n_dest, state)
             if new:
                 n_dest = new
+                kill_n_dest = True
 
         args = copy.deepcopy(inst.args)
 
@@ -346,6 +348,11 @@ def bblock_propagation(bblock, propagated_types, subst_insts=True):
             # (as variables aren't propagated), but needed for copy propagation
             # and higher.
             state = kill_subst_uses(state, dest)
+
+        if kill_n_dest:
+            # Need to kill n_dest, which was MEM and could have been substituted
+            # TODO: Propagating MEM references is in general not safe
+            state = kill_subst_uses(state, n_dest)
 
         if inst.op == "=" and isinstance(args[0], propagated_types):
             assert n_dest
