@@ -9,4 +9,12 @@
 # TODO
 #20     $a1 = $a3 + 1 == 1
 
+#xform_expr_infer: condition negation during expr simpl.
+30     $a1 = !($a2 == $a3)
+31     $a1 = !($a2 != $a3)
+32     $a1 = !($a2 < $a3)
+33     $a1 = !($a2 <= $a3)
+34     $a1 = !($a2 > $a3)
+35     $a1 = !($a2 >= $a3)
+
 100    return
