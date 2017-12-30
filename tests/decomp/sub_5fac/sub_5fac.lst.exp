@@ -43,6 +43,6 @@ void sub_5FAC()
       // $cr0.eq = (i32)$r10 == (i32)0x0; // {'uses': ['49']} (dead);
       // $cr0.lt = (i32)$r10 < (i32)0x0; // {'uses': []} (dead);
       // $cr0.gt = (i32)$r10 > (i32)0x0; // {'uses': []} (dead);
-    } while (!((i32)$r10 == 0x0));
+    } while ((i32)$r10 != 0x0);
   }
 }
