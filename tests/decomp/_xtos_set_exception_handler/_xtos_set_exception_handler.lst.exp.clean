@@ -13,7 +13,7 @@ void _xtos_set_exception_handler()
     }
     *(u32*)(_xtos_c_handler_table + $a2_0 * 4) = $a3;
     *(u32*)(_xtos_exc_handler_table_ + $a2_0 * 4) = $a4;
-    if (*(u32*)(_xtos_c_handler_table + $a2_0 * 4) == _xtos_p_none) {
+    if ($a2 == _xtos_p_none) {
       $a2 = 0x0;
     }
   } else {
