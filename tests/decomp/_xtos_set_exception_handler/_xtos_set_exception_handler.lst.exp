@@ -23,8 +23,8 @@ void _xtos_set_exception_handler()
     }
     *(u32*)(_xtos_c_handler_table + $a2_0 * 4) = $a3; // {'uses': []}
     *(u32*)(_xtos_exc_handler_table_ + $a2_0 * 4) = $a4; // {'uses': []}
-    // $a10 = *(u32*)(_xtos_c_handler_table + $a2_0 * 4) + -_xtos_p_none; // {'uses': ['0000002d']} (dead);
-    if (*(u32*)(_xtos_c_handler_table + $a2_0 * 4) == _xtos_p_none) {
+    // $a10 = $a2 + -_xtos_p_none; // {'uses': ['0000002d']} (dead);
+    if ($a2 == _xtos_p_none) {
       $a2 = 0x0; // {'uses': []}
     }
   } else {
