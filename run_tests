@@ -48,7 +48,7 @@ test_decomp() {
     for f in tests/decomp/*/*.lst; do
         echo $f
         rm -f $(dirname $f)/funcdb.yaml
-        ./apply_xform.py --log-level=ERROR --script script_decompile --format=c $f > $f.out|| failed
+        ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $f > $f.out|| failed
         rm -f $(dirname $f)/funcdb.yaml
         ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
             --no-dead --no-comments $f > $f.out.clean || failed
