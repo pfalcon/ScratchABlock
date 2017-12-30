@@ -268,6 +268,8 @@ class MEM(SimpleExpr):
         return type_sort(type(self)) < type_sort(type(other))
 
     def __contains__(self, other):
+        if other == self:
+            return True
         return other in self.expr
 
     def __hash__(self):
@@ -417,6 +419,8 @@ class EXPR:
         return type_sort(type(self)) < type_sort(type(other))
 
     def __contains__(self, other):
+        if other == self:
+            return True
         for a in self.args:
             if other in a:
                 return True
