@@ -67,3 +67,20 @@ parameter register, but ending with an infinite loop, while another
 path truly preserves that register, so overall semantics is
 preserving the register in the normal program flow, and this is
 signified in the preserveds.
+
+6. Assuming RISC-style register calling convention, $sp being in
+function parameters after dataflow analysis may mean the function
+takes addresses of the objects on the stack. Otherwise, if they
+were just derefences of stack pointer, they would have been
+rewritten as stack variables. Note that referencing objects via
+stack pointer may create aliasing problems for rewritten stack
+vars.
+
+Van Emmerik "3.4.5 Stack Pointer as Parameter" p.86/146 talks
+about the fact that with stack calling convention, stack pointer
+would appear to be a parameter of any function, and thus needs
+to be explicitly filtered out for final decompilation results.
+This is definitely true, but the previous paragraph talks about
+what it means that $sp is deemed as a parameter by the dataflow
+analysis even after stack variable rewriting pass (which should
+eliminate explicit $sp references).
