@@ -1,5 +1,7 @@
 ScratchABlock uses PseudoC, a machine-independent assembler with C-like
-syntax, inspired by Radare2.
+syntax,
+[an idea inspired](https://radare.gitbooks.io/radare2book/content/visual_mode/visual_disassembly.html#asmpseudo-enable-pseudo-syntax)
+by Radare2.
 
 This documents why other existing compiler/decompiler IRs were not
 choosen instead.
