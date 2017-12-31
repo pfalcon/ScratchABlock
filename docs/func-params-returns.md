@@ -9,7 +9,7 @@ passes. The propagation in turn requires first-stage liveness (and
 reaching definitions) analysis.
 
 2. Any value computed by a function may be its potential return.
-Unless we found *all* callers of a function, we can't write down
+Unless we found *all* callers of a function, we can't write off
 some potential return. And any new discovered caller may extend
 set of returns. If a caller is not known, we should conservatively
 assume the initial proposition, that any value which reaches exit
