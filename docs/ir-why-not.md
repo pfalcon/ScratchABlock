@@ -7,7 +7,7 @@ syntax,
 by Radare2.
 
 This documents why other existing compiler/decompiler IRs were not
-choosen instead.
+chosen instead.
 
 LLVM IR
 -------
