@@ -1,0 +1,3 @@
+'00000000':
+  label: _xtos_set_interrupt_handler_arg
+  returns: [a2]
