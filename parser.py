@@ -289,17 +289,7 @@ class Parser:
         return self.parse_level(("*", "/", "%"), self.parse_primary)
 
     def parse_add(self):
-        e = self.parse_mul()
-        while True:
-            if self.lex.match("+"):
-                e2 = self.parse_mul()
-                e = EXPR("+", [e, e2])
-            elif self.lex.match("-"):
-                e2 = self.parse_mul()
-                e = EXPR("-", [e, e2])
-            else:
-                break
-        return e
+        return self.parse_level(("+", "-"), self.parse_mul)
 
     def parse_shift(self):
         return self.parse_level(("<<", ">>"), self.parse_add)
