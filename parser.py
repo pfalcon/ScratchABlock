@@ -276,12 +276,13 @@ class Parser:
         e = next_level()
         match = True
         while match:
+            match = False
             for op in operators:
                 if self.lex.match(op):
                     e2 = next_level()
                     e = EXPR(op, [e, e2])
+                    match = True
                     break
-            match = False
         return e
 
     def parse_mul(self):
