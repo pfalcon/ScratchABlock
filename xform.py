@@ -355,8 +355,10 @@ def bblock_propagation(bblock, propagated_types, subst_insts=True):
             state = kill_subst_uses(state, n_dest)
 
         if inst.op == "=" and isinstance(args[0], propagated_types):
-            assert n_dest
-            state[n_dest] = args[0]
+            # Don't propagate expressions with side effects
+            if not inst.side_effect():
+                assert n_dest
+                state[n_dest] = args[0]
 
         if subst_insts:
             if inst.op == "if":
