@@ -389,7 +389,7 @@ class EXPR:
         if self.op == "SFUNC":
             return str(self.args[0]) + "(" + ", ".join([str(a) for a in self.args[1:]]) + ")"
         if self.op == "CAST":
-            return "(" + str(self.args[0]) + ")" + str(self.args[1])
+            return "(" + str(self.args[0]) + ")" + self.strarg(self, self.args[1])
 
         DICT = {
             "NEG": "-",
