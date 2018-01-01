@@ -376,13 +376,23 @@ class EXPR:
             s = str(arg)
         preced_my = EXPR.preced(expr)
         preced_arg = EXPR.preced(arg)
-        limited_assoc = expr.op in {"-", "/", "%"}
-        if preced_arg > preced_my or (preced_arg == preced_my and limited_assoc):
+        full_assoc = expr.op in {"+", "*", "&", "^", "|"}
+        if preced_arg == preced_my and full_assoc:
+            # Render repeated fully associative operators without extra parens
+            pass
+        elif preced_arg > preced_my or (preced_arg == preced_my and preced_arg != 1):
+            # Otherwise, if precedence rules require parens, render them, unless
+            # the arg is a unary/primary term
             s = "(%s)" % s
         else:
-            # Common cases of confusing precedence in C, where parens is usually
-            # suggested.
-            if expr.op in ("<<", ">>") and (preced_arg != 1 and arg.op in ("+", "-")):
+            # Parens would not be required per the precedence rules, but
+            # handle common cases of confusing precedence in C, where parens
+            # are usually suggested.
+            if expr.op in ("&", "^", "|") and preced_arg != 1:
+                # Any binary op subexpression of bitwise ops in parens
+                s = "(%s)" % s
+            elif expr.op in ("<<", ">>") and preced_arg != 1:
+                # Any binary op subexpression of shift in parens
                 s = "(%s)" % s
         return s
 
