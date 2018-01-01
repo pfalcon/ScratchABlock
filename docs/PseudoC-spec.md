@@ -128,35 +128,6 @@ $eax = (i32)$eax >> 2
 ```
 
 
-### Jumps
-
-Unconditional jumps are represented by:
-
-```c
-goto label
-```
-
-Where `label` is address symbol.
-
-Conditional jumps:
-
-```c
-if (condition) goto label
-```
-
-A condition can be (among other things):
-
-* `$Z == 0` (Z flag is zero)
-* `$S == 1 && $V == 0` (a combination of flags)
-* `$a0 == $a1` (direct register comparison, typical for RISC)
-
-Note that a comparison is another case when signed casts may be required:
-
-```c
-if ((i32)$a1 > (i32)$a2) goto less
-```
-
-
 ### Special functions
 
 Any CPU operation not representable by C-inspired operations above,
@@ -194,6 +165,35 @@ with explicit cast of an expression to pointer type. Examples:
 $a0 = *(u32*)$a0
 $a0 = *(u8*)($a1 + $a2)
 $eax = *(u32*)($ebx + $ecx * 8 + 3)
+```
+
+
+### Jumps
+
+Unconditional jumps are represented by:
+
+```c
+goto label
+```
+
+Where `label` is address symbol.
+
+Conditional jumps:
+
+```c
+if (condition) goto label
+```
+
+A condition can be (among other things):
+
+* `$Z == 0` (Z flag is zero)
+* `$S == 1 && $V == 0` (a combination of flags)
+* `$a0 == $a1` (direct register comparison, typical for RISC)
+
+Note that a comparison is another case when signed casts may be required:
+
+```c
+if ((i32)$a1 > (i32)$a2) goto less
 ```
 
 
