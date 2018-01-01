@@ -154,6 +154,20 @@ def expr_simplify_cast(e):
             return VALUE(val, e.args[1].base)
 
 
+def unsignize_logical_ops(e):
+    "Operands of &, |, ^ should be unsigned."
+    if is_expr(e) and e.op in ("&", "|", "^"):
+        assert is_expr_2args(e)
+
+        if is_value(e.args[1]):
+            val = e.args[1].val
+            if val >= 0:
+                return
+            val = val & (2**arch.BITNESS - 1)
+            # Force hex
+            return EXPR(e.op, e.args[0], VALUE(val, 16))
+
+
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_sub_to_add)
     new_expr = expr_xform(new_expr, expr_associative_add)
@@ -161,6 +175,7 @@ def simplify_expr(expr):
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
     new_expr = expr_xform(new_expr, expr_simplify_bitfield)
     new_expr = expr_xform(new_expr, expr_simplify_cast)
+    new_expr = expr_xform(new_expr, unsignize_logical_ops)
 
     expr_commutative_normalize(new_expr)
     import xform_expr_infer
