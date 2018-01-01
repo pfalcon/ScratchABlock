@@ -631,6 +631,9 @@ class Inst:
                 assert len(args) >= 2, repr(args)
                 if self.dest == args[0]:
                     s += "%s %s= " % (self.dest, op)
+                    # Render operator as a compound statement operator
+                    # (lowest priority, no extra parens).
+                    e.op += "="
                     e.args = args[1:]
                 else:
                     s += "%s = " % self.dest
