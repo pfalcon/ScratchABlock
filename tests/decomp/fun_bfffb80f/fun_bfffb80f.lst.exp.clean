@@ -1,0 +1,14 @@
+// Estimated params: []
+void fun_bfffb80f()
+{
+  while ((*(u32*)0x3ff0000c & BIT(8)) != 0) {
+    *(u32*)0x3ff0000c &= 0xeff;
+  }
+  *(u32*)0x60000208 &= 0xfffdffff;
+  *(u32*)0x3ff0000c &= -0x2;
+  *(u32*)0x3ff0000c |= 0x1;
+  while ((*(u32*)0x3ff0000c & BIT(1)) == 0) {
+    nop();
+  }
+  *(u32*)0x3ff0000c &= -0x2;
+}
