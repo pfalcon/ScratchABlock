@@ -72,9 +72,9 @@ that numeric data / addresses were already properly classified.
 ### Numeric constants
 
 PseudoC supports decimal constants (consisting of all digits) and
-hexadical constants (starting with 0x). As mentioned above, numeric data
+hexadical constants (starting with `0x`). As mentioned above, numeric data
 is assumed to be such - any address would be replaced by a symbol, e.g.
-if `0x406ef` is an address, it should be represented as e.g. data_406ef.
+if `0x406ef` is an address, it should be represented as e.g. `data_406ef`.
 A constant may be prefixed with `-` to signify that it's negative. PseudoC
 assumes two's complement representation of negative numbers (and may
 convert negative number to unsigned representation if needed).
@@ -136,7 +136,7 @@ Unconditional jumps are represented by:
 goto label
 ```
 
-Where "label" is a symbol.
+Where `label` is address symbol.
 
 Conditional jumps:
 
