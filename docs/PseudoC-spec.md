@@ -68,6 +68,25 @@ value is an address constant. Note that in general, there're no numeric
 addresses in a correct PseudoC program - i.e., PseudoC already assumes
 that numeric data / addresses were already properly classified.
 
+There can be exceptions to this rule, for example, MMIO addresses can
+be represented by numeric constants. On the other hand, addresses of
+jumps and variables are expected to be symbolic. But there still can
+be necessary exeptions to this rule. For example, consider that a
+particular program has two `u32` variables: `var1` at `0x10` and
+`var2` at `0x14`. The code could access `var2` as:
+
+```c
+$r0 = 0x13
+$r1 = *(u32)($r0 + 1)
+```
+
+This effectively represents an aliasing problem. Numeric constant
+`0x13` above doesn't have any symbolic association. (And it means
+that PseudoC listing alone may not be enough for all kinds of program
+transformations, it may need to be accompanied by other data, e.g.
+a symbol table in the case above. Considerations of additional data
+is however outside the scope of PseudoC specification per se.)
+
 
 ### Numeric constants
 
