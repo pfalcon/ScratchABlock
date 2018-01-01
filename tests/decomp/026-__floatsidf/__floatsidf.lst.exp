@@ -1,0 +1,22 @@
+// Estimated params: [$a2]
+void __floatsidf()
+{
+  $a2 = $a2_0; // {'uses': []}
+  if ($a2_0 != 0) {
+    bitfield($a2_0, /*lsb*/31, /*sz*/1); // {'uses': ['00000022']}
+    abs($a2_0); // {'uses': ['00000008', '0000000e']}
+    count_leading_zeroes(abs($a2_0)); // {'uses': ['0000000b', '0000001a']}
+    // $SAR = -(count_leading_zeroes(abs($a2_0)) & 0x1f) + 32; // {'uses': ['0000000e']} (dead);
+    $a5 = abs($a2_0) << (count_leading_zeroes(abs($a2_0)) & 0x1f); // {'uses': ['00000011', '00000014']}
+    $a3 = $a5 >> 11; // {'uses': ['00000020']}
+    $a2 = $a5 << 21; // {'uses': []}
+    // $a5 = 0x41d; // {'uses': ['0000001a']} (dead);
+    // $a5 = -count_leading_zeroes(abs($a2_0)) + 0x41d; // {'uses': ['0000001d']} (dead);
+    // $a5 = (-count_leading_zeroes(abs($a2_0)) + 0x41d) << 20; // {'uses': ['00000020']} (dead);
+    $a3 += (-count_leading_zeroes(abs($a2_0)) + 0x41d) << 20; // {'uses': ['00000025']}
+    // $a7 = bitfield($a2_0, /*lsb*/31, /*sz*/1) << 31; // {'uses': ['00000025']} (dead);
+    $a3 |= bitfield($a2_0, /*lsb*/31, /*sz*/1) << 31; // {'uses': []}
+  } else {
+    $a3 = 0x0; // {'uses': []}
+  }
+}

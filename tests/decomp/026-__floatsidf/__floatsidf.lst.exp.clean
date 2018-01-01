@@ -1,0 +1,17 @@
+// Estimated params: [$a2]
+void __floatsidf()
+{
+  $a2 = $a2_0;
+  if ($a2_0 != 0) {
+    bitfield($a2_0, /*lsb*/31, /*sz*/1);
+    abs($a2_0);
+    count_leading_zeroes(abs($a2_0));
+    $a5 = abs($a2_0) << (count_leading_zeroes(abs($a2_0)) & 0x1f);
+    $a3 = $a5 >> 11;
+    $a2 = $a5 << 21;
+    $a3 += (-count_leading_zeroes(abs($a2_0)) + 0x41d) << 20;
+    $a3 |= bitfield($a2_0, /*lsb*/31, /*sz*/1) << 31;
+  } else {
+    $a3 = 0x0;
+  }
+}
