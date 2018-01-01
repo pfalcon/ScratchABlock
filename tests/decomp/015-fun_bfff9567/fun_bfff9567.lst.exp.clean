@@ -1,7 +1,7 @@
 // Estimated params: []
 void fun_bfff9567()
 {
-  $a5 = *(u32*)0x3ff20de0 & 0xfc | *(u32*)0x3ff20de0 >> 1 & 0x7f800000 | 0x3;
+  $a5 = ((*(u32*)0x3ff20de0 >> 1) & 0x7f800000) | (*(u32*)0x3ff20de0 & 0xfc) | 0x3;
   *(u32*)0x3ff20de0 = $a5;
   *(u32*)0x3ff20c94 &= 0xfffffffe;
 }
