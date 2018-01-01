@@ -82,10 +82,35 @@ convert negative number to unsigned representation if needed).
 
 ### Operators
 
-C syntax is used for operators, including compound assignments for "two
-address instruction" form. Otherwise, syntax is normally in "three address"
-form. `+`, `-`, `*`, `/`, `%`, `<<`, `>>` operators
-are supported. Note that `++` and `--` aren't supported. Examples:
+The C syntax and precedence rules are used for operators, including
+compound assignments for "two address instruction" form. The following
+operators are supported: `-` (unary minus), `!` (logical not), `(<type>)`
+(type cast), `*` (unary, pointer dereference, must be followed by explicit
+cast to a pointer type), `*`, `/`, `%` (modulo), `+`, `-`, `<<`, `>>`,
+`<`, `<=`, `>=`, `>`, `==`, `!=`, `&`, `^`, `|`, `&&`, `||`.
+
+The following C operators are not supported by PseudoC:
+
+* `++` and `--` - use `$var += 1` and `$var -= 1` instead.
+* Unary `&` - in assemebler (and thus PseudoC), there's no concept of
+  "memory variable", just an address and way to access (dereference) it.
+  Thus, unary `&` isn't needed either. (Unary `&` might appear in lifted
+  PseudoC.)
+* `=` and compound assignments - these are supported in PseudoC, but are
+  statements, not operators. In other words, syntax like
+  `$r0 = $r1 = $r2 + 1` is not supported (should be 2 separate stamenents,
+  `$r1 = $r2 + 1` and `$r0 = $r1`). *Future*: If an actual CPU architecture
+  is found with "multiple assignments", this syntax could be support as
+  "macro-like extension" (see below).
+* `.`, `->` - As there are no structures in PseudoC, there are no operators
+  for field access. `.` actually can be a part of identifier in ScratchABlock
+  (not formally part of PseudoC).
+* `?:` - ternary operator is not supported, explicit `if` statement should be
+  used instead.
+* `,` - sequential operator not supported. *Future*: as alternative, multiple
+  `;`-separated statements on the same line could be allowed.
+
+Example of operators (used as part of assignment statements):
 
 ```c
 $a0 = $a1 + $a2
