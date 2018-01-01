@@ -1,0 +1,10 @@
+#xform_bblock: sub_const_to_add
+#xform_bblock: bblock_expr_propagation
+
+# side-effect free SFUNC
+10      $a1 = abs($a0)
+20      $a2 = $a1 + 3
+
+# side-effect SFUNC
+30      $a4 = side_effect($a3)
+40      $a5 = $a4 + 1
