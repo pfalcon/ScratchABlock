@@ -25,9 +25,9 @@ void fun_bfffb80f()
   *(u32*)0x60000208 &= 0xfffdffff; // {'uses': []}
   // memw(); (dead);
   // $a11 = *(u32*)0x3ff0000c; // {'uses': ['00000044']} (dead);
-  // $a11 = *(u32*)0x3ff0000c & -0x2; // {'uses': ['0000004a']} (dead);
+  // $a11 = *(u32*)0x3ff0000c & 0xfffffffe; // {'uses': ['0000004a']} (dead);
   // memw(); (dead);
-  *(u32*)0x3ff0000c &= -0x2; // {'uses': []}
+  *(u32*)0x3ff0000c &= 0xfffffffe; // {'uses': []}
   // memw(); (dead);
   // $a9 = *(u32*)0x3ff0000c; // {'uses': ['00000053']} (dead);
   // $a9 = *(u32*)0x3ff0000c | 0x1; // {'uses': ['00000059']} (dead);
@@ -42,7 +42,7 @@ void fun_bfffb80f()
   }
   // memw(); (dead);
   // $a8 = *(u32*)0x3ff0000c; // {'uses': ['00000076']} (dead);
-  // $a8 = *(u32*)0x3ff0000c & -0x2; // {'uses': ['0000007c']} (dead);
+  // $a8 = *(u32*)0x3ff0000c & 0xfffffffe; // {'uses': ['0000007c']} (dead);
   // memw(); (dead);
-  *(u32*)0x3ff0000c &= -0x2; // {'uses': []}
+  *(u32*)0x3ff0000c &= 0xfffffffe; // {'uses': []}
 }
