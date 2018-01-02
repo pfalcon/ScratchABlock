@@ -48,7 +48,7 @@ def add_vals(a, b):
     return VALUE(val, base)
 
 
-def expr_neg(expr):
+def expr_neg_if_possible(expr):
     if is_value(expr):
         return VALUE(-expr.val, expr.base)
     if is_expr(expr):
@@ -57,6 +57,12 @@ def expr_neg(expr):
         if expr.op == "+":
             new_args = [expr_neg(x) for x in expr.args]
             return EXPR("+", new_args)
+
+
+def expr_neg(expr):
+    new = expr_neg_if_possible(expr)
+    if new:
+        return new
 
     return EXPR("NEG", expr)
 
@@ -126,6 +132,12 @@ def expr_simplify_lshift(e):
                 return EXPR("*", [e.args[0], VALUE(1 << val, 10)])
 
 
+def expr_simplify_neg(e):
+    if is_expr(e) and e.op == "NEG":
+        new = expr_neg_if_possible(e.args[0])
+        return new
+
+
 def expr_simplify_bitfield(e):
     "Simplify bitfield() to an integer cast if possible."
     if is_expr(e) and e.op == "SFUNC" and e.args[0] == SFUNC("bitfield"):
@@ -175,6 +187,7 @@ def simplify_expr(expr):
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
     new_expr = expr_xform(new_expr, expr_simplify_bitfield)
     new_expr = expr_xform(new_expr, expr_simplify_cast)
+    new_expr = expr_xform(new_expr, expr_simplify_neg)
     new_expr = expr_xform(new_expr, unsignize_logical_ops)
 
     expr_commutative_normalize(new_expr)
