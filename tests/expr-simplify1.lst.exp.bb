@@ -13,5 +13,6 @@ $r11 = $r10
 $r1 = $r2 & 0xfffffffe
 $r1 ^= 0xffffffff
 $r1 = $r2 | 0xffffff00
+$r1 = -$r1 + -$r2
 return
 Exits: []
