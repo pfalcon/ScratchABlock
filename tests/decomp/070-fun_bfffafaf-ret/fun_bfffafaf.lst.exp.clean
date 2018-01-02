@@ -12,10 +12,10 @@ void fun_bfffafaf()
       do {
         $a2 = *(u32*)($a2 + 0x8);
         $a3 += -0x1;
-        $a3 = bitfield($a3, /*lsb*/0, /*sz*/16);
+        $a3 = (u16)$a3;
         $a2 = *(u32*)($a2 + 0x8);
         $a3 += -0x1;
-        $a3 = bitfield($a3, /*lsb*/0, /*sz*/16);
+        $a3 = (u16)$a3;
       } while ($a3 != 0);
     }
   }
