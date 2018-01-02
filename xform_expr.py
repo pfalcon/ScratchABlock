@@ -182,6 +182,7 @@ def unsignize_logical_ops(e):
 
 def simplify_expr(expr):
     new_expr = expr_xform(expr, expr_sub_to_add)
+    expr_commutative_normalize(new_expr)
     new_expr = expr_xform(new_expr, expr_associative_add)
     new_expr = expr_xform(new_expr, expr_simplify_add)
     new_expr = expr_xform(new_expr, expr_simplify_lshift)
