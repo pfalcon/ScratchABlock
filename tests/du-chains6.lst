@@ -1,0 +1,13 @@
+#xform: repr_output
+#xform: analyze_reach_defs
+#xform: make_du_chains
+10     $a = 1
+20     $b = $a
+30     $c = $a + 1
+40     $d = $c + $a
+45     goto 50
+50 50:
+50     $b = $a
+60     $a = 2
+70     $c = $a + 2
+80     $d = $c + $a
