@@ -1,8 +1,8 @@
 // Estimated params: [$a2, $a3]
 void _xtos_set_exception_handler()
 {
-  // $a2 = $a2_0; // {'uses': []} (dead);
-  $a3 = $a3_0; // {'uses': []}
+  // $a2 = $a2_0; // {'uses': ['00000000', '00000014']} (dead);
+  $a3 = $a3_0; // {'uses': ['00000019', '00000020', '00000026']}
   if ($a2_0 < 0x40) {
     // $a9 = 0x0; // {'uses': ['0000002d.0']} (dead);
     // $a6 = _xtos_c_wrapper_handler; // {'uses': ['00000023.0']} (dead);
@@ -10,13 +10,13 @@ void _xtos_set_exception_handler()
     // $a8 = _xtos_exc_handler_table_; // {'uses': ['0000001c']} (dead);
     // $a10 = _xtos_p_none; // {'uses': ['00000019.0', '00000020', '0000002a']} (dead);
     // $a11 = _xtos_c_handler_table; // {'uses': ['00000017']} (dead);
-    // $a5 = $a2_0 * 4; // {'uses': ['00000017', '0000001c', '00000028']} (dead);
+    // $a5 = $a2_0 * 4; // {'uses': ['00000017', '0000001c']} (dead);
     // $a11 = _xtos_c_handler_table + $a2_0 * 4; // {'uses': ['0000001e', '00000026']} (dead);
     if ($a3_0 == 0) {
       $a3 = _xtos_p_none; // {'uses': ['00000020', '00000026']}
     }
-    // $a5 = _xtos_exc_handler_table_ + $a2_0 * 4; // {'uses': []} (dead);
-    $a2 = *(u32*)(_xtos_c_handler_table + $a2_0 * 4); // {'uses': []}
+    // $a5 = _xtos_exc_handler_table_ + $a2_0 * 4; // {'uses': ['00000028']} (dead);
+    $a2 = *(u32*)(_xtos_c_handler_table + $a2_0 * 4); // {'uses': ['0000002a']}
     // $a7 = $a3 + -_xtos_p_none; // {'uses': ['00000023']} (dead);
     if ($a3 != _xtos_p_none) {
       $a4 = _xtos_c_wrapper_handler; // {'uses': ['00000028']}
