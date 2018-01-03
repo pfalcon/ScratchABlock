@@ -1,3 +1,5 @@
+import logging
+
 import core
 from core import is_expr, is_mem
 from utils import set_union, set_intersection
@@ -240,31 +242,52 @@ class LiveVarAnalysis(GenKillAnalysis):
 
 
 def make_du_chains(cfg):
+    log = logging.getLogger("make_du_chains")
 
-    def trace(bblock, mapping):
-        for inst in bblock.items:
-            args = inst.args
-            if len(args) == 1 and is_expr(args[0]):
-                args = args[0].args
-            for r in inst.uses(cfg):
-                if r in mapping:
-                    mapping[r].comments["uses"].append(inst.addr)
+    du_map = {}
+    bblock_last_def = {}
 
-            for dest in inst.defs(regs_only=False):
-                mapping[dest] = inst
-                inst.comments["uses"] = []
-
-    # sorted_nodes are for unit testing
-    # Generally, should either start from single entry or initialize
-    # last_def_insts with reachdef_in.
-    for addr, node_props in cfg.iter_sorted_nodes():
+    for bblock_addr, node_props in cfg.iter_sorted_nodes():
         bblock = node_props["val"]
-        last_def_insts = {}
-        trace(bblock, last_def_insts)
+        last_def = {}
 
-        for addr, node_props in cfg.iter_sorted_nodes():
-            bblock = node_props["val"]
-            for var, inst in last_def_insts.items():
-                if (var, inst.addr) in node_props["reachdef_in"]:
-                    mapping = last_def_insts.copy()
-                    trace(bblock, mapping)
+        for inst in bblock.items:
+            defs = inst.defs(regs_only=False)
+            if defs:
+                inst.comments["uses"] = []
+                du_map[inst.addr] = inst.comments["uses"]
+                for dest in defs:
+                    last_def[dest] = inst.addr
+
+        log.debug("last_def for %s: %s", bblock_addr, last_def)
+        bblock_last_def[bblock_addr] = last_def
+
+    log.debug("empty du_map: %s", du_map)
+    log.debug("bblock_last_def: %s", bblock_last_def)
+
+    for bblock_addr, node_props in cfg.iter_sorted_nodes():
+        bblock = node_props["val"]
+        last_def = {}
+
+        reachdef_in = node_props["reachdef_in"]
+        log.debug("reachdef_in %s: %s", bblock_addr, reachdef_in)
+        for var, defined_in_bblock in reachdef_in:
+            if defined_in_bblock is not None:
+                last_def.setdefault(var, set()).add(bblock_last_def[defined_in_bblock][var])
+        log.debug("last_def on entry: %s", last_def)
+
+        for inst in bblock.items:
+            log.debug("%s: %s", inst, inst.uses(cfg))
+            for r in inst.uses(cfg):
+                if r in last_def:
+                    log.debug("%s", last_def[r])
+                    for inst_addr in last_def[r]:
+                        du_map[inst_addr].append(inst.addr)
+                else:
+                    log.debug("%r not in last_def", r)
+
+            defs = inst.defs(regs_only=False)
+            for dest in defs:
+                last_def[dest] = {inst.addr}
+
+    log.debug("du_map:", du_map)
