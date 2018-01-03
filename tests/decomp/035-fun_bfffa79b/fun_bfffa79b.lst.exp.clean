@@ -1,0 +1,16 @@
+// Estimated params: [$a2, $a3]
+void fun_bfffa79b()
+{
+  if (*(u32*)(some_struct + 0x3c) != 0) {
+    *(u32*)(*(u32*)(some_struct + 0x3c) + 0x8) = $a2_0;
+    *(u32*)(some_struct + 0x3c) = $a3_0;
+    *(u32*)(some_struct + 0x3c) = $a3_0;
+    *(u32*)(some_struct + 0x40) += *(u8*)(*(u32*)($a2_0 + 0x4) + 0x2) | (*(u8*)(*(u32*)($a2_0 + 0x4) + 0x3) << 8);
+  } else {
+    *(u32*)(some_struct + 0x38) = $a2_0;
+    *(u32*)(some_struct + 0x3c) = $a3_0;
+    *(u32*)(some_struct + 0x3c) = $a3_0;
+    *(u32*)(some_struct + 0x40) = 0x0;
+    *(u32*)(some_struct + 0x40) = *(u8*)(*(u32*)($a2_0 + 0x4) + 0x2) | (*(u8*)(*(u32*)($a2_0 + 0x4) + 0x3) << 8);
+  }
+}
