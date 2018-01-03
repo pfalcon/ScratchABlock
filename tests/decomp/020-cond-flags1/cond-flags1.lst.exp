@@ -1,8 +1,8 @@
 // Estimated params: [$eax, $ebx]
 void fun_05()
 {
-  // $eax = $eax_0; // {'uses': []} (dead);
-  // $ebx = $ebx_0; // {'uses': []} (dead);
+  // $eax = $eax_0; // {'uses': ['10', '11']} (dead);
+  // $ebx = $ebx_0; // {'uses': ['10', '11']} (dead);
   $ecx = 0; // {'uses': ['40']}
   // $Z = $eax_0 == $ebx_0; // {'uses': ['20']} (dead);
   // $C = $eax_0 < $ebx_0; // {'uses': []} (dead);
