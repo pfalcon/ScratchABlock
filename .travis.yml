@@ -1,0 +1,16 @@
+language: python
+python:
+  - "3.4"
+
+addons:
+  apt:
+    packages:
+      - python3-nose
+      - python3-yaml
+
+# install dependencies
+install:
+  - pip3 install -r requirements.txt
+
+# run tests
+script: bash run_tests
