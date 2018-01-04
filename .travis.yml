@@ -1,0 +1,10 @@
+language: python
+
+addons:
+  apt:
+    packages:
+      - python3-nose
+      - python3-yaml
+
+# run tests
+script: bash run_tests
