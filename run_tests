@@ -7,9 +7,9 @@ failed() {
 
 if [ -z "$1" -o "$1" == "unit" ]; then
     echo "=== test_unit ==="
-    nosetests3 --version || nose_missing=1
+    python3 -m nose --version || nose_missing=1
     if [ -z "$nose_missing" ]; then
-        nosetests3 -v || failed
+        python3 -m nose -v || failed
     fi
 fi
 
@@ -75,5 +75,5 @@ fi
 echo "TESTS PASSED"
 if [ -n "$nose_missing" ]; then
     echo
-    echo "WARNING: unit tests were not run due to missing nosetests3 package"
+    echo "WARNING: unit tests were not run due to missing 'nose' package for python3"
 fi
