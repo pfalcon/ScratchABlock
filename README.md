@@ -58,11 +58,16 @@ ScratchABlock is released under the terms of GNU General Public License v3
 
 ScratchABlock is written in Python3 language, and tested with version 3.3
 and up, though may work with 3.2 or lower too (won't work with legacy
-Python2 versions). There're few dependencies:
+Python2 versions). There're a few dependencies:
 
 * PyYAML, https://pypi.python.org/pypi/PyYAML
 * nose-tests, https://pypi.python.org/pypi/nose (required only for unit
-  tests, expected executable name is `nosetests3`).
+  tests).
+
+On Debian/Ubuntu Linux, these can be installed with
+`sudo apt-get install python3-yaml python3-nose`. Alternatively, you can
+install these via Python's own `pip` package manager with (should work for
+any OS): `pip3 install -r requirements.txt`.
 
 ScratchABlock uses the *PseudoC* assembler as its IR. It is an assembler
 language expressed as much as possible using the familiar C language
