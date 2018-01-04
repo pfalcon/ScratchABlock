@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/pfalcon/ScratchABlock.png?branch=master)](https://travis-ci.org/pfalcon/ScratchABlock)
+
 **Q**: Why is there a need for yet another decompiler, especially a
 crippled one?
 
