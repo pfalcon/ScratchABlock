@@ -1,35 +1,12 @@
-import os.path
-from core import ADDR, REG
-
-import yaml
-
 import progdb
+from core import ADDR, REG
+from archutils import *
 
 
 BITNESS = 32
 ENDIANNESS = "LITTLE"
 
-
-def reg_range(first, last):
-    return {REG("a%d" % x) for x in range(first, last + 1)}
-
-ALL_REGS = {REG("a0"), REG("sp")} | reg_range(2, 15)
-
-
-def continuous_subrange(regs, ref_range):
-    """Taking regs and ref_range as sorted reg lists, returns initial
-    consecutive subrabge of regs which is in ref_range. E.g. for
-    regs={$a2, $a3, $a5}, ref_range=reg_range($a2, $a7), will return
-    {$a2, $a3}. The idea is that ABIs usually call for cosecutive
-    allocation of regs, so anything after 'hole' is spurious params /
-    returns."""
-    res = set()
-    for r in sorted(ref_range):
-        if r in regs:
-            res.add(r)
-        else:
-            return res
-    return res
+ALL_REGS = {REG("a0"), REG("sp")} | reg_range("a", 2, 15)
 
 
 def call_params(addr):
@@ -37,30 +14,30 @@ def call_params(addr):
         addr = addr.addr
         if addr in progdb.FUNC_DB and "params" in progdb.FUNC_DB[addr]:
             return progdb.FUNC_DB[addr]["params"]
-    return reg_range(2, 7)
+    return reg_range("a", 2, 7)
 
 def param_filter(regs):
     #return regs
-    #return regs & reg_range(2, 7)
+    #return regs & reg_range("a", 2, 7)
     # van Emmerik p.143
     # We know that for Xtensa params are passed in regs, and ignore case
     # of passing extra regs on stack so far.
-    return continuous_subrange(regs, reg_range(2, 7))
+    return reg_continuous_subrange(regs, reg_range("a", 2, 7))
 
 def call_ret(addr):
-    return reg_range(2, 5)
+    return reg_range("a", 2, 5)
 
 def ret_filter(regs):
     # Simple filter
-    #return regs & reg_range(2, 5)
+    #return regs & reg_range("a", 2, 5)
 
     # Ordered filter: if we know that returns should use a2, a3, a4, a5
     # in order, then if we have a2, a4 as potential returns, we known that
     # a4 is spurious.
-    return continuous_subrange(regs, reg_range(2, 5))
+    return reg_continuous_subrange(regs, reg_range("a", 2, 5))
 
 def call_save(addr):
-    return reg_range(12, 15) | {REG("sp")}
+    return reg_range("a", 12, 15) | {REG("sp")}
 
 def call_uses(addr):
     return call_params(addr)
