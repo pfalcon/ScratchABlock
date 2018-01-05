@@ -651,6 +651,16 @@ class Inst:
 
 
 class COND:
+    """This class is a container of EXPR used as a condition in the
+    'if (cond) goto' statement. It's needed because the same condition
+    is used both in the Inst representing such a statement and a lebel
+    of a CFG edge connecting basic blocks. If condition is updated,
+    e.g. while transforming its Inst, the change should be mirrored
+    to the CFG edge. Using COND class, this can be easily achieved:
+    the same COND instance is referenced both in Inst and edge, and
+    we can freely update or even completely replace EXPR it contains,
+    while both users will stay up to date.
+    """
 
     NEG = {
         "==": "!=",
