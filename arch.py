@@ -39,6 +39,14 @@ def call_params(addr):
             return progdb.FUNC_DB[addr]["params"]
     return reg_range(2, 7)
 
+def param_filter(regs):
+    #return regs
+    #return regs & reg_range(2, 7)
+    # van Emmerik p.143
+    # We know that for Xtensa params are passed in regs, and ignore case
+    # of passing extra regs on stack so far.
+    return continuous_subrange(regs, reg_range(2, 7))
+
 def call_ret(addr):
     return reg_range(2, 5)
 
