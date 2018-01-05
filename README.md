@@ -113,8 +113,8 @@ serving as the intermediate representation (IR) for ScratchABlock and
 a [survey](docs/ir-why-not.md) why another existing IR was not selected.
 
 The current approach of ScratchABlock is to grow a collection of
-relatively loosely-coupled algorithms for program analysis and
-transformation, have them covered with tests, and allow easy user
+relatively loosely-coupled algorithms ("passes") for program analysis
+and transformation, have them covered with tests, and allow easy user
 access to them. The magic of decompilation consists of applying these
 algorithms in the rights order and right number of times. Then, to
 improve the performance of decompilation, these passes usually require
