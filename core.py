@@ -456,6 +456,12 @@ class EXPR:
             r |= set(a.regs())
         return r
 
+    uses = regs
+
+    def defs(self, regs_only=True):
+        assert not self.side_effect()
+        return set()
+
     def side_effect(self):
         if self.op == "SFUNC":
             return self.args[0].name not in ("BIT", "abs", "bitfield", "count_leading_zeroes")
@@ -758,6 +764,12 @@ class COND:
 
     def regs(self):
         return self.expr.regs()
+
+    def defs(self, regs_only=True):
+        return self.expr.defs(regs_only)
+
+    def uses(self):
+        return self.expr.uses()
 
     def foreach_subexpr(self, func):
         self.expr.foreach_subexpr(func)
