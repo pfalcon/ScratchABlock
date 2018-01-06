@@ -1,9 +1,10 @@
 // Estimated params: [$eax, $ebx]
 void fun_05()
 {
-  $ecx = 0;
   if ($eax_0 != $ebx_0) {
     $ecx = 1;
+  } else {
+    $ecx = 0;
   }
   uses($ecx);
 }
