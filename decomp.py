@@ -265,8 +265,23 @@ def match_if_else_unjumped(cfg):
             if isinstance(succ_block, IfElse) \
               and succ_block.branches[-1][IFELSE_BRANCH] is None \
               and type(succ_block.branches[0][IFELSE_BRANCH]) is BBlock:
-                # TODO: Check uses/kills of the if block
-                log.warn("match_if_else_unjumped: variable liveness is not checked!")
+                first_defs = block.defs(regs_only=False)
+                second_defs = succ_block.defs(regs_only=False)
+                second_uses = succ_block.uses()
+                log.info("ifelse_unjumped: first: defs: %s | second: defs: %s, uses: %s", first_defs, second_defs, second_uses)
+                if not first_defs:
+                    # Everything was apparently DCEed
+                    return
+                if not first_defs.issubset(second_defs):
+                    log.info("ifelse_unjumped: can't apply, because first defines more other vars than 2nd: %s vs %s",
+                         first_defs, second_defs)
+                    return
+                if first_defs & second_uses:
+                    log.info("ifelse_unjumped: can't apply, because if uses (%s) vals defined in preceding block (%s)",
+                        second_uses, first_defs)
+                    return
+                # TODO: Are the checks above enough?
+                log.info("ifelse_unjumped: %s, %s", v, succ)
                 cfgutils.detach_node(cfg, v)
                 succ_block.branches[-1] = (None, block)
                 return True
