@@ -478,6 +478,7 @@ class EXPR:
 class Inst:
 
     trail = ""
+    show_addr = False
     show_comments = True
     annotate_calls = False
     comment = "//"
@@ -608,12 +609,18 @@ class Inst:
 
         comments = self.comments.copy()
 
+        addr = ""
+        if self.show_addr:
+            addr = "/*%s*/ " % self.addr
+
         if self.op == "LIT":
-            return self.args[0]
+            return addr + self.args[0]
 
         s = ""
         if self.show_comments and "org_inst" in comments:
             s = self.comment + " " + str(comments.pop("org_inst")) + " "
+
+        s = addr + s
 
         if self.op == "call" and self.annotate_calls:
             comments["uses"] = sorted(self.uses())
