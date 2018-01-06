@@ -3,7 +3,7 @@ from archutils import *
 
 
 BITNESS = 32
-ENDIANNESS = "LITTLE"
+ENDIANNESS = "little"
 
 ALL_REGS = {REG("a0"), REG("sp")} | reg_range("a", 2, 15)
 
