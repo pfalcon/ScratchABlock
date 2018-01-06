@@ -545,10 +545,20 @@ class Inst:
     def defs(self, regs_only=True, cfg=None):
         # Avoid circular import. TODO: fix properly
         import arch
+        import progdb
         """Return set of all registers defined by this instruction. Function
         calls (and maybe SFUNCs) require special treatment."""
         if self.op == "call":
-            return arch.call_defs(self.args[0])
+            addr = self.args[0]
+            if isinstance(addr, ADDR):
+                # Direct call with known address
+                addr = addr.addr
+                if addr in progdb.FUNC_DB and "modifieds" in progdb.FUNC_DB[addr]:
+                    return progdb.FUNC_DB[addr]["modifieds"]
+
+            # Indirect call or not params in funcdb
+            # TODO: need to allow saving callsite info in funcdb
+            return arch.call_defs(addr)
 
         defs = set()
         if self.dest:

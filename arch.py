@@ -36,11 +36,6 @@ def call_save(addr):
     return reg_range("a", 12, 15) | {REG("sp")}
 
 def call_defs(addr):
-    if isinstance(addr, ADDR):
-        addr = addr.addr
-        if addr in progdb.FUNC_DB and "modifieds" in progdb.FUNC_DB[addr]:
-            #print("call_defs: funcdb for %s" % addr)
-            return progdb.FUNC_DB[addr]["modifieds"]
     return call_ret(addr) | (ALL_REGS - call_save(addr))
 
 
