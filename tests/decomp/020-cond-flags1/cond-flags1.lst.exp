@@ -3,11 +3,12 @@ void fun_05()
 {
   // $eax = $eax_0; // {'uses': ['10', '11']} (dead);
   // $ebx = $ebx_0; // {'uses': ['10', '11']} (dead);
-  $ecx = 0; // {'uses': ['40']}
-  // $Z = $eax_0 == $ebx_0; // {'uses': ['20']} (dead);
-  // $C = $eax_0 < $ebx_0; // {'uses': []} (dead);
   if ($eax_0 != $ebx_0) {
     $ecx = 1; // {'uses': ['40']}
+  } else {
+    $ecx = 0; // {'uses': ['40']}
+    // $Z = $eax_0 == $ebx_0; // {'uses': ['20']} (dead);
+    // $C = $eax_0 < $ebx_0; // {'uses': []} (dead);
   }
   uses($ecx);
 }
