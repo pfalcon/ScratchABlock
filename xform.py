@@ -21,6 +21,7 @@ def apply_iterative(func, args):
     while func(*args):
         cnt += 1
     log.info("Ran %s %d times" % (func, cnt))
+    return cnt
 
 
 def check_pass(cfg, prop_name, err_msg):
