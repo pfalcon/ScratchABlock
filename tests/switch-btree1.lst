@@ -1,0 +1,43 @@
+# recover switch statements from binary trees
+10  $a1 = 0
+11  if ($a2 > 700) goto N_14
+12  if ($a2 == 700) goto N_5
+13  if ($a2 > 250) goto N_15
+14  if ($a2 == 250) goto N_7
+15  if ($a2 == 100) goto N_9
+16  if ($a2 == 200) goto N_8
+17  goto N_1
+18 N_15:
+19  if ($a2 == 500) goto N_6
+20  goto N_1
+21 N_14:
+22  if ($a2 == 750) goto N_4
+23  if ($a2 == 800) goto N_3
+24  if ($a2 == 900) goto N_2
+25  goto N_1
+26 N_2:
+27  $a3 = 900
+28  goto N_1
+29 N_3:
+30  $a3 = 800
+31  goto N_1
+32 N_4:
+33  $a3 = 750
+34  goto N_1
+35 N_5:
+36  $a3 = 700
+37  goto N_1
+38 N_6:
+39  $a3 = 500
+40  goto N_1
+41 N_7:
+42  $a3 = 250
+43  goto N_1
+44 N_8:
+45  $a3 = 200
+46  goto N_1
+47 N_9:
+48  $a3 = 100
+49 N_1:
+50  $a4 = $a1 + $a3
+51  return
