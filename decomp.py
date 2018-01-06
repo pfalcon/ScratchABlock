@@ -39,6 +39,23 @@ def split_node(cfg, n):
     cfg.add_edge(n2, cfg.succ(n)[0])
 
 
+class RecursiveBlock(BBlock):
+    """A structured block, consisting recursively of BBlock's and
+    RecursiveBlock's."""
+
+    def recursive_union(self, func):
+        res = set()
+        for subb in self.subblocks():
+            res |= func(subb)
+        return res
+
+    def uses(self):
+        return self.recursive_union(lambda b: b.uses())
+
+    def defs(self, regs_only=True):
+        return self.recursive_union(lambda b: b.defs(regs_only))
+
+
 class Seq(BBlock):
     def __init__(self, b1, b2):
         super().__init__(b1.addr)
