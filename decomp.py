@@ -56,7 +56,7 @@ class RecursiveBlock(BBlock):
         return self.recursive_union(lambda b: b.defs(regs_only))
 
 
-class Seq(BBlock):
+class Seq(RecursiveBlock):
     def __init__(self, b1, b2):
         super().__init__(b1.addr)
         self.items = [b1, b2]
@@ -118,7 +118,7 @@ def match_if(cfg):
 IFELSE_COND = 0
 IFELSE_BRANCH = 1
 
-class IfElse(BBlock):
+class IfElse(RecursiveBlock):
     def __init__(self, header, t_block, f_block, true_cond):
         super().__init__(header.addr)
         self.header = header
@@ -126,6 +126,15 @@ class IfElse(BBlock):
 
     def subblocks(self):
         return [x[1] for x in self.branches if x[1]]
+
+    def recursive_union(self, func):
+        res = set()
+        for cond, subb in self.branches:
+            if cond:
+                res |= func(cond)
+            if subb:
+                res |= func(subb)
+        return res
 
     def swap_branches(self):
         # Swap If/Else branches, negating condition
@@ -273,7 +282,7 @@ def match_if_else_ladder(cfg):
                 return True
 
 
-class Loop(BBlock):
+class Loop(RecursiveBlock):
     def __init__(self, b):
         super().__init__(b.addr)
         self.items = [b]
@@ -304,7 +313,7 @@ def match_infloop(cfg):
                     return True
 
 
-class DoWhile(BBlock):
+class DoWhile(RecursiveBlock):
     def __init__(self, b, cond):
         super().__init__(b.addr)
         self.cond = cond
@@ -336,7 +345,7 @@ def match_dowhile(cfg):
                     return True
 
 
-class While(BBlock):
+class While(RecursiveBlock):
     def __init__(self, b, cond):
         super().__init__(b.addr)
         self.cond = cond
