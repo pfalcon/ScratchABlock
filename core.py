@@ -511,13 +511,27 @@ class Inst:
     def uses(self, cfg=None):
         # Avoid circular import. TODO: fix properly
         import arch
+        import progdb
+
         """Return set of all registers used by this instruction. Function
         calls (and maybe SFUNCs) require special treatment."""
         if self.op == "call":
-            return self.args[0].regs() | arch.call_uses(self.args[0])
+            addr = self.args[0]
+            uses = addr.regs()
+            if isinstance(addr, ADDR):
+                # Direct call with known address
+                addr = addr.addr
+                if addr in progdb.FUNC_DB and "params" in progdb.FUNC_DB[addr]:
+                    return uses | progdb.FUNC_DB[addr]["params"]
+
+            # Indirect call or not params in funcdb
+            # TODO: need to allow saving callsite info in funcdb
+            return uses | arch.call_params(addr)
+
         if self.op == "return":
             if not self.args:
                 return arch.ret_uses(cfg)
+
         uses = set()
         for a in self.args:
             for r in a.regs():
