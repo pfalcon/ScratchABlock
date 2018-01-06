@@ -11,6 +11,7 @@ ALL_REGS = {REG("a0"), REG("sp")} | reg_range("a", 2, 15)
 def call_params(addr):
     return reg_range("a", 2, 7)
 
+
 def param_filter(regs):
     #return regs
     #return regs & reg_range("a", 2, 7)
@@ -19,8 +20,10 @@ def param_filter(regs):
     # of passing extra regs on stack so far.
     return reg_continuous_subrange(regs, reg_range("a", 2, 7))
 
+
 def call_ret(addr):
     return reg_range("a", 2, 5)
+
 
 def ret_filter(regs):
     # Simple filter
@@ -31,8 +34,10 @@ def ret_filter(regs):
     # a4 is spurious.
     return reg_continuous_subrange(regs, reg_range("a", 2, 5))
 
+
 def call_save(addr):
     return reg_range("a", 12, 15) | {REG("sp")}
+
 
 def call_defs(addr):
     return call_ret(addr) | (ALL_REGS - call_save(addr))
