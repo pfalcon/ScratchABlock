@@ -28,14 +28,18 @@ def structure(cfg):
     cnt = 1
     while cnt:
         cnt = 0
-        cnt += _(match_seq(cfg))
         cnt += _(match_if(cfg))
+        # Opportunity for applying match_if_else_unjumped arises after
+        # match_if pass, and we should match all such cases, or they
+        # will be consumed by match_seq instead.
+        cnt += apply_iterative(match_if_else_unjumped, (cfg,))
         cnt += _(match_ifelse(cfg))
         cnt += _(match_if_else_inv_ladder(cfg))
         cnt += _(match_if_else_ladder(cfg))
         cnt += _(match_while(cfg))
         cnt += _(match_dowhile(cfg))
         cnt += _(match_if_dowhile(cfg))
+        cnt += _(match_seq(cfg))
 
 
 # Apply arch-specific transformations
