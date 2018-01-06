@@ -193,7 +193,9 @@ def match_ifelse(cfg):
 
 def match_if_else_inv_ladder_recursive(block):
     if isinstance(block, IfElse):
-        assert len(block.branches) == 2, "Must be applied before match_if_else_ladder"
+        if len(block.branches) != 2:
+            log.warn("match_if_else_inv_ladder: Must be applied before match_if_else_ladder")
+            return
         if_block = block.branches[0][IFELSE_BRANCH]
         else_block = block.branches[1][IFELSE_BRANCH]
         if isinstance(if_block, IfElse) and not isinstance(else_block, IfElse):
