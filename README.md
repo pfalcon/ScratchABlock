@@ -66,7 +66,7 @@ Python2 versions). There're a few dependencies:
 
 On Debian/Ubuntu Linux, these can be installed with
 `sudo apt-get install python3-yaml python3-nose`. Alternatively, you can
-install these via Python's own `pip` package manager with (should work for
+install these via Python's own `pip` package manager (should work for
 any OS): `pip3 install -r requirements.txt`.
 
 ScratchABlock uses the *PseudoC* assembler as its IR. It is an assembler
