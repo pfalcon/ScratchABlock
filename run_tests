@@ -47,11 +47,12 @@ test_decomp() {
     echo "=== test_decomp ==="
     for f in tests/decomp/*/*.lst; do
         echo $f
-        rm -f $(dirname $f)/funcdb.yaml
-        ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $f > $f.out|| failed
-        rm -f $(dirname $f)/funcdb.yaml
+        dir=$(dirname $f)
+        rm -f $dir/funcdb.yaml
+        ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $dir || failed
+        rm -f $dir/funcdb.yaml
         ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
-            --no-dead --no-comments $f > $f.out.clean || failed
+            --no-dead --no-comments --output-suffix=.out.clean $dir || failed
         diff -u $f.exp $f.out || failed
         diff -u $f.exp.clean $f.out.clean || failed
     done
