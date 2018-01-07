@@ -1,0 +1,9 @@
+// Estimated params: [$a2, $a3]
+void fun_bfff9bcf()
+{
+  *(u32*)0x6000057c |= 0x1;
+  $a6 = ($a2_0 << 18) | (*(u32*)0x6000057c & 0xfffa0001) | (bitfield($a3_0, /*lsb*/0, /*sz*/15) * 4) | 0x2;
+  *(u32*)0x6000057c = $a6;
+  while ((i32)*(u32*)0x6000057c >= 0) {
+  }
+}
