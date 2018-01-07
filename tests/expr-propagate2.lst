@@ -1,0 +1,13 @@
+# Expression propagation state should be properly updated even in the presence
+# of type casts.
+#xform_inst: rewrite_complex_dest
+#xform_bblock: sub_const_to_add
+#xform_bblock: bblock_expr_propagation
+10   $a1 = 0xFFF
+11   $a2 = data_0x20F000
+12   (u32)$a2 = *(u32*)$a2 & $a1
+13   if ($a2 == 0) goto exit
+14   $a3 = data_0x20F004
+15   *(u32*)$a3 = 0
+15 exit:
+16   return
