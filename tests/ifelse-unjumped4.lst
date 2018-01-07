@@ -1,0 +1,10 @@
+#xform_bblock: remove_trailing_jumps_bblock
+#xform: match_if
+#xform: match_if_else_unjumped
+# Here, match_if_else_unjumped doesn't apply because if body and preceding
+# block define different registers.
+05  $a2 = 1
+10 if ($a1 != 5) goto 20
+11  $a4 = 2
+20 20:
+20  $a3 = 3
