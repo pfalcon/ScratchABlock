@@ -36,6 +36,7 @@ def parse_args():
     argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in input file's dir)")
     argp.add_argument("--format", choices=["none", "bblocks", "asm", "c"], default="bblocks",
         help="output format (default: %(default)s)")
+    argp.add_argument("--output-suffix", metavar="SUFFIX", default=".out", help="suffix for output files in same-dir mode (default: .out)")
     argp.add_argument("--no-dead", action="store_true", help="don't output DCE-eliminated instructions")
     argp.add_argument("--no-comments", action="store_true", help="don't output decompilation comments (annotations)")
     argp.add_argument("--no-graph-header", action="store_true", help="don't output graph properties")
@@ -179,7 +180,7 @@ def one_iter(input, output, iter_no):
                     base_name = full_name.rsplit("/", 1)[-1]
                     args.output = output + "/" + base_name
                 else:
-                    args.output = full_name + ".out"
+                    args.output = full_name + args.output_suffix
                 handle_file(args)
     else:
         handle_file(args)
