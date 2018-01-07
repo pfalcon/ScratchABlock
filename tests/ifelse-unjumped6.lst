@@ -1,0 +1,13 @@
+#xform_bblock: remove_trailing_jumps_bblock
+#xform: match_if
+#xform: match_if_else_unjumped
+# This example shows that the kind of analysis as done by
+# match_if_else_unjumped isn't precise enough if done on basic block level.
+# If we split $a4 assignment away, it would work. Note that $a4 and $a2
+# could go in different order too, or be interspersed with other statements.
+05  $a4 = 1
+06  $a2 = 1
+10 if ($a1 != 5) goto 20
+11  $a2 = 2
+20 20:
+20  $a3 = 3
