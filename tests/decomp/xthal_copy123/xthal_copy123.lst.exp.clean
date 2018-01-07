@@ -1,0 +1,21 @@
+// Estimated params: [$a2, $a3, $a4]
+void xthal_copy123()
+{
+  if ($a4_0 != 0) {
+    $a5 = $a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2);
+    $a8 = *(u32*)($a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2));
+    $a10 = *(u32*)($a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2)) << (-(($a2_0 & 3) * 8) + 32);
+    if ($a4_0 + bitfield($a2_0, /*lsb*/0, /*sz*/2) >= 0x4) {
+      $a8 = *(u32*)($a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2) + 0x4);
+      $a10 = UINT64(UINT64(*(u32*)(($a3_0 & 0xfffffffc) + 0x4), *(u32*)($a3_0 & 0xfffffffc)) >> (($a3_0 & 3) * 8), *(u32*)($a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2)) << (-(($a2_0 & 3) * 8) + 32)) >> (-(($a2_0 & 3) * 8) + 32);
+      *(u32*)($a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2)) = $a10;
+      $a5 = $a2_0 + -bitfield($a2_0, /*lsb*/0, /*sz*/2) + 0x4;
+    }
+    $a3 = UINT64(UINT64(*(u32*)(($a3_0 & 0xfffffffc) + 0x4), *(u32*)($a3_0 & 0xfffffffc)) >> (($a3_0 & 3) * 8), $a10) >> (($a4_0 & 3) * 8);
+    $SAR = (($a4_0 + bitfield($a2_0, /*lsb*/0, /*sz*/2)) & 3) * 8;
+    $a8 >>= $SAR;
+    $SAR = -((($a4_0 + bitfield($a2_0, /*lsb*/0, /*sz*/2)) & 3) * 8) + 32;
+    $a8 = UINT64($a8, $a3) >> $SAR;
+    *(u32*)$a5 = $a8;
+  }
+}
