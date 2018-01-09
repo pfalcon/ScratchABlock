@@ -368,7 +368,7 @@ class Parser:
         if not dest:
             return Inst(None, "LIT", [l])
 
-        if is_expr(dest) and isinstance(dest.args[0], SFUNC):
+        if is_expr(dest) and isinstance(dest.args[0], SFUNC) and lex.eol():
             return Inst(None, "SFUNC", [dest])
 
         def make_assign_inst(dest, op, args):
