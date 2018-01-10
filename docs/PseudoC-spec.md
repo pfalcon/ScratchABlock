@@ -186,6 +186,73 @@ $a0 = *(u8*)($a1 + $a2)
 $eax = *(u32*)($ebx + $ecx * 8 + 3)
 ```
 
+Statements
+----------
+
+### Assignments
+
+A most basic statement is an assigment, which computes expression on
+the right hand side and assigns it to the location on left hand side
+(commonly known as l-value). E.g.:
+
+```c
+$r0 = ($r1 + 2) * 3
+```
+
+As the example above shows, assignments are not limited to "3-address
+form", where there is only a destination on the LHS and operator
+connecting 2 arguments on th RHS, instead arbitrary expressions are
+allowed on RHS.
+
+L-values are also different to what they are in C. Following expressions
+can be L-values:
+
+* Virtual registers
+* Memory expressions
+* Casts (including narrowing casts) of the above
+* bitfield() special function, with constant *lsb* ans *sz* arguments,
+  applied to the above
+
+Using casts and bitfield() allows to concisely represent accesses to
+sub-registers, common in CISC CPUs. E.g. taking x86 ECX register as the
+base register, CL sub-register can be assigned as:
+
+```c
+(u8)$ecx = 1
+```
+
+And CH as:
+
+```c
+bitfield($ecx, /*lsb*/8, /*sz*/8) = 2
+```
+
+### Compound assignments
+
+Compound assignments are similar to C, and are useful to represent
+2-address form of assembly statements. E.g.:
+
+```c
+$r0 += 1
+```
+
+is equivalent to:
+
+```c
+$r0 = $r0 + 1
+```
+
+Likewise,
+
+```c
+(i32)$r1 >>= 1
+```
+
+is equivalent to:
+
+```c
+(i32)$r1 = (i32)$r1 >> 1
+```
 
 ### Jumps
 
