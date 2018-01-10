@@ -174,7 +174,8 @@ $a0 = csr(2)
 ```
 
 Note that this syntax is NOT used to represent calls to
-functions/procedures defined in the PseudoC code.
+functions/procedures defined in the PseudoC code. See the `call`
+statement below for that.
 
 
 ### Memory expressions
