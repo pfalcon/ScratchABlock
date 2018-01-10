@@ -135,7 +135,7 @@ Example of operators (used as part of assignment statements):
 
 ```c
 $a0 = $a1 + $a2
-$eax += $ebx
+$eax = $ebx >> 2
 ```
 
 Operations like `*`, `/`, `%`, `>>` may have different forms for signed and
