@@ -334,6 +334,10 @@ class TYPE(SimpleExpr):
     def __hash__(self):
         return hash(self.name)
 
+    def bitsize(self):
+        assert self.name[0] in ("i", "u")
+        return int(self.name[1:])
+
 
 class EXPR:
     "A recursive expression."
