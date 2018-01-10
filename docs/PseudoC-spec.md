@@ -12,8 +12,10 @@ IR:
   to IR, to ensure human readability. (Situation is not so bright with
   CISC, but that's it - CISC.)
 
-Basic syntactic elements of PseudoC are:
+Syntactic elements of PseudoC are described below.
 
+Expressions
+-----------
 
 ### Virtual registers
 
@@ -175,7 +177,7 @@ Note that this syntax is NOT used to represent calls to
 functions/procedures defined in the PseudoC code.
 
 
-### Accessing memory
+### Memory expressions
 
 The syntax is: `*(type*)expr`, i.e. a typical C pointer dereference,
 with explicit cast of an expression to pointer type. Examples:
