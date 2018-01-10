@@ -432,20 +432,21 @@ For a particular PseudoC program, each line may be prefixed by an
 address. This address is interpreted symbolically, not numerically.
 This is to facilitate insertion of new statements in a program.
 Addresses are compared lexicographically, not numerically, so for
-proper operation they should be e.g. of the same width. If an
-explicit addresses are not given, an implicit address is assigned,
-based on the line number of the instruction.
+proper operation they should be e.g. of the same width (padded with
+zeroes on the left). If an explicit addresses are not given, an
+implicit address is assigned, based on the line number of an
+instruction.
 
 
 Example of PseudoC program:
 
 ```c
 // if-else
-10  if (!$a1) goto l30
-20  $a2 = 1
-21  goto l40
+01  if (!$a1) goto l30
+05  $a2 = 1
+20  goto l_skip
 30 l30:
 20  $a2 = 2
-40 l40:
+40 l_skip:
 40  $a3 = 0
 ```
