@@ -143,9 +143,11 @@ def expr_simplify_bitfield(e):
     if is_expr(e) and e.op == "SFUNC" and e.args[0] == SFUNC("bitfield"):
         assert is_value(e.args[2]) and is_value(e.args[3])
         if e.args[2].val == 0:
-            type = {8: "u8", 16: "u16", 32: "u32"}.get(e.args[3].val)
+            sz = e.args[3].val
+            type = {8: "u8", 16: "u16", 32: "u32"}.get(sz)
             if type:
                 return EXPR("CAST", [TYPE(type), e.args[1]])
+            return EXPR("&", e.args[1], VALUE((1 << sz) - 1))
 
 def expr_simplify_cast(e):
     if is_expr(e) and e.op == "CAST":
