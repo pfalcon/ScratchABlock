@@ -1,0 +1,11 @@
+// Estimated params: []
+void .ENTRY()
+{
+  // $a1 = 0xfff; // {'uses': ['12']} (dead);
+  // $a2 = data_0x20F000; // {'uses': ['12']} (dead);
+  // $a2 = *(u32*)data_0x20F000 & 0xfff; // {'uses': ['13']} (dead);
+  if ((*(u32*)data_0x20F000 & 0xfff) != 0) {
+    // $a3 = data_0x20F004; // {'uses': ['15']} (dead);
+    *(u32*)data_0x20F004 = 0; // {'uses': []}
+  }
+}

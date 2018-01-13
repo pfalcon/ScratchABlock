@@ -1,0 +1,7 @@
+// Estimated params: []
+void .ENTRY()
+{
+  if ((*(u32*)data_0x20F000 & 0xfff) != 0) {
+    *(u32*)data_0x20F004 = 0;
+  }
+}
