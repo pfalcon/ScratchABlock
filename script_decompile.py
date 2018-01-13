@@ -60,6 +60,7 @@ def apply(cfg):
     cfg_single_exit(cfg)
 
     foreach_bblock(cfg, sub_const_to_add)
+    foreach_inst(cfg, rewrite_complex_dest)
     # Initial pass on simplifying expressions
     foreach_inst(cfg, simplify_inst)
 
