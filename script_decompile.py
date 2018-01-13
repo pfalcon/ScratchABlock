@@ -56,6 +56,8 @@ def apply(cfg):
 
     # Various algos below don't work with no explicit entry in CFG
     cfg_preheader(cfg)
+    # Also don't work with >1 entries
+    remove_unreachable_entries(cfg)
     # Various algos below require single-exit CFG
     cfg_single_exit(cfg)
 
