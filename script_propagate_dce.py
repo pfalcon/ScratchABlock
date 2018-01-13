@@ -1,4 +1,6 @@
 from xform import *
+from dataflow import *
+
 
 def apply(cfg):
     # Various algos below don't work with no explicit entry in CFG
@@ -16,6 +18,7 @@ def apply(cfg):
     insert_initial_regs(cfg)
 
     analyze_reach_defs(cfg)
+    make_du_chains(cfg)
     #const_propagation(cfg)
     #copy_propagation(cfg)
     #mem_propagation(cfg)
