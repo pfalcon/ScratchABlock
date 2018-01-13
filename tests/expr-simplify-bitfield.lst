@@ -6,4 +6,6 @@
 21     $a2 = bitfield($a2, /*lsb*/1, /*sz*/8)
 20     $a2 = bitfield($a2, /*lsb*/0, /*sz*/24)
 
+30     $a3 = bitfield($a2, /*lsb*/0, /*sz*/2)
+
 100    return
