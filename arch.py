@@ -1,6 +1,10 @@
 
 arch_m = None
 
+# Default bitness if specific arch is not loaded
+BITNESS = 32
+
+
 def load_arch(name):
     global arch_m
     arch_m = __import__("arch_" + name)
@@ -8,11 +12,6 @@ def load_arch(name):
         if var.startswith("__"):
             continue
         globals()[var] = getattr(arch_m, var)
-
-
-# TODO: Support multiple archs/callconv, load dynamically based on
-# user options.
-load_arch("xtensa")
 
 
 if __name__ == "__main__":

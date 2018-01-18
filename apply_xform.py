@@ -31,6 +31,7 @@ def parse_args():
     argp = argparse.ArgumentParser(description="Parse PseudoC program, apply transformations, and dump result in various formats")
     argp.add_argument("file", help="input file in PseudoC format, or directory of such files")
     argp.add_argument("-o", "--output", help="output file/dir (default stdout for single file, *.out for directory)")
+    argp.add_argument("--arch", default="xtensa", help="architecture to use")
     argp.add_argument("--script", action="append", help="apply script from file")
     argp.add_argument("--iter", action="store_true", help="apply transform iteratively until no changes to funcdb")
     argp.add_argument("--funcdb", help="function database file (default: funcdb.yaml in input file's dir)")
@@ -198,6 +199,9 @@ if __name__ == "__main__":
 
     if args.log_level:
         logging.basicConfig(level=getattr(logging, args.log_level))
+
+    import arch
+    arch.load_arch(args.arch)
 
     if args.annotate_calls:
         core.Inst.annotate_calls = True
