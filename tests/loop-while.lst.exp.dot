@@ -1,8 +1,9 @@
 digraph G {
+node [shape=box]
 "ENTRY" -> "00"
-"00" [label="BBlock\n00"]
-"30" [label="While\n30"]
-"50" [label="BBlock\n50"]
+"00" [label="00: BBlock"]
+"30" [label="30: While"]
+"50" [label="50: BBlock"]
 "00" -> "30"
 "30" -> "50"
 }

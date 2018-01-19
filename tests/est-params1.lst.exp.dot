@@ -1,5 +1,6 @@
 digraph G {
-".ENTRY" [label="BBlock\n.ENTRY"]
-"20" [label="BBlock\n20"]
+node [shape=box]
+".ENTRY" [label=".ENTRY: BBlock"]
+"20" [label="20: BBlock"]
 ".ENTRY" -> "20"
 }

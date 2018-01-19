@@ -1,8 +1,9 @@
 digraph G {
+node [shape=box]
 "ENTRY" -> "10"
-"10" [label="ControlAnd\n10"]
-"40" [label="BBlock\n40"]
-"50" [label="BBlock\n50"]
+"10" [label="10: ControlAnd"]
+"40" [label="40: BBlock"]
+"50" [label="50: BBlock"]
 "10" -> "40" [label="else"]
 "10" -> "50" [label="(($a2 == 0) || ($a3 != 0))"]
 "40" -> "50"
