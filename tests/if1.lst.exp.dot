@@ -1,6 +1,7 @@
 digraph G {
+node [shape=box]
 "ENTRY" -> "10"
-"10" [label="IfElse\n10"]
-"20" [label="BBlock\n20"]
+"10" [label="10: IfElse"]
+"20" [label="20: BBlock"]
 "10" -> "20"
 }

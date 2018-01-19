@@ -1,7 +1,8 @@
 digraph G {
-"10" [label="BBlock\n10"]
-"11" [label="BBlock\n11"]
-"20" [label="BBlock\n20"]
+node [shape=box]
+"10" [label="10: BBlock"]
+"11" [label="11: BBlock"]
+"20" [label="20: BBlock"]
 "10" -> "11" [label="else"]
 "10" -> "20" [label="($a1 == 0)"]
 "11" -> "20"

@@ -1,8 +1,9 @@
 digraph G {
+node [shape=box]
 "ENTRY" -> "10"
-"10" [label="BBlock\n10"]
-"30" [label="BBlock\n30"]
-"40" [label="BBlock\n40"]
+"10" [label="10: BBlock"]
+"30" [label="30: BBlock"]
+"40" [label="40: BBlock"]
 "10" -> "30" [label="else"]
 "10" -> "40" [label="(EXPR(==[REG(r0), VALUE(0x5)]))"]
 "30" -> "40"
