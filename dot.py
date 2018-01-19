@@ -25,7 +25,7 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
         obj = info.get("val")
         if obj is not None:
             typ = type(obj).__name__
-            label = "%s\\n%s" % (typ, addr)
+            label = "%s: %s" % (addr, typ)
         else:
             label = addr
         if "dfsno" in info:
