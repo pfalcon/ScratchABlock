@@ -1,6 +1,9 @@
 import sys
 import re
 
+
+show_insts = False
+
 # Simple module to output graph as .dot file, which can be viewed
 # with dot or xdot.py tools.
 def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
@@ -34,6 +37,9 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
             label += "(e#%s)" % info["dfsno_exit"]
         if "idom" in info:
             label += "\nidom: %s" % info["idom"]
+        if show_insts:
+            for inst in obj:
+                label += "\n" + str(inst)
         out.write('"%s" [label="%s"]\n' % (addr, label))
 
     for (fr, to), data in sorted(graph.iter_edges()):
