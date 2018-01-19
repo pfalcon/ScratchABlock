@@ -14,6 +14,7 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
         edge = "--"
 
     out.write("%s G {\n" % header)
+    out.write("node [shape=box]\n")
     if is_cfg:
         entries = graph.entries()
         if entries and (len(entries) > 1 or entries[0] != ".ENTRY"):
