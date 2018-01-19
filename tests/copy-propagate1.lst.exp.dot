@@ -1,4 +1,0 @@
-digraph G {
-"ENTRY" -> "20"
-"20" [label="BBlock\n20"]
-}
