@@ -46,6 +46,7 @@ def parse_args():
     argp.add_argument("--no-graph-header", action="store_true", help="don't output graph properties")
     argp.add_argument("--annotate-calls", action="store_true", help="annotate calls if uses/defs")
     argp.add_argument("--inst-addr", action="store_true", help="output instruction addresses")
+    argp.add_argument("--dot-inst", action="store_true", help="output instructions in .dot files")
     argp.add_argument("--repr", action="store_true", help="dump __repr__ format of instructions and other objects")
     argp.add_argument("--debug", action="store_true", help="produce debug files")
     argp.add_argument("--log-level", metavar="LEVEL", default="INFO", help="set logging level (default: %(default)s)")
@@ -55,6 +56,9 @@ def parse_args():
         core.SimpleExpr.simple_repr = False
     if args.inst_addr:
         core.Inst.show_addr = True
+    if args.dot_inst:
+        import dot
+        dot.show_insts = True
 
     return args
 
