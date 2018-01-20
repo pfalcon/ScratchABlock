@@ -119,6 +119,13 @@ C-- has different aims and purpose though, for example it supports garbage
 collection interface, exception handling, etc. Overall, featureset and
 usecases for C-- and ScratchABlock definitely overlap, but are different.
 
+Miasm IR
+--------
+
+https://github.com/cea-sec/miasm
+
+Miasm has [own IR](https://github.com/cea-sec/miasm#intermediate-representation).
+
 References
 ----------
 * http://indefinitestudies.org/2009/04/03/a-quick-survey-on-intermediate-representations-for-program-analysis/
