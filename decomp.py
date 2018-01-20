@@ -417,20 +417,6 @@ def match_if_dowhile(cfg):
                 return True
 
 
-class ControlAnd(BBlock):
-    def __init__(self, addr, cond1, cond2):
-        super().__init__(addr)
-        #print((addr, cond1, cond2))
-        self.cond = CompoundCond(cond1.list() + ["||"] + cond2.list())
-        self.l = []
-
-    def __repr__(self):
-        return "%s(%s)" % (self.__class__.__name__, self.cond)
-
-    def dump(self, stream, indent=0, printer=str):
-        self.write(stream, indent, "/* && */")
-
-
 def match_control_and(cfg):
     for v, _ in cfg.iter_nodes():
         if cfg.degree_out(v) == 2:
@@ -441,9 +427,12 @@ def match_control_and(cfg):
                 assert len(succ2) == 2
                 if succ1[0] == succ2[0]:
                     _log.info("and %s, %s", v, v2)
-                    newb = ControlAnd(v, cfg.edge(v, succ1[0]).get("cond"), cfg.edge(v2, succ1[0]).get("cond"))
-                    cfg.add_node(v, val=newb)
-                    cfg.set_edge(v, succ1[0], cond=newb.cond)
+                    new_cond = EXPR(
+                        "||",
+                        cfg.edge(v, succ1[0]).get("cond").expr,
+                        cfg.edge(v2, succ1[0]).get("cond").expr
+                    )
+                    cfg.edge(v, succ1[0]).get("cond").expr = new_cond
                     cfg.remove_node(v2)
                     cfg.add_edge(v, succ2[1])
                     return True
