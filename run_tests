@@ -45,16 +45,20 @@ test_xform() {
 
 test_decomp() {
     echo "=== test_decomp ==="
-    for f in tests/decomp/*/*.lst; do
-        echo $f
-        dir=$(dirname $f)
-        rm -f $dir/funcdb.yaml
-        ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $dir || failed
-        rm -f $dir/funcdb.yaml
-        ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
-            --no-dead --no-comments --output-suffix=.out.clean $dir || failed
-        diff -u $f.exp $f.out || failed
-        diff -u $f.exp.clean $f.out.clean || failed
+    for dir in tests/decomp/*; do
+        if [ -d $dir ]; then
+            echo $dir
+            #dir=$(dirname $f)
+            rm -f $dir/funcdb.yaml
+            ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $dir || failed
+            rm -f $dir/funcdb.yaml
+            ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
+                --no-dead --no-comments --output-suffix=.out.clean $dir || failed
+            for f in $dir/*.lst; do
+                diff -u $f.exp $f.out || failed
+                diff -u $f.exp.clean $f.out.clean || failed
+            done
+        fi
     done
 }
 
