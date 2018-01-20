@@ -361,8 +361,8 @@ def match_dowhile(cfg):
 
 
 class While(RecursiveBlock):
-    def __init__(self, b, cond):
-        super().__init__(b.addr)
+    def __init__(self, addr, b, cond):
+        super().__init__(addr)
         self.cond = cond
         self.items = [b]
 
@@ -387,7 +387,7 @@ def match_while(cfg):
             if len(back_cand) == 1 and back_cand[0] == v and cfg.degree_in(succ[0]) == 1:
                 log.info("while: %s, %s", v, succ[0])
                 b = cfg.node(succ[0])["val"]
-                newb = While(b, cfg.edge(v, succ[0]).get("cond"))
+                newb = While(v, b, cfg.edge(v, succ[0]).get("cond"))
                 cfg.add_node(v, val=newb)
                 cfg.remove_node(succ[0])
                 return True
@@ -412,7 +412,7 @@ def match_if_dowhile(cfg):
                 #print(if_cond, if_cond == dowhile_cond)
                 if if_cond != dowhile_cond:
                     continue
-                while_bb = While(subs[0].items[0], if_cond)
+                while_bb = While(bblock.branches[0][1], subs[0].items[0], if_cond)
                 info["val"] = while_bb
                 return True
 
