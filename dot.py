@@ -24,32 +24,33 @@ def out_bblock_node(obj, out):
         return (addr, addr)
 
 
-def subgraph(obj, out):
+def subgraph(obj, out, level=0):
     if type(obj) is BBlock:
         return out_bblock_node(obj, out)
     else:
-        out.write("subgraph cluster_%s {\n" % id(obj))
+        uniq_sfx = "%d_%s" % (level, obj.addr)
+        out.write('subgraph "cluster_%s" {\n' % uniq_sfx)
         out.write("label=%s\n" % type(obj).__name__)
         my_first_n = None
         prev_n = None
 
         if isinstance(obj, IfElse):
-            my_first_n, prev_n = subgraph(obj.header, out)
-            landing = "landing_%s" % id(obj)
+            my_first_n, prev_n = subgraph(obj.header, out, level + 1)
+            landing = "landing_%s" % uniq_sfx
             for cond, block in obj.branches:
                 if block is None:
                     out.write('"%s" -> "%s" [label="else"]\n' % (prev_n, landing))
                 else:
-                    first_n, last_n = subgraph(block, out)
+                    first_n, last_n = subgraph(block, out, level + 1)
                     if cond is None:
                         cond = "else"
                     out.write('"%s" -> "%s" [label="%s"]\n' % (prev_n, first_n, cond))
                     out.write('"%s" -> "%s"\n' % (last_n, landing))
-            out.write('%s [shape=point label=""]\n' % landing)
+            out.write('"%s" [shape=point label=""]\n' % landing)
             prev_n = landing
         else:
           for o in obj.subblocks():
-            first_n, last_n = subgraph(o, out)
+            first_n, last_n = subgraph(o, out, level + 1)
 
             if my_first_n is None:
                 my_first_n = first_n
