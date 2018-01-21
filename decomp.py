@@ -59,13 +59,21 @@ class RecursiveBlock(BBlock):
 class Seq(RecursiveBlock):
     def __init__(self, b1, b2):
         super().__init__(b1.addr)
-        self.items = [b1, b2]
+        if isinstance(b1, Seq):
+            b1 = b1.items
+        else:
+            b1 = [b1]
+        if isinstance(b2, Seq):
+            b2 = b2.items
+        else:
+            b2 = [b2]
+        self.items = b1 + b2
 
     def subblocks(self):
         return self.items
 
     def __repr__(self):
-        return "%s(%r, %r)" % (self.__class__.__name__, self.items[0], self.items[1])
+        return "%s(%r)" % (self.__class__.__name__, self.items)
 
     def dump(self, stream, indent=0, printer=str):
         for b in self.items:
