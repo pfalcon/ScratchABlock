@@ -1,7 +1,10 @@
 digraph G {
 node [shape=box]
 "ENTRY" -> "10"
-"10" [label="10: DoWhile"]
+subgraph "cluster_0_10" {
+  label=DoWhile
+  "10" [label="10: BBlock"]
+}
 "40" [label="40: BBlock"]
 "10" -> "40"
 }

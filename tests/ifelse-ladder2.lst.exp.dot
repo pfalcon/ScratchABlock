@@ -2,8 +2,21 @@ digraph G {
 node [shape=box]
 "ENTRY" -> "05"
 "05" [label="05: BBlock"]
-"05.if" [label="05.if: IfElse"]
+subgraph "cluster_0_05.if" {
+  label=IfElse
+  "05.if" [label="05.if: BBlock"]
+  "20" [label="20: BBlock"]
+  "05.if" -> "20" [label="($a1 == 1)"]
+  "20" -> "landing_0_05.if"
+  "32" [label="32: BBlock"]
+  "05.if" -> "32" [label="($a1 == 2)"]
+  "32" -> "landing_0_05.if"
+  "35" [label="35: BBlock"]
+  "05.if" -> "35" [label="else"]
+  "35" -> "landing_0_05.if"
+  "landing_0_05.if" [shape=point label=""]
+}
 "40" [label="40: BBlock"]
 "05" -> "05.if"
-"05.if" -> "40"
+"landing_0_05.if" -> "40"
 }

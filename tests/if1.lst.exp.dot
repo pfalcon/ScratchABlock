@@ -1,7 +1,15 @@
 digraph G {
 node [shape=box]
 "ENTRY" -> "10"
-"10" [label="10: IfElse"]
+subgraph "cluster_0_10" {
+  label=IfElse
+  "10" [label="10: BBlock"]
+  "11" [label="11: BBlock"]
+  "10" -> "11" [label="($a1 != 0)"]
+  "11" -> "landing_0_10"
+  "10" -> "landing_0_10" [label="else"]
+  "landing_0_10" [shape=point label=""]
+}
 "20" [label="20: BBlock"]
-"10" -> "20"
+"landing_0_10" -> "20"
 }

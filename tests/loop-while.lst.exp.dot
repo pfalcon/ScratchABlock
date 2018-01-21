@@ -2,8 +2,14 @@ digraph G {
 node [shape=box]
 "ENTRY" -> "00"
 "00" [label="00: BBlock"]
-"30" [label="30: While"]
+subgraph "cluster_0_30" {
+  label=While
+  "30" [shape=circle width=0.3 fixedsize=true label="30"]
+  "10" [label="10: BBlock"]
+  "30" -> "10"
+  "10" -> "30"
+}
 "50" [label="50: BBlock"]
 "00" -> "30"
-"30" -> "50"
+"10" -> "50"
 }

@@ -1,5 +1,10 @@
 digraph G {
 node [shape=box]
 "ENTRY" -> "10"
-"10" [label="10: Seq"]
+subgraph "cluster_0_10" {
+  label=Seq
+  "10" [label="10: BBlock"]
+  "20" [label="20: BBlock"]
+  "10" -> "20"
+}
 }
