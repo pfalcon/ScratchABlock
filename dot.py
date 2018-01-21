@@ -2,7 +2,7 @@ import sys
 import re
 
 from core import BBlock
-from decomp import IfElse
+from decomp import IfElse, While
 
 
 show_insts = False
@@ -52,6 +52,22 @@ def subgraph(obj, out, level=0):
                     write_indented(out, level+1, '"%s" -> "%s"\n' % (last_n, landing))
             write_indented(out, level+1, '"%s" [shape=point label=""]\n' % landing)
             prev_n = landing
+        elif isinstance(obj, While):
+            write_indented(out, level+1, '"%s" [shape=circle width=0.3 fixedsize=true label="%s"]\n' % (obj.addr, obj.addr))
+            first_n, last_n = subgraph(obj.items[0], out, level + 1)
+            write_indented(out, level+1, '"%s" -> "%s"\n' % (obj.addr, first_n))
+            write_indented(out, level+1, '"%s" -> "%s"\n' % (last_n, obj.addr))
+            prev_n = last_n
+
+            # We render a simplified While representation using above, because
+            # trying to add more edges below for fully faithful representation
+            # doesn't work well, subgraph gets crowded and with rendering artifacts.
+            #landing = "landing_%d_%s" % (level, obj.addr)
+            #write_indented(out, level+1, '"%s" [shape=point label=""]\n' % landing)
+            #write_indented(out, level+1, '"%s" -> "%s"\n' % (obj.addr, landing))
+            #write_indented(out, level+1, '"%s" -> "%s" [style="invis" weight=100]\n' % (last_n, landing))
+            #prev_n = obj.addr
+            #prev_n = landing
         else:
           for o in obj.subblocks():
             first_n, last_n = subgraph(o, out, level + 1)
