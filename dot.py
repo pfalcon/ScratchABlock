@@ -1,8 +1,66 @@
 import sys
 import re
 
+from core import BBlock
+from decomp import IfElse
+
 
 show_insts = False
+
+
+def out_bblock_node(obj, out):
+        addr = obj.addr
+        if obj is not None:
+            typ = type(obj).__name__
+            label = "%s: %s" % (addr, typ)
+        else:
+            label = addr
+
+        if show_insts:
+            for inst in obj:
+                label += "\n" + str(inst)
+        out.write('"%s" [label="%s"]\n' % (addr, label))
+
+        return (addr, addr)
+
+
+def subgraph(obj, out):
+    if type(obj) is BBlock:
+        return out_bblock_node(obj, out)
+    else:
+        out.write("subgraph cluster_%s {\n" % id(obj))
+        out.write("label=%s\n" % type(obj).__name__)
+        my_first_n = None
+        prev_n = None
+
+        if isinstance(obj, IfElse):
+            my_first_n, prev_n = subgraph(obj.header, out)
+            landing = "landing_%s" % id(obj)
+            for cond, block in obj.branches:
+                if block is None:
+                    out.write('"%s" -> "%s" [label="else"]\n' % (prev_n, landing))
+                else:
+                    first_n, last_n = subgraph(block, out)
+                    if cond is None:
+                        cond = "else"
+                    out.write('"%s" -> "%s" [label="%s"]\n' % (prev_n, first_n, cond))
+                    out.write('"%s" -> "%s"\n' % (last_n, landing))
+            out.write('%s [shape=point label=""]\n' % landing)
+            prev_n = landing
+        else:
+          for o in obj.subblocks():
+            first_n, last_n = subgraph(o, out)
+
+            if my_first_n is None:
+                my_first_n = first_n
+
+            if prev_n:
+                out.write('"%s" -> "%s"\n' % (prev_n, first_n))
+            prev_n = last_n
+
+        out.write("}\n")
+        return (my_first_n, prev_n)
+
 
 # Simple module to output graph as .dot file, which can be viewed
 # with dot or xdot.py tools.
@@ -24,6 +82,8 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
             for e in sorted(entries):
                 out.write('"%s" %s "%s"\n' % ("ENTRY", edge, e))
 
+    block_end_map = {}
+
     for addr, info in graph.iter_sorted_nodes():
         obj = info.get("val")
         if obj is not None:
@@ -37,10 +97,16 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
             label += "(e#%s)" % info["dfsno_exit"]
         if "idom" in info:
             label += "\nidom: %s" % info["idom"]
-        if show_insts:
-            for inst in obj:
-                label += "\n" + str(inst)
-        out.write('"%s" [label="%s"]\n' % (addr, label))
+
+        if type(obj) is BBlock:
+            if show_insts:
+                for inst in obj:
+                    label += "\n" + str(inst)
+            out.write('"%s" [label="%s"]\n' % (addr, label))
+            block_end_map[addr] = addr
+        else:
+            first, last = subgraph(obj, out)
+            block_end_map[addr] = last
 
     for (fr, to), data in sorted(graph.iter_edges()):
         label = data.get("cond")
@@ -48,9 +114,9 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
         if is_cfg and label is None and len(succ) == 2:
             label = "else"
         if label:
-            out.write('"%s" %s "%s" [label="%s"]\n' % (fr, edge, to, label))
+            out.write('"%s" %s "%s" [label="%s"]\n' % (block_end_map[fr], edge, to, label))
         else:
-            out.write('"%s" %s "%s"\n' % (fr, edge, to))
+            out.write('"%s" %s "%s"\n' % (block_end_map[fr], edge, to))
     out.write("}\n")
 
 
