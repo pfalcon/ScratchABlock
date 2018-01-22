@@ -1,6 +1,6 @@
 import sys
 from graph import Graph
-from copy import copy
+import copy
 
 import utils
 
@@ -664,7 +664,7 @@ class Inst:
         if self.op == "=" and not is_expr(self.args[0]):
             s += "%s = %s" % (self.dest, self.args[0])
         else:
-            e = copy(self.args[0])
+            e = copy.copy(self.args[0])
             args = e.args
             op = e.op
             if not (op == "!" or op[0].isalpha()):
