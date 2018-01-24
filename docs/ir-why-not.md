@@ -23,8 +23,8 @@ BinNavi REIL, Valgrind VEX
 --------------------------
 
 All these decompiler IRs are designed with CISC X86 architecture in
-mind, and take for granted that single machine instructions is
-converted to number of IR instructions. That alone makes them not
+mind, and take for granted that a single machine instructions will be
+converted to several IR instructions. That alone makes them not
 human-friendly, but they also feature over-explicit, verbose syntax.
 
 VEX is [used by angr](https://docs.angr.io/docs/ir.html). They also
@@ -124,7 +124,7 @@ Miasm IR
 
 https://github.com/cea-sec/miasm
 
-Miasm has [own IR](https://github.com/cea-sec/miasm#intermediate-representation).
+Miasm has its [own IR](https://github.com/cea-sec/miasm#intermediate-representation).
 
 References
 ----------
