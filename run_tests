@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 failed() {
     echo "TESTS FAILED!"
