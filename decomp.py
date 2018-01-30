@@ -454,5 +454,6 @@ def match_abnormal_sel(cfg):
     """
     for v, _ in cfg.iter_rev_postorder():
         if cfg.degree_in(v) == 2 and cfg.degree_out(v) == 1:
+            _log.info("abnormal_sel: %s", v)
             split_node(cfg, v)
             return True
