@@ -1,7 +1,8 @@
 import sys
 
-from utils import pairwise
+from utils import pairwise, natural_sort_key
 from cfgutils import swap_if_branches
+import progdb
 
 no_dead = False
 
@@ -41,7 +42,13 @@ def dump_c(cfg, stream=sys.stdout):
                 print("// Estimated params: %s" % sorted(list(cfg.props["estimated_params"])), file=stream)
             if cfg.props["trailing_jumps"]:
                 print("// Trailing jumps not removed, not rendering CFG edges as jumps", file=stream)
-            print("void %s()\n{" % label, file=stream)
+
+            func_props = progdb.FUNC_DB.get(label, {})
+            params = ""
+            if "params" in func_props:
+                params = sorted(func_props["params"], key=natural_sort_key)
+                params = ", ".join(["u32 " + str(r) + "_0" for r in params])
+            print("void %s(%s)\n{" % (label, params), file=stream)
             func_start = False
         if addr in labels:
             print("\nl%s:" % addr, file=stream)
