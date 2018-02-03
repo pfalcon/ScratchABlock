@@ -9,8 +9,9 @@ import yamlutils
 
 
 argp = argparse.ArgumentParser(description="Perform various transformations on a function database")
-argp.add_argument("command", help="transformation to perform")
 argp.add_argument("file", help="function database file (YAML)")
+argp.add_argument("command", help="transformation to perform")
+argp.add_argument("args", nargs="*", help="transformation arguments (optional)")
 args = argp.parse_args()
 
 with open(args.file) as f:
