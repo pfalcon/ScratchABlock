@@ -15,7 +15,7 @@ run_test() {
     # exactly what script_callgraph does.
     ./apply_xform.py --script script_callgraph --format none $name
     ./apply_xform.py --script script_callgraph_func_refs --format none $name
-    ./funcdb_util.py called_by $name/funcdb.yaml
+    ./funcdb_util.py $name/funcdb.yaml called_by
 
     ./apply_xform.py --script script_preserveds $name
 
