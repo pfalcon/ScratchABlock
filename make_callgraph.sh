@@ -20,4 +20,4 @@ $DIR/correct_internal_entrypoint.py $funcdir
 $DIR/apply_xform.py --script script_callgraph --format none $funcdir
 $DIR/apply_xform.py --script script_callgraph_func_refs --format none $funcdir
 $DIR/funcdb_dot.py $funcdir/funcdb.yaml -o $funcdir/callgraph.dot "$@"
-$DIR/funcdb_util.py called_by $funcdir/funcdb.yaml
+$DIR/funcdb_util.py $funcdir/funcdb.yaml called_by
