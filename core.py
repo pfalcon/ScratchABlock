@@ -116,7 +116,7 @@ class SimpleExpr:
 class REG(SimpleExpr):
 
     def __init__(self, name):
-        assert isinstance(name, str)
+        #assert isinstance(name, str)
         self.name = name
         self.signed = False
 
@@ -128,7 +128,7 @@ class REG(SimpleExpr):
 
     def __str__(self):
         cast = "(i32)" if self.signed else ""
-        return self.comment + cast + "$" + self.name
+        return self.comment + cast + "$" + str(self.name)
 
     def __eq__(self, other):
         return type(self) == type(other) and self.name == other.name
