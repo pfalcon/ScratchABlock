@@ -5,7 +5,7 @@
 
 // Predecessors: ['20']
 10:
-Exits: [(None, '11'), (COND(EXPR(==[$a1, 0])), '20')]
+Exits: [(COND(EXPR(==[$a1, 0])), '20'), (None, '11')]
 
 // Predecessors: ['10']
 11:
