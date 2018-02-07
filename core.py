@@ -882,7 +882,8 @@ class CFGPrinter:
 
     def print_trailer(self):
         succ = self.cfg.succ(self.addr)
-        print("Exits:", [(self.cfg.edge(self.addr, x).get("cond"), x) for x in succ], file=self.stream)
+        exits = [(self.cfg.edge(self.addr, x).get("cond"), x) for x in succ]
+        print("Exits:", sorted(exits, key=lambda x: utils.natural_sort_key(str(x))), file=self.stream)
 
 
     def print_label(self):
