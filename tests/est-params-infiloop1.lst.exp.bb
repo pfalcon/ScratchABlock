@@ -39,7 +39,7 @@ Exits: [(None, '20')]
 20:
 func($r1)
 goto 20
-Exits: [(None, '20'), (0, '_DEADEND_')]
+Exits: [(0, '_DEADEND_'), (None, '20')]
 
 // Predecessors: ['20']
 // Node props:
