@@ -1,0 +1,17 @@
+# Test that expression propagation is done in clearly separated stages,
+# leading to correct propagation result.
+#xform: cfg_preheader
+#xform: cfg_single_exit
+#xform: analyze_live_vars
+#xform: insert_initial_regs
+#xform: analyze_reach_defs
+#xform: expr_propagation
+10 func1:
+10     $a13 = 0x100 + $a2
+20     if ($a3 != 0) goto label1
+30     $a2 = 0x1
+40 label1:
+50     $a4 = *(u32*)$a13
+60     if (0x10 < $a4) goto label2
+70 label2:
+80     return
