@@ -1,0 +1,9 @@
+#xform_inst: simplify_inst
+30     $sp = $sp_0 - 0x20 + 0x10
+31     $sp = ($sp_0 - 0x20) + 0x10
+32     $sp = ($sp_0 + -0x20) + 0x10
+33     $sp = $sp_0 + (-0x20 + 0x10)
+34     $sp = 0x10 + $sp_0 - 0x20
+35     $sp = 0x10 + ($sp_0 - 0x20)
+
+100    return
