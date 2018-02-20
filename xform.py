@@ -714,6 +714,7 @@ def collect_params(cfg):
     func_addr = cfg.entry()
     e = cfg[func_addr]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
+    args = arch.param_filter(args)
     progdb.update_cfg_prop(cfg, "params", args)
 
 
