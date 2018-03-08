@@ -117,6 +117,23 @@ def update_cfg_prop(cfg, prop, new_val):
     cfg.props[prop] = new_val
 
 #
+# Symtab functions
+#
+
+SYMTAB = {}
+
+def load_symtab(fname):
+    with open(fname) as f:
+        for l in f:
+            l = l.strip()
+            addr, sym = l.split()
+            SYMTAB[sym] = int(addr, 16)
+
+# Returns real memory (not symbolic) address, for bindata module.
+def lookup_sym(sym):
+    return SYMTAB[sym]
+
+#
 # Struct database functions
 #
 
