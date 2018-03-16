@@ -223,6 +223,13 @@ if __name__ == "__main__":
 
         args.funcdb = proj_dir + "/funcdb.yaml"
         _log.info("Using funcdb: %s", args.funcdb)
+        # Load binary data
+        import bindata
+        bindata.init(proj_dir)
+        # Load symtab
+        if os.path.exists(proj_dir + "/symtab.txt"):
+            _log.info("Using symtab:", proj_dir + "/symtab.txt")
+            progdb.load_symtab(proj_dir + "/symtab.txt")
 
     input = args.file
     output = args.output
