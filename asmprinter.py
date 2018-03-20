@@ -23,6 +23,7 @@ class AsmPrinter(CFGPrinter):
 
     def get_jump_labels(self):
         def collect_labels(inst):
+            assert isinstance(inst, Inst), "Perhaps, this is structured CFG? Use --format=c for output."
             addr = inst.jump_addr()
             if addr is not None:
                 self.referenced_labels.add(addr)
