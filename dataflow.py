@@ -6,6 +6,9 @@ from utils import set_union, set_intersection
 from xform import foreach_bblock
 
 
+log = logging.getLogger(__name__)
+
+
 class AnalysisBase:
 
     # Set to False for backward analysis
@@ -207,8 +210,10 @@ class LiveVarAnalysis(GenKillAnalysis):
                         info[self.node_prop_out] = rets
                     elif "modifieds" in self.g.props:
                         info[self.node_prop_out] = self.g.props["modifieds"]
+                        log.warning("Conservatively using modifieds as function live-out")
                     elif "reach_exit" in self.g.props:
                         info[self.node_prop_out] = self.g.props["reach_exit"]
+                        log.warning("Conservatively using reach_exit as function live-out")
                     else:
                         info[self.node_prop_out] = set()
             else:
