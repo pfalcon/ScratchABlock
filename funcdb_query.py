@@ -9,14 +9,17 @@ import yamlutils
 
 
 argp = argparse.ArgumentParser(description="Query a function database")
-argp.add_argument("file", help="function database file (YAML)")
+argp.add_argument("file_or_dir", help="function database file (YAML) or project directory")
 argp.add_argument("--select", help="fields to select")
 argp.add_argument("--where", help="condition of rows to select")
 argp.add_argument("--sort", action="store_true", help="sort resultset")
 argp.add_argument("--html", action="store_true", help="output HTML")
 args = argp.parse_args()
 
-with open(args.file) as f:
+if os.path.isdir(args.file_or_dir):
+    args.file_or_dir += "/funcdb.yaml"
+
+with open(args.file_or_dir) as f:
     FUNC_DB = yaml.load(f)
 
 
