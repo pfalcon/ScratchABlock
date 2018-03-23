@@ -16,6 +16,9 @@ argp.add_argument("--sort", action="store_true", help="sort resultset")
 argp.add_argument("--html", action="store_true", help="output HTML")
 args = argp.parse_args()
 
+if not args.select and not args.where:
+    argp.error("At least one of --select or --where should be given")
+
 if os.path.isdir(args.file_or_dir):
     args.file_or_dir += "/funcdb.yaml"
 
