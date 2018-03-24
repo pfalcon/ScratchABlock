@@ -28,6 +28,8 @@ with open(args.file_or_dir) as f:
 
 def where(props):
     #print("where", props)
+    if args.where is None:
+        return True
     try:
         res = eval(args.where, None, props)
     except NameError:
