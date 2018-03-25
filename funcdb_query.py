@@ -47,6 +47,8 @@ res = []
 for addr, props in FUNC_DB.items():
     props = props.copy()
     props["addr"] = addr
+    if "calls_indir" not in props:
+        props["calls_indir"] = []
     if where(props):
         res.append(select(props))
 
