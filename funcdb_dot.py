@@ -12,7 +12,7 @@ argp.add_argument("file", help="Input file (YAML)")
 argp.add_argument("-o", "--output", help="Output file (default stdout)")
 argp.add_argument("--func", help="Start from this function")
 argp.add_argument("--no-refs", action="store_true", help="Show only direct calls, not refs to other functions "
-    "(otherwise shown as dashed lines)")
+    "(otherwise refs shown as dashed lines)")
 argp.add_argument("--group", action="append", default=[], help="Group some functions together, GROUP is name=file.txt, "
     "if name is '_ignore_', don't graph these functions")
 argp.add_argument("--each-call", action="store_true", help="Show multiple edges for each call site")
