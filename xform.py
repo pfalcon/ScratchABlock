@@ -682,8 +682,8 @@ def collect_reach_exit_maybe(cfg):
 
 
 import dataflow
-def analyze_live_vars(cfg):
-    ana = dataflow.LiveVarAnalysis(cfg)
+def analyze_live_vars(cfg, **kwargs):
+    ana = dataflow.LiveVarAnalysis(cfg, **kwargs)
     ana.solve()
 
 def analyze_reach_defs(cfg):
