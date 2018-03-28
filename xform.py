@@ -718,29 +718,24 @@ def collect_params(cfg):
     progdb.update_cfg_prop(cfg, "params", args)
 
 
-# Collect regs which are live after a function call. Intersection of
-# this set with function's modifieds will be returns of a function.
+# Collect regs which are live after each function call within current
+# function. Triples of (bblock_addr, func, live_out) are stored in CFG's
+# "calls_live_out" property (to be later further unioned and stored in
+# funcdb). This corresponds to Van Emmerik's callsite use collector.
 def collect_call_live_out(cfg):
-    import progdb
 
+    calls_live_out = []
     def collect(node):
         bb = node["val"]
         if bb.items and bb[-1].op == "call":
             inst = bb[-1]
             arg = inst.args[0]
-            if is_addr(arg):
-                func = arg.addr
-                regs = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in node["live_out"])
-                progdb.FUNC_DB.setdefault(func, {}).setdefault("callsites_live_out", set()).update(regs)
+            # TODO: Perhaps filter in the real regs?
+            regs = {r for r in node["live_out"] if not r.name.endswith("_0")}
+            calls_live_out.append((bb.addr, arg, regs))
 
     foreach_node(cfg, collect)
-
-
-def clear_call_live_out():
-    import progdb
-    for addr, props in progdb.FUNC_DB.items():
-        if "callsites_live_out" in props:
-            props["callsites_live_out"] = set()
+    progdb.update_cfg_prop(cfg, "calls_live_out", calls_live_out)
 
 
 def collect_returns():
