@@ -718,6 +718,23 @@ def collect_params(cfg):
     progdb.update_cfg_prop(cfg, "params", args)
 
 
+# Kind of "AI" telling why this or that reg has got into "params" list.
+# The explanations are approximate, e.g. a register may be "modified only
+# along some paths" (especially if overestimated as modified in the
+# presense of unknown functions), and still be a genuine param.
+def annotate_params(cfg):
+    res = {}
+    for reg in cfg.props["params"]:
+        if reg in cfg.props.get("reach_exit_maybe", ()):
+            res[reg] = "Param because modified only along some paths"
+        elif reg == REG("sp"):
+            res[reg] = "Param because address of object on stack is taken"
+        else:
+            res[reg] = "Likely a genuine param"
+    if res:
+        cfg.props["params_why"] = res
+
+
 # Collect regs which are live after each function call within current
 # function. Triples of (bblock_addr, func, live_out) are stored in CFG's
 # "calls_live_out" property (to be later further unioned and stored in
