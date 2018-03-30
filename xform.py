@@ -706,7 +706,7 @@ def estimate_params(cfg):
     e = cfg[real_entry]
     args = set(REG(r.name[:-2] if r.name.endswith("_0") else r.name) for r in e["live_in"])
     args -= set([REG("sp")])
-    cfg.props["estimated_params"] = args
+    progdb.update_cfg_prop(cfg, "estimated_params", args)
 
 
 # Precisely compute func params
