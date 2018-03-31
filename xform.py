@@ -725,12 +725,14 @@ def collect_params(cfg):
 def annotate_params(cfg):
     res = {}
     for reg in cfg.props["params"]:
-        if reg in cfg.props.get("reach_exit_maybe", ()):
-            res[reg] = "Param because modified only along some paths"
+        if reg in cfg.props.get("estimated_params", ()):
+            res[reg] = "100% genuine param"
         elif reg == REG("sp"):
             res[reg] = "Param because address of object on stack is taken"
+        elif reg in cfg.props.get("reach_exit_maybe", ()):
+            res[reg] = "Param because modified only along some paths (and maybe param to some callee)"
         else:
-            res[reg] = "Likely a genuine param"
+            res[reg] = "Likely param passed down to some callee"
     if res:
         cfg.props["params_why"] = res
 
