@@ -78,7 +78,12 @@ def update_funcdb(cfg):
     func_props = FUNC_DB_BY_ADDR.setdefault(cfg.props["addr"], {})
     func_props["label"] = cfg.props["name"]
 
-    for prop in ("params", "estimated_params", "modifieds", "preserveds", "reach_exit", "reach_exit_maybe", "calls_live_out"):
+    PROPS = (
+        "params", "estimated_params", "params_why", "modifieds", "preserveds",
+        "reach_exit", "reach_exit_maybe", "calls_live_out"
+    )
+
+    for prop in PROPS:
         if prop in cfg.props:
             func_props[prop] = cfg.props[prop]
 
