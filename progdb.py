@@ -71,10 +71,20 @@ def save_funcdb(fname, backup=True):
         yaml.dump(db, f)
 
 
+def check_invariants(cfg):
+    if "reach_exit" in cfg.props:
+        reach = cfg.props["reach_exit"]
+        reach_maybe = cfg.props.get("reach_exit_maybe", set())
+        assert reach_maybe.issubset(reach)
+
+
 def update_funcdb(cfg):
     "Aggregate data from each CFG processed into a function DB."
     if "addr" not in cfg.props:
         return
+
+    check_invariants(cfg)
+
     func_props = FUNC_DB_BY_ADDR.setdefault(cfg.props["addr"], {})
     func_props["label"] = cfg.props["name"]
 
