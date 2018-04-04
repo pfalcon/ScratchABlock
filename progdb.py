@@ -11,6 +11,7 @@ import yaml
 import yamlutils
 
 import utils
+from utils import repr_stable
 import core
 from core import is_addr, is_value, is_expr, EXPR
 
@@ -75,7 +76,8 @@ def check_invariants(cfg):
     if "reach_exit" in cfg.props:
         reach = cfg.props["reach_exit"]
         reach_maybe = cfg.props.get("reach_exit_maybe", set())
-        assert reach_maybe.issubset(reach)
+        assert reach_maybe.issubset(reach), "%s: maybe: %s, sure: %s" % (cfg.props["name"],
+            repr_stable(reach_maybe), repr_stable(reach))
 
 
 def update_funcdb(cfg):
