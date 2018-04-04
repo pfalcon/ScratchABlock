@@ -272,7 +272,7 @@ def expr_subst(expr, subst_dict):
             log.debug("Trying to replace %s with recursively referring %s, not doing" % (expr, new))
             return None
         if new and len(new) > 10:
-            log.warn("Trying to replace %s with complex [len=%d] %s, not doing" % (expr, len(new), new))
+            log.debug("Trying to replace %s with complex [len=%d] %s, not doing" % (expr, len(new), new))
             return None
         return new
 
