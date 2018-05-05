@@ -214,7 +214,7 @@ class Graph:
         num += 1
         return num
 
-    def number_postorder(self, node=None):
+    def number_postorder(self, node=None, num=1):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
         if node is None:
@@ -232,7 +232,7 @@ class Graph:
         entries = self.entries()
         num = 1
         for e in entries:
-            num = self._number_postorder(e, num)
+            num = self.number_postorder(e, num)
 
     def iter_postorder(self):
         return sorted(self._nodes.items(), key=lambda x: x[1]["dfsno"])
