@@ -578,7 +578,7 @@ def collect_preserveds(cfg):
         if is_reg(k) and is_reg(v):
             if v.name == k.name + "_0":
                 preserveds.add(k)
-    cfg.props["preserveds"] = preserveds
+    progdb.update_cfg_prop(cfg, "preserveds", preserveds)
 
 
 # Requires expr_propagation
