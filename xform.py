@@ -678,8 +678,8 @@ def collect_reach_exit_maybe(cfg):
         if len(addrs) > 1 and None in addrs:
             mod_maybe.add(var)
 
-    if mod_maybe:
-        cfg.props["reach_exit_maybe"] = mod_maybe
+    if mod_maybe or "reach_exit_maybe" in cfg.props:
+        progdb.update_cfg_prop(cfg, "reach_exit_maybe", mod_maybe)
 
 
 import dataflow
