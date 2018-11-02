@@ -40,7 +40,7 @@ def select(props):
     #print("select", props)
     if args.select == "*":
         return props
-    res = eval("(" + args.select + ")", None, props)
+    res = eval("(" + args.select + ",)", None, props)
     return res
 
 res = []
