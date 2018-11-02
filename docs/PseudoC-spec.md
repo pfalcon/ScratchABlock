@@ -1,6 +1,8 @@
 PseudoC assembly language
 =========================
 
+Author: Paul Sokolovsky
+
 ScratchABlock uses PseudoC as its Intermediate Representation (IR)
 language. PseudoC uses familiar, C-like syntax to represent a generic
 RISC-like assembler. Following were requirements for choosing such
