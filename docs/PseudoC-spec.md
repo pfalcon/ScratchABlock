@@ -6,7 +6,7 @@ Author: Paul Sokolovsky
 ScratchABlock uses PseudoC as its Intermediate Representation (IR)
 language. PseudoC uses familiar, C-like syntax to represent a generic
 RISC-like assembler. Following were requirements for choosing such
-IR:
+an IR:
 
 * Syntax should be automagically understood by any (qualified)
   programmer, what can be more familiar than C?
@@ -53,7 +53,7 @@ above, e.g. `u8*`.
 Types appear in few places in PseudoC program:
 
 * Declaring types of CPU registers (tentative).
-* When access memory, to cast numeric value in a register into a pointer
+* When accessing memory, to cast numeric value in a register into a pointer
   to a type of needed size.
 * To mark places where signed variants of operations are needed (or
   vice-versa, unsigned). In this usage, l-values remain l-values after
@@ -61,7 +61,7 @@ Types appear in few places in PseudoC program:
   on a register `$r0`.
 * For narrowing or widening values, where this usage has normal C
   semantics, e.g. `$r32 = (i16)$r32`, assuming `$r32` is 32-bit, will
-  truncate it to 16 bits, then sign-extend the value to full 32 bits.
+  truncate it to 16 bits, then sign-extend the value to the full 32 bits.
 
 
 ### Symbolic addresses
@@ -81,7 +81,7 @@ particular program has two `u32` variables: `var1` at `0x10` and
 
 ```c
 $r0 = 0x13
-$r1 = *(u32)($r0 + 1)
+$r1 = *(u32*)($r0 + 1)
 ```
 
 This effectively represents an aliasing problem. Numeric constant
@@ -156,8 +156,8 @@ $eax = (i32)$eax >> 2
 Any CPU operation not representable by C-inspired operations above,
 or any special operation in general, can be represented by a special
 function. PseudoC defines inventory of generic special functions,
-useful across different CPUs, and any particular CPU may define its
-specific special functions. An example of generic special functions:
+useful across different CPUs, and any particular CPU may define
+additional special functions. An example of generic special functions:
 
 ```c
 // Rotate left
@@ -309,7 +309,7 @@ instructions from the repertoir above. Examples:
 
 ### Conditional instructions
 
-Some pseudo-RISC CPUs support conditional instruction exection. PseudoC
+Some pseudo-RISC CPUs support conditional instruction execution. PseudoC
 allows syntax like:
 
 ```c
@@ -350,12 +350,12 @@ if (lt()) goto label
 
 (Macros and pragmas are not yet implemented.)
 
-The idea of dealing with conditional flags as use in conditional jump
-instructions used in many architectures is to maintain and assign
-explicitly to virtual registers representing conditinal flags. For
+The idea of dealing with conditional flags (as used in conditional jump
+instructions in many architectures) is to maintain and assign
+explicitly to virtual registers representing these conditinal flags. For
 example, x86's Z flag can be named ``$Z``, ``$z``, ``$flags_z``, etc.
 Potentially, it can be named even ``$flags.Z`` (i.e. structure field
-syntax, likely, bitfield).
+syntax - likely, a bitfield).
 
 As an example, x86 ``cmp eax, ebx`` instruction's effect on Z flag could
 be represented as:
@@ -416,7 +416,7 @@ $ebx_ = $ebx
 $ecx = $eax + $ebx
 ```
 
-2. Macro to set flags, e.g. x86 ``sub eax, ebx`` and ``add ecx, edx``
+2. A macro to set flags, e.g. x86 ``sub eax, ebx`` and ``add ecx, edx``
 could be converted to:
 
 ```c
@@ -435,9 +435,9 @@ address. This address is interpreted symbolically, not numerically.
 This is to facilitate insertion of new statements in a program.
 Addresses are compared lexicographically, not numerically, so for
 proper operation they should be e.g. of the same width (padded with
-zeroes on the left). If an explicit addresses are not given, an
-implicit address is assigned, based on the line number of an
-instruction.
+zeroes on the left). If explicit addresses are not given, an
+implicit address is assigned to each instruction, based on the line
+number of the instruction.
 
 
 Example of PseudoC program:
