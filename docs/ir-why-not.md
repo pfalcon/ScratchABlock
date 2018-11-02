@@ -126,6 +126,14 @@ https://github.com/cea-sec/miasm
 
 Miasm has its [own IR](https://github.com/cea-sec/miasm#intermediate-representation).
 
+FalconRE IR
+-----------
+
+https://github.com/falconre/falcon
+
+Just as everyone else, FalconRE has its [own IR](https://docs.rs/falcon/0.3.1/falcon/il/index.html),
+at least this time "with strong influences from RREIL and Binary Ninja's LLIL".
+
 References
 ----------
 * http://indefinitestudies.org/2009/04/03/a-quick-survey-on-intermediate-representations-for-program-analysis/
