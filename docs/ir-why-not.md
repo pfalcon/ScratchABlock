@@ -134,7 +134,67 @@ https://github.com/falconre/falcon
 Just as everyone else, FalconRE has its [own IR](https://docs.rs/falcon/0.3.1/falcon/il/index.html),
 at least this time "with strong influences from RREIL and Binary Ninja's LLIL".
 
+This [blog post](http://reversing.io/posts/the-il-nop/) has insightful
+comments about some other PRs:
+
+> I have experienced the, “Joys,” of VEX IR in Angr’s pyvex, and
+> the forever popular LLVM IR.
+
+> With Falcon, I wanted to design a simple, expression-based IL. I originally
+> arrived at five Operation types:
+>  * Assign { dst: Scalar,       src: Expression }
+>  * Store  { index: Expression, src: Expression }
+>  * Load   { dst: Scalar,       src: Expression }
+>  * Branch { target: Expression }
+>  * Raise  { expr: Expression }
+
+PseudoC doesn't even try to specifically distinguish loads and stores - for
+it, they are assignments just the same. Of course, if for some analysis
+they're useful, they can be easily separated: loads are just assignments
+with memory reference on RHS, store - on LHS.
+
+> ILs by readability
+>
+> Binary Ninja is the first IL I know of which made it a point to have a
+> readable IL. If you haven’t spent a lot of time looking at ILs for
+> reverse-engineering, the experience is typically like reading a computer
+> program written by your friend’s nephew who is having trouble with their
+> Introduction to Java course,  and is pretty sure their program to find the
+> greatest number in an array is complete, but they’re having some trouble
+> and here’s 300 lines of code and I guess they don’t teach whitespace
+> anymore and all_the_variablesLookLike_THIS. It can be annoying.
+>
+> RREIL is not readable. VEX IR is not readable.
+
+D'oh. Nuff said. I couldn't say better, and actually, I didn't, but quoted
+Keith Cooper and Linda Torczon in ScratchABlock README instead.
+
+> Falcon encodes intra-procedural direct branches, including conditional
+> intra-procedural direct branches, implicitly as optionally guarded edges
+> in the ControlFlowGraph.
+
+Well, of course. In ScratchABlock, original instructions remain after
+parsing, but most transformations start with removing them using
+the `remove_trailing_jumps` pass.
+
+> I ended up replacing the Raise operation with the much more verbose,
+> and battle-ready, Intrinsic operation.
+
+In PseudoC, "Intrinsic" is called "special function".
+
+> If-Then-Else, or Ite Expression
+> I originally left the Ite expression out of Falcon IL very consciously.
+> After a while, I relented, and now Falcon has an Ite expression.
+
+ScratchABlock/PseudoC approaches this problem differently, given that its
+original usage is decompilation in the first place. So, besides "basic"
+PseudoC form, there're also "lifted" forms of PseudoC with consecutively
+higher and higher level control flow structures (like If-Then-Else). Granted,
+there's [currently] no parser for such a form, but nonetheless it exists
+in the CFG representation and can be processed and/or dumped.
+
 References
 ----------
 * http://indefinitestudies.org/2009/04/03/a-quick-survey-on-intermediate-representations-for-program-analysis/
 * [angr FAQ: Why did you choose VEX instead of another IR (such as LLVM, REIL, BAP, etc)?](https://docs.angr.io/docs/faq.html#why-did-you-choose-vex-instead-of-another-ir-such-as-llvm-reil-bap-etc)
+* [FalconRE: The IL Nop](http://reversing.io/posts/the-il-nop/)
