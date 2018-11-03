@@ -1,4 +1,4 @@
-#xform: booleanize_cond
+#xform_inst: booleanize_cond
 #xform: match_control_and
 10     $a1 = 1
 20     if (!$a2) goto false
