@@ -27,6 +27,19 @@ def normalize_cond(inst):
         inst.args[0].normalize()
 
 
+def booleanize_cond(inst):
+    "Make conditions be of bool type (have bool operation)."
+    if inst.op == "if":
+        cond = inst.args[0]
+        if not cond.is_relation():
+            e = cond.expr
+            if is_expr(e) and e.op == "!":
+                new = EXPR("==", e.args[0], VALUE(0, 0))
+            else:
+                new = EXPR("!=", e, VALUE(0, 0))
+            cond.expr = new
+
+
 def simplify_inst(inst):
     if not (inst.dest and inst.op == "="):
         return

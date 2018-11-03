@@ -427,23 +427,6 @@ def collect_state_in(cfg):
     return changed
 
 
-def booleanize_cond(cfg):
-    "Make conditions be of bool type (have bool operation)."
-
-    def booleanize(inst):
-        if inst.op == "if":
-            cond = inst.args[0]
-            if not cond.is_relation():
-                e = cond.expr
-                if is_expr(e) and e.op == "!":
-                    new = EXPR("==", e.args[0], VALUE(0, 0))
-                else:
-                    new = EXPR("!=", e, VALUE(0, 0))
-                cond.expr = new
-
-    foreach_inst(cfg, booleanize)
-
-
 def propagate(cfg, bblock_propagator):
     check_pass(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:

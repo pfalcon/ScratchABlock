@@ -1,4 +1,4 @@
-#xform: booleanize_cond
+#xform_inst: booleanize_cond
 #xform: analyze_reach_defs
 #xform: collect_reach_exit
 10  if (!$a1) goto 30

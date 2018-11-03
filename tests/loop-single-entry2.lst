@@ -1,5 +1,5 @@
 # Jump-threaded ifelse-inside-infloop
-#xform: booleanize_cond
+#xform_inst: booleanize_cond
 #xform_bblock: remove_trailing_jumps_bblock
 #xform: loop_single_entry
 10 10:

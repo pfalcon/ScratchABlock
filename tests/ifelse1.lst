@@ -1,4 +1,4 @@
-#xform: booleanize_cond
+#xform_inst: booleanize_cond
 #xform_bblock: remove_trailing_jumps_bblock
 #xform: match_ifelse
 10  if (!$a1) goto 30
