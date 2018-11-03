@@ -92,7 +92,8 @@ def update_funcdb(cfg):
 
     PROPS = (
         "params", "estimated_params", "params_why", "modifieds", "preserveds",
-        "reach_exit", "reach_exit_maybe", "calls_live_out", "noreturn"
+        "reach_exit", "reach_exit_maybe", "calls_live_out", "noreturn",
+        "has_infloops"
     )
 
     for prop in PROPS:
