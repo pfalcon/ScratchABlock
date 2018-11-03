@@ -56,6 +56,34 @@ elif args.command == "returns":
         if "modifieds" in props and "callsites_live_out" in props:
             props["returns"] = set(props["modifieds"]) & set(props["callsites_live_out"])
 
+elif args.command == "select-subgraph":
+    if len(args.args) > 1:
+        dirname = args.args[1]
+    else:
+        dirname = args.args[0] + ".subgraph"
+    if not os.path.isdir(dirname):
+        os.makedirs(dirname)
+    else:
+        print("Warning: already exists:", dirname)
+
+    queue = [args.args[0]]
+    seen = set()
+    while queue:
+        func = queue.pop()
+        if func in seen:
+            continue
+        seen.add(func)
+        addr = label2addr[func]
+        funcinfo = FUNC_DB[addr]
+        print(func)
+        #print(funcinfo)
+        queue.extend(funcinfo["calls"])
+        fname = "%s-%s.lst" % (addr, func)
+        try:
+            os.symlink("../funcs/" + fname, dirname + "/" + fname)
+        except FileExistsError as e:
+            print("Warning:", e)
+
 else:
     argp.error("Unknown command: " + args.command)
 
