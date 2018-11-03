@@ -21,6 +21,12 @@ from xform_expr import *
 import arch
 
 
+def normalize_cond(inst):
+    "Normalize conditions so constants are on the right side."
+    if inst.op == "if":
+        inst.args[0].normalize()
+
+
 def simplify_inst(inst):
     if not (inst.dest and inst.op == "="):
         return
