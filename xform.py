@@ -239,6 +239,9 @@ def cfg_infloops_exit(cfg):
             deadend_nodes.append(addr)
 
     if deadend_nodes:
+        if not cfg.props.get("noreturn"):
+             cfg.props["has_infloops"] = True
+
         # Add intermediate node, so later we can remove it, and all
         # extra edges are gone
         bb = BBlock("_DEADEND_")
