@@ -6,6 +6,7 @@ from core import *
 from cfgutils import *
 from dce import *
 from xform_expr import *
+from xform_inst import *
 from utils import set_union
 import arch
 import progdb
@@ -390,57 +391,6 @@ def bblock_mem_propagation(bblock, subst_insts=True):
 def bblock_expr_propagation(bblock, subst_insts=True):
     "Propagate constants and register copies"
     bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR), subst_insts)
-
-
-def simplify_inst(inst):
-    if not (inst.dest and inst.op == "="):
-        return
-    assert len(inst.args) == 1
-    inst.args[0] = simplify_expr(inst.args[0])
-
-
-def struct_access_inst(inst):
-    if not (inst.dest and inst.op == "="):
-        return
-    assert len(inst.args) == 1
-    inst.args[0] = struct_access_expr(inst.args[0])
-
-
-def rewrite_complex_dest(inst):
-    "Rewrite casts and bitfield() on the left hand side of assignment."
-
-    dest = inst.dest
-    if not (inst.dest and inst.op == "="):
-        return
-    if not is_expr(inst.dest):
-        return
-    if dest.op == "CAST":
-        lsb = 0
-        size = dest.args[0].bitsize()
-    elif dest.op == "SFUNC" and dest.args[0].name == "bitfield":
-        assert is_value(dest.args[2]) and is_value(dest.args[3])
-        lsb = dest.args[2].val
-        size = dest.args[3].val
-    else:
-        assert 0
-
-    inst.dest = dest.args[1]
-    if lsb == 0 and size == arch.BITNESS:
-        return
-
-    all_ones = (1 << arch.BITNESS) - 1
-    mask = (1 << size) - 1
-    mask <<= lsb
-    if lsb == 0:
-        new_rhs = EXPR("&", inst.args[0], VALUE(mask))
-    else:
-        new_rhs = EXPR("&",
-            EXPR("<<", inst.args[0], VALUE(lsb, 10)),
-            VALUE(mask))
-
-    inst.args[0] = EXPR("|",
-        EXPR("&", inst.dest, VALUE(all_ones ^ mask)),
-        new_rhs)
 
 
 def collect_state_in(cfg):
