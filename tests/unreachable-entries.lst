@@ -1,0 +1,9 @@
+#xform: remove_unreachable_entries
+10 inc_by_1:
+20    $r1 = 1
+30    goto doit
+40 inc_by_2:
+40    $r1 = 2
+50 doit:
+50    $r0 += $r1
+60    return $r0
