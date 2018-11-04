@@ -9,7 +9,7 @@ def apply(cfg):
     # Also don't work unless there's a single exit
     cfg_single_exit(cfg)
 
-    foreach_bblock(cfg, sub_const_to_add)
+    foreach_inst(cfg, sub_const_to_add)
 
     # Need to do before DCE and even before insert_initial_regs
     collect_reach_exit(cfg)

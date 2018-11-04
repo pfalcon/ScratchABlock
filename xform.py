@@ -249,15 +249,6 @@ def cfg_infloops_exit(cfg):
         return True
 
 
-def sub_const_to_add(bblock):
-    "Replace all subtractions of constant with adds."
-
-    for inst in bblock.items:
-        inst.dest = expr_xform(inst.dest, expr_sub_const_to_add)
-        for i, a in enumerate(inst.args):
-            inst.args[i] = expr_xform(a, expr_sub_const_to_add)
-
-
 def expr_subst(expr, subst_dict):
 
     if isinstance(expr, (VALUE, STR, ADDR, SFUNC, TYPE)):

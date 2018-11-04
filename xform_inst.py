@@ -40,6 +40,14 @@ def booleanize_cond(inst):
             cond.expr = new
 
 
+def sub_const_to_add(inst):
+    "Replace subtractions of constant with adds."
+
+    inst.dest = expr_xform(inst.dest, expr_sub_const_to_add)
+    for i, a in enumerate(inst.args):
+        inst.args[i] = expr_xform(a, expr_sub_const_to_add)
+
+
 def simplify_inst(inst):
     if not (inst.dest and inst.op == "="):
         return

@@ -1,5 +1,5 @@
 #xform_inst: booleanize_cond
-#xform_bblock: sub_const_to_add
+#xform_inst: sub_const_to_add
 #xform_bblock: bblock_expr_propagation
 05  $a1 = $a2 - 5
 10 if (!$a1) goto 20

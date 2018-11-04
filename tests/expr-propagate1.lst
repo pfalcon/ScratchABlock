@@ -1,5 +1,5 @@
 # vanEmmerik p.66
-#xform_bblock: sub_const_to_add
+#xform_inst: sub_const_to_add
 #xform_bblock: bblock_expr_propagation
 0       $esp = $esp0
 1       $esp = $esp - 4

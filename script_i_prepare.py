@@ -14,7 +14,7 @@ def apply(cfg):
     # Also don't work unless there's a single exit
     cfg_single_exit(cfg)
 
-    foreach_bblock(cfg, sub_const_to_add)
+    foreach_inst(cfg, sub_const_to_add)
 
     # This can be done once, no need to refine afterwards,
     # as we're interested in the "maybe" aspect which depends
