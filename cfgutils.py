@@ -62,11 +62,11 @@ def foreach_bblock_and_subblock(cfg, func):
         apply(bblock, func)
 
 
-def foreach_inst(cfg, func):
+def foreach_inst(cfg, func, **kwargs):
     def inst_handler(bblock):
         for inst in bblock.items:
-            func(inst)
-    foreach_bblock(cfg, inst_handler)
+            func(inst, **kwargs)
+    foreach_bblock_and_subblock(cfg, inst_handler)
 
 
 def copy_bblocks_props(cfg_from, cfg_to):
