@@ -618,6 +618,10 @@ def analyze_reach_defs(cfg):
     ana = dataflow.ReachDefAnalysis(cfg)
     ana.solve()
 
+def analyze_dom(cfg):
+    ana = dataflow.DominatorAnalysis(cfg)
+    ana.solve()
+
 
 # Regs in live_in set on function entry are estimated params
 # (may miss something, e.g. if value in a reg is passed thru
