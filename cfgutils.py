@@ -67,3 +67,10 @@ def foreach_inst(cfg, func):
         for inst in bblock.items:
             func(inst)
     foreach_bblock(cfg, inst_handler)
+
+
+def copy_bblocks_props(cfg_from, cfg_to):
+    def copy(bblock):
+        cfg_to[bblock.addr]["val"].props = bblock.props.copy()
+
+    foreach_bblock(cfg_from, copy)
