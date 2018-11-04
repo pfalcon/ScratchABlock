@@ -97,3 +97,17 @@ def rewrite_complex_dest(inst):
     inst.args[0] = EXPR("|",
         EXPR("&", inst.dest, VALUE(all_ones ^ mask)),
         new_rhs)
+
+
+def rewrite_stack_vars(inst, rewrite_to=CVAR):
+    "Rewrite memory references relative to sp0 to local variables."
+    def mem2loc(m):
+        if is_mem(m) and is_expr(m.expr) and set(m.expr.regs()) == {REG("sp_0")}:
+            name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
+            return rewrite_to(name)
+
+    if inst.dest:
+        inst.dest = expr_xform(inst.dest, mem2loc)
+
+    for arg_no, arg in enumerate(inst.args):
+        inst.args[arg_no] = expr_xform(arg, mem2loc)

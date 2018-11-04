@@ -462,21 +462,6 @@ def insert_params(cfg):
         first_bblock.items.insert(i, Inst(reg, "=", [REG("arg_" + reg.name)], addr=entry_addr + ".arg%d" % i))
 
 
-def rewrite_stack_vars(bblock, rewrite_to=CVAR):
-    "Rewrite memory references relative to sp0 to local variables."
-    def mem2loc(m):
-        if is_mem(m) and is_expr(m.expr) and set(m.expr.regs()) == {REG("sp_0")}:
-            name = "loc" + str(m.expr.args[1].val).replace("-", "_") + "_" + str(m.type)
-            return rewrite_to(name)
-
-    for i, inst in enumerate(bblock.items):
-        if inst.dest:
-            inst.dest = expr_xform(inst.dest, mem2loc)
-
-        for arg_no, arg in enumerate(inst.args):
-            inst.args[arg_no] = expr_xform(arg, mem2loc)
-
-
 # Requires insert_initial_regs pass followed by expr_propagation passes
 # (normal, then stack vars propagation), and should be run before DCE.
 def collect_preserveds(cfg):
