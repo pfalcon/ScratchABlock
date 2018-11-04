@@ -75,6 +75,15 @@ syntax. The idea is that any C programmer would understand it intuitively
 ([example](tests/ifelse2.lst)), but there is an ongoing effort to
 [document PseudoC more formally](docs/PseudoC-spec.md).
 
+Note that based on the requirements described in the previous section of
+the document, and following well-known "Unix paradigm", ScratchABlock
+does "one thing" - analyses and transformations on PseudoC programs,
+and explicitly *not* concerned with converting machine instructions of
+particular architectures into PseudoC (at least, for now). That means
+that ScratchABlock doesn't force you to use any particular converter/
+lifter - you can use any you like. Caveat: you would need to have one
+to use it. See the end of the document for some hints in that regard.
+
 Source code and interfacing scripts are in the root of the repository.
 The most important scripts are:
 
@@ -171,6 +180,7 @@ Algorithms and transformations implemented by ScratchABlock:
 ScratchABlock's partner tool is [ScratchABit](https://github.com/pfalcon/ScratchABit),
 which is an interactive disassemler intended to perform the lowest-level
 tasks of decompilation process, like separation of code from data, and
-identifying function boundaries. ScratchABit produces a PseudoC output
-(subject to plugin availability for a particular CPU architecture),
+identifying function boundaries. ScratchABit usually works with a native
+architecture assembler syntax, but for some architectures (usually, faithful
+RISCs), if a suitable plugin is available, it can output a PseudoC syntax,
 which can serve as input to ScratchABlock.
