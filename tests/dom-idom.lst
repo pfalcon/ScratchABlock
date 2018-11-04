@@ -1,0 +1,17 @@
+# (0, 1), (1, 2), (1, 5), (2, 3), (3, 4), (3, 1), (5, 6), (5, 8), (6, 7), (7, 3), (8, 7)
+#xform: number_postorder
+#xform: compute_idom
+0   nop()
+1 1:
+1   if ($r0) goto 5
+2   nop()
+3 3:
+3   if ($r1) goto 1
+4   return
+5 5:
+5   if ($r2) goto 8
+6   nop()
+7 7:
+7   if ($r3) goto 3
+8 8:
+8   goto 7
