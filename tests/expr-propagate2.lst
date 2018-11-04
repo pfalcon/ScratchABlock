@@ -1,7 +1,7 @@
 # Expression propagation state should be properly updated even in the presence
 # of type casts.
 #xform_inst: rewrite_complex_dest
-#xform_bblock: sub_const_to_add
+#xform_inst: sub_const_to_add
 #xform_bblock: bblock_expr_propagation
 10   $a1 = 0xFFF
 11   $a2 = data_0x20F000
