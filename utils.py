@@ -17,6 +17,13 @@ def pairwise(iterable):
     yield (it, None)
 
 
+def make_set(v):
+    "Make set if not already."
+    if isinstance(v, set):
+        return v
+    return {v}
+
+
 def set_union(*sets):
     # Python's set.union is unfortunately not a class method,
     # but a normal method, [and if used as unbound method],
