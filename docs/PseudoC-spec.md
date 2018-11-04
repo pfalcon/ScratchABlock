@@ -299,6 +299,28 @@ call $eax
 call *(u32*)($r0 + $r1 * 4)
 ```
 
+### Returning from functions/procedures
+
+The normal form is:
+
+```c
+return
+```
+
+However, return may also take an argument or list of arguments:
+
+```c
+return $eax
+return $r0, $r1, $r2
+return UINT64($edx, $eax)
+```
+
+This has a number of uses:
+
+* Making return value explicit (as a kind of self-documenting).
+* As a shortcut for `uses()` special function.
+* In lifted PsuedoC, as a result of decompilation process (in which case
+  it may be an expression, not just a register).
 
 Macro-like functionality
 ------------------------
