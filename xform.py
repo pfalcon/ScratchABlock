@@ -249,20 +249,20 @@ def cfg_infloops_exit(cfg):
         return True
 
 
-def kill_subst_uses(subst, kill_var):
-    "Remove from subst dict any expressions involving kill_var"
-    def not_used(var, expr):
-        # Here we assume that expression can be at most reference to a var,
-        # which is true for at most copy propagation, but to handle expr
-        # propagation, need to do better
-        return var not in expr
-    subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
-    # We of course should kill state for var itself
-    subst.pop(kill_var, None)
-    return subst
-
-
 def bblock_propagation(bblock, propagated_types, subst_insts=True):
+
+    def kill_subst_uses(subst, kill_var):
+        "Remove from subst dict any expressions involving kill_var"
+        def not_used(var, expr):
+            # Here we assume that expression can be at most reference to a var,
+            # which is true for at most copy propagation, but to handle expr
+            # propagation, need to do better
+            return var not in expr
+        subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
+        # We of course should kill state for var itself
+        subst.pop(kill_var, None)
+        return subst
+
     state = bblock.props.get("state_in", {})
     for i, inst in enumerate(bblock.items):
 
