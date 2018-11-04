@@ -275,7 +275,7 @@ Conditional jumps:
 if (condition) goto label
 ```
 
-A condition can be (among other things):
+Where *condition* is an expression. A condition can be (among other things):
 
 * `$Z == 0` (Z flag is zero)
 * `$S == 1 && $V == 0` (a combination of flags)
