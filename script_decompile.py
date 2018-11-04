@@ -107,4 +107,4 @@ def apply(cfg):
     # Post-processing
     #
 
-    foreach_bblock_and_subblock(cfg, rewrite_stack_vars)
+    foreach_inst(cfg, rewrite_stack_vars)

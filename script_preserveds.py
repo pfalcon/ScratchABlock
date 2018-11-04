@@ -26,7 +26,7 @@ def apply(cfg):
     expr_propagation(cfg)
 
     # To rewrite stack vars, we need to propagate $sp_0, hence all the above
-    foreach_bblock(cfg, rewrite_stack_vars, rewrite_to=REG)
+    foreach_inst(cfg, rewrite_stack_vars, rewrite_to=REG)
 
     # Now need to do second propagation phase, of stack vars
     analyze_reach_defs(cfg)
