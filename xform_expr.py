@@ -17,8 +17,13 @@
 
 """Transformation passes on expressions"""
 
+import logging
+
 from core import *
 import arch
+
+
+log = logging.getLogger(__name__)
 
 
 def is_expr_2args(e):
@@ -246,3 +251,54 @@ def simplify_cond(e):
         if is_expr_2args(arg1) and arg1.op == "+" and is_value(arg1.args[1]) and is_value(arg2):
             assert 0, "Should be replaced by fb730b7de49"
             e.expr = EXPR(e.expr.op, arg1.args[0], add_vals(expr_neg(arg1.args[1]), arg2))
+
+
+def expr_subst(expr, subst_dict):
+
+    if isinstance(expr, (VALUE, STR, ADDR, SFUNC, TYPE)):
+        return None
+
+    if isinstance(expr, REG):
+        new = subst_dict.get(expr)
+        if new and expr in new:
+            log.debug("Trying to replace %s with recursively referring %s, not doing" % (expr, new))
+            return None
+        if new and len(new) > 10:
+            log.debug("Trying to replace %s with complex [len=%d] %s, not doing" % (expr, len(new), new))
+            return None
+        return new
+
+    if isinstance(expr, MEM):
+        new = expr_subst(expr.expr, subst_dict)
+        if new:
+            return MEM(expr.type, new)
+        return
+
+    if isinstance(expr, COND):
+        # This performs substituations in-place, because the same
+        # COND instance is referenced in inst (to be later removed
+        # by remove_trailing_jumps) and in out edges in CFG.
+        new = expr_subst(expr.expr, subst_dict)
+        if new:
+            expr.expr = new
+            simplify_cond(expr)
+        return
+
+    if isinstance(expr, EXPR):
+        new_args = []
+        was_new = False
+        for a in expr.args:
+            new = expr_subst(a, subst_dict)
+            if new is None:
+                new = a
+            else:
+                was_new = True
+            new_args.append(new)
+        if not was_new:
+            return None
+
+        new_expr = EXPR(expr.op, new_args)
+        new_expr = simplify_expr(new_expr)
+        return new_expr
+
+    assert 0, repr((expr, type(expr)))
