@@ -17,7 +17,8 @@
 
 """Transformation passes on basic blocks"""
 
-from core import Inst
+from core import *
+from xform_expr import expr_subst
 
 
 def remove_sfunc(bblock, name):
@@ -27,3 +28,80 @@ def remove_sfunc(bblock, name):
             dead.addr = inst.addr
             bblock.items[i] = dead
             bblock.items[i].comments["org_inst"] = inst
+
+
+def bblock_propagation(bblock, propagated_types, subst_insts=True):
+
+    def kill_subst_uses(subst, kill_var):
+        "Remove from subst dict any expressions involving kill_var"
+        def not_used(var, expr):
+            # Here we assume that expression can be at most reference to a var,
+            # which is true for at most copy propagation, but to handle expr
+            # propagation, need to do better
+            return var not in expr
+        subst = dict((k, v) for k, v in subst.items() if not_used(kill_var, v))
+        # We of course should kill state for var itself
+        subst.pop(kill_var, None)
+        return subst
+
+    state = bblock.props.get("state_in", {})
+    for i, inst in enumerate(bblock.items):
+
+        n_dest = inst.dest
+        kill_n_dest = False
+        if isinstance(n_dest, MEM):
+            new = expr_subst(n_dest, state)
+            if new:
+                n_dest = new
+                kill_n_dest = True
+
+        args = copy.deepcopy(inst.args)
+
+        for arg_no, arg in enumerate(args):
+            repl = expr_subst(arg, state)
+            if repl:
+                args[arg_no] = repl
+
+        for dest in inst.defs():
+            # Calling kill_subst_uses isn't really needed for const propagation
+            # (as variables aren't propagated), but needed for copy propagation
+            # and higher.
+            state = kill_subst_uses(state, dest)
+
+        if kill_n_dest:
+            # Need to kill n_dest, which was MEM and could have been substituted
+            # TODO: Propagating MEM references is in general not safe
+            state = kill_subst_uses(state, n_dest)
+
+        if inst.op == "=" and isinstance(args[0], propagated_types):
+            # Don't propagate expressions with side effects
+            if not inst.side_effect():
+                assert n_dest
+                state[n_dest] = args[0]
+
+        if subst_insts:
+            if inst.op == "if":
+                # Replace in-place because of if statement/out-edges label shared COND
+                inst.args[0].expr = args[0].expr
+            else:
+                inst.args = args
+            inst.dest = n_dest
+
+    bblock.props["state_out"] = state
+
+
+def bblock_const_propagation(bblock, subst_insts=True):
+    "Propagate only constant values"
+    bblock_propagation(bblock, (VALUE, ADDR), subst_insts)
+
+def bblock_copy_propagation(bblock, subst_insts=True):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG), subst_insts)
+
+def bblock_mem_propagation(bblock, subst_insts=True):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM), subst_insts)
+
+def bblock_expr_propagation(bblock, subst_insts=True):
+    "Propagate constants and register copies"
+    bblock_propagation(bblock, (VALUE, ADDR, REG, MEM, EXPR), subst_insts)
