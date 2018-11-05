@@ -123,6 +123,18 @@ RULES.append((
     lambda W: EXPR(COND.NEG[W["rel_op"]], W["x1"], W["x2"])
 ))
 
+RULES.append((
+    EXPR("!=", EXPR(V("rel_op"), V("x1"), V("x2")), VALUE(0)),
+    lambda W: W["rel_op"] in ("==", "!=", "<", "<=", ">=", ">"),
+    lambda W: EXPR(W["rel_op"], W["x1"], W["x2"])
+))
+
+RULES.append((
+    EXPR("==", EXPR(V("rel_op"), V("x1"), V("x2")), VALUE(0)),
+    lambda W: W["rel_op"] in ("==", "!=", "<", "<=", ">=", ">"),
+    lambda W: EXPR(COND.NEG[W["rel_op"]], W["x1"], W["x2"])
+))
+
 
 def simplify(ex):
     for r in RULES:
