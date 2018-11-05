@@ -470,7 +470,7 @@ Example of PseudoC program:
 05  $a2 = 1
 20  goto l_skip
 30 l30:
-20  $a2 = 2
+30  $a2 = 2
 40 l_skip:
 40  $a3 = 0
 ```
