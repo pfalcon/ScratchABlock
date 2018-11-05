@@ -461,11 +461,28 @@ zeroes on the left). If explicit addresses are not given, an
 implicit address is assigned to each instruction, based on the line
 number of the instruction.
 
+Representation of functions/procedures
+--------------------------------------
 
-Example of PseudoC program:
+Canonical PseudoC representation is one function/procedure per files.
+For the cases when this is not practical, multiple functions can be
+put into a file, each starting with `.func` pragma (RFC). A function
+should start with a label, representing function name.
+
+A PseudoC program (i.e. file) may start with declararion of register
+sizes/signedness (RFC), e.g.:
 
 ```c
-// if-else
+u32 $r0, $r1, $r2
+u64 $l0, $l1
+i32 $i0
+```
+
+Examples of PseudoC programs
+----------------------------
+
+```c
+# if-else
 01  if (!$a1) goto l30
 05  $a2 = 1
 20  goto l_skip
@@ -474,3 +491,10 @@ Example of PseudoC program:
 40 l_skip:
 40  $a3 = 0
 ```
+
+Footonotes
+----------
+
+RFC - Request for comments from interested parties. Most of RFCs marked
+in texts are not yet implemented in the reference PseudoC processing
+library, ScratchABlock.
