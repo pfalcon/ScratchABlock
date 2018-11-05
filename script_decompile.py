@@ -63,6 +63,7 @@ def apply(cfg):
 
     foreach_inst(cfg, sub_const_to_add)
     foreach_inst(cfg, rewrite_complex_dest)
+    foreach_inst(cfg, booleanize_cond)
     # Initial pass on simplifying expressions
     foreach_inst(cfg, simplify_inst)
 
