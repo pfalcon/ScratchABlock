@@ -1,0 +1,11 @@
+#xform: number_postorder
+#xform: compute_idom
+#xform: compute_dom_frontier_cooper
+0A      if ($r0) goto 0C
+0B      goto 0D
+0C 0C:
+0C      if ($r1) goto 0E
+0D 0D:
+0D      return
+0E 0E:
+0E      goto 0C
