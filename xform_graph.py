@@ -166,3 +166,21 @@ def compute_dom_frontier_cytron(g, node=None):
                 df.add(y)
 
     g[node]["dom_front"] = df
+
+
+def compute_dom_frontier_cooper(g):
+    """Compute dominance frontier of each node.
+
+    Ref: A Simple, Fast Dominance Algorithm, Cooper, Harvey, Kennedy
+    """
+    for n, info in g.iter_nodes():
+        info["dom_front"] = set()
+
+    for n, info in g.iter_nodes():
+        preds = g.pred(n)
+        if len(preds) > 1:
+            for p in preds:
+                runner = p
+                while runner != info["idom"]:
+                    g[runner]["dom_front"].add(n)
+                    runner = g[runner]["idom"]
