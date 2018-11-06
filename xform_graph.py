@@ -113,3 +113,56 @@ def idom_to_sdom(g):
 
 def idom_to_dom(g):
     reflexive_transitive_closure(g, "idom", "dom")
+
+
+def idom_children(g, node):
+    """Return children of idom node.
+
+    The implementation here is very inefficient.
+    """
+
+    res = []
+    for n, info in g.iter_nodes():
+        if info["idom"] == node:
+            res.append(n)
+    return res
+
+
+def idom_transitive_dom(g, node1, node2):
+    "Check whether node1 dominates node2, by walking idom chain."
+    while node2 is not None:
+        if node1 == node2:
+            return True
+        node2 = g[node2]["idom"]
+    return False
+
+
+def compute_dom_frontier_cytron(g, node=None):
+    """Compute dominance frontier of each node.
+
+    Intuitively, dominance frontier of a node X is a set of
+    successors of "last" nodes which X dominates. I.e., if
+    X dominates A, but not its successor B, then B is in X's
+    dominance frontier.
+
+    Ref: Efficiently Computing Static Single Assignment Form and the Control
+    Dependence Graph, Cytron, Ferrante, Rosen, Wegman, Zedeck
+    Ref: Appel p.406.
+    """
+
+    if node is None:
+        node = g.entry()
+
+    df = set()
+
+    for y in g.succ(node):
+        if g[y]["idom"] != node:
+            df.add(y)
+
+    for z in idom_children(g, node):
+        compute_dom_frontier_cytron(g, z)
+        for y in g[z]["dom_front"]:
+            if g[y]["idom"] != node:
+                df.add(y)
+
+    g[node]["dom_front"] = df
