@@ -136,7 +136,7 @@ Algorithms and transformations implemented by ScratchABlock:
 * Graph algorithms:
   * Construction and querying (predecessors, successors, etc.)
   * Traversal (depth first search (DFS), postorder)
-  * Dominator tree
+  * Dominator tree/dominance frontiers
   * Node splitting
 
 * Data flow analysis:
