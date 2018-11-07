@@ -68,27 +68,6 @@ def remove_trailing_jumps(cfg):
     cfg.props["trailing_jumps"] = False
 
 
-def remove_trailing_jumps_bblock(bblock, remove_returns=False):
-    """Trailing jumps are encoded as out edges of basic block, and
-    superfluous for most deeper transformations (but useful for
-    surface transformations which should maintain instruction
-    correspondence to the original input). This pass removes them.
-    """
-    to_remove = ["goto", "if"]
-    if remove_returns:
-        to_remove.append("return")
-
-    last_jump = None
-    for i in range(len(bblock.items) -1, -1, -1):
-        if bblock.items[i].op in to_remove:
-            last_jump = i
-        else:
-            break
-    if last_jump is not None:
-        #print("Removing: ", bblock.items[last_jump:])
-        del bblock.items[last_jump:]
-
-
 def remove_unreachable_entries(cfg):
     # Remove disconnected graph nodes.
     entries = cfg.entries()
