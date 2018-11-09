@@ -189,21 +189,30 @@ def match_ifelse(cfg):
 
                 if len(t_v_s) != 1: continue
                 if len(f_v_s) != 1: continue
-                common = list(set(t_v_s) & set(f_v_s))
-                if common:
-                    f_v_s = common
 
-                    log.info("ifelse: %s, %s, %s, %s", v, t_v, f_v, f_v_s[0])
-                    v = split_bblock(cfg, v)
-                    if_header = cfg.node(v)["val"]
-                    t_block = cfg.node(t_v)["val"]
-                    f_block = cfg.node(f_v)["val"]
-                    newb = IfElse(if_header, t_block, f_block, cond.neg())
-                    cfg.add_node(v, val=newb)
-                    cfg.remove_node(t_v)
-                    cfg.remove_node(f_v)
-                    cfg.add_edge(v, f_v_s[0])
-                    return True
+                common = list(set(t_v_s) & set(f_v_s))
+                if not common:
+                    continue
+
+                f_v_preds = cfg.pred(f_v)
+                t_v_preds = cfg.pred(t_v)
+                if len(f_v_preds) != 1 or len(t_v_preds) != 1:
+                    log.warn("ifelse: %s, %s, %s, %s is part of abnormal selection", v, t_v, f_v, f_v_s[0])
+                    continue
+
+                f_v_s = common
+
+                log.info("ifelse: %s, %s, %s, %s", v, t_v, f_v, f_v_s[0])
+                v = split_bblock(cfg, v)
+                if_header = cfg.node(v)["val"]
+                t_block = cfg.node(t_v)["val"]
+                f_block = cfg.node(f_v)["val"]
+                newb = IfElse(if_header, t_block, f_block, cond.neg())
+                cfg.add_node(v, val=newb)
+                cfg.remove_node(t_v)
+                cfg.remove_node(f_v)
+                cfg.add_edge(v, f_v_s[0])
+                return True
 
 
 #
