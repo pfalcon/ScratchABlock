@@ -78,6 +78,10 @@ def apply(cfg):
 
     dce(cfg)
 
+    # This should be run after propagation, so it caught all cases.
+    # Run this after DCE to not do useless work ;-).
+    foreach_inst(cfg, normalize_cond)
+
     #
     # Control flow
     #
