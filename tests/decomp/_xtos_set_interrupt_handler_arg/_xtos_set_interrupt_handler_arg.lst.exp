@@ -4,34 +4,39 @@ void _xtos_set_interrupt_handler_arg()
   // $a2 = $a2_0; // {'uses': ['00000000', '00000005', '0000000b', '0000000e', '00000027']} (dead);
   // $a3 = $a3_0; // {'uses': ['00000022', '00000038']} (dead);
   // $a4 = $a4_0; // {'uses': ['0000003b']} (dead);
+  if ((i32)$a2_0 < 0) goto l00000034;
   // $a5 = 14; // {'uses': ['00000005']} (dead);
+  if (14 < (i32)$a2_0) goto l00000034;
   // $a6 = xtos_int_level_table; // {'uses': ['0000000e']} (dead);
   // $a8 = $a2_0 * 8; // {'uses': ['00000019']} (dead);
   // $a6 = $a2_0 + xtos_int_level_table; // {'uses': ['00000010']} (dead);
   // $a6 = *(u8*)($a2_0 + xtos_int_level_table); // {'uses': ['00000016']} (dead);
   // $a7 = _xtos_interrupt_table; // {'uses': ['00000019']} (dead);
-  if (*(u8*)($a2_0 + xtos_int_level_table) < 0x3) {
-    // $a7 = _xtos_interrupt_table + -($a2_0 * 8); // {'uses': ['0000001f', '00000024', '00000027', '00000038', '0000003b']} (dead);
-    // $a8 = _xtos_unhandled_interrupt; // {'uses': ['00000024', '0000002a', '0000003e']} (dead);
-    $a6 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': ['0000002a', '0000002f.0', '0000003e', '00000043.0']}
-    if ($a3_0 == 0) {
-      *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70) = _xtos_unhandled_interrupt; // {'uses': []}
-      *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x74) = $a2_0; // {'uses': []}
-      // $a9 = $a6 + -_xtos_unhandled_interrupt; // {'uses': ['0000002f']} (dead);
-      $a2 = 0x0; // {'uses': []}
-      if ($a6 != _xtos_unhandled_interrupt) {
-        $a2 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': []}
-      }
-    } else {
-      *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70) = $a3_0; // {'uses': []}
-      *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x74) = $a4_0; // {'uses': []}
-      // $a10 = $a6 + -_xtos_unhandled_interrupt; // {'uses': ['00000043']} (dead);
-      $a2 = 0x0; // {'uses': []}
-      if ($a6 != _xtos_unhandled_interrupt) {
-        $a2 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': []}
-      }
+  if (*(u8*)($a2_0 + xtos_int_level_table) >= 0x3) goto l00000034;
+  // $a7 = _xtos_interrupt_table + -($a2_0 * 8); // {'uses': ['0000001f', '00000024', '00000027', '00000038', '0000003b']} (dead);
+  // $a8 = _xtos_unhandled_interrupt; // {'uses': ['00000024', '0000002a', '0000003e']} (dead);
+  $a6 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': ['0000002a', '0000002f.0', '0000003e', '00000043.0']}
+  if ($a3_0 == 0) {
+    *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70) = _xtos_unhandled_interrupt; // {'uses': []}
+    *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x74) = $a2_0; // {'uses': []}
+    // $a9 = $a6 + -_xtos_unhandled_interrupt; // {'uses': ['0000002f']} (dead);
+    $a2 = 0x0; // {'uses': []}
+    if ($a6 != _xtos_unhandled_interrupt) {
+      $a2 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': []}
     }
   } else {
+    *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70) = $a3_0; // {'uses': []}
+    *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x74) = $a4_0; // {'uses': []}
+    // $a10 = $a6 + -_xtos_unhandled_interrupt; // {'uses': ['00000043']} (dead);
     $a2 = 0x0; // {'uses': []}
+    if ($a6 != _xtos_unhandled_interrupt) {
+      $a2 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70); // {'uses': []}
+    }
   }
+  goto l_EXIT_;
+
+l00000034:
+  $a2 = 0x0; // {'uses': []}
+
+l_EXIT_:
 }
