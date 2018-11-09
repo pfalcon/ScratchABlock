@@ -44,7 +44,7 @@ def apply_iterative(func, args):
     return cnt
 
 
-def check_pass(cfg, prop_name, err_msg):
+def check_prop(cfg, prop_name, err_msg):
     entry_addr = cfg.entry()
     if prop_name not in cfg[entry_addr]:
         assert 0, err_msg
@@ -280,7 +280,7 @@ def collect_state_in(cfg):
 
 
 def propagate(cfg, bblock_propagator):
-    check_pass(cfg, "reachdef_in", "This pass requires reaching defs information")
+    check_prop(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:
         foreach_bblock(cfg, lambda bb: bblock_propagator(bb, False))
         if not collect_state_in(cfg):
@@ -316,7 +316,7 @@ def insert_sp0(cfg):
 def insert_initial_regs(cfg):
     entry_addr = cfg.entry()
 #    used_regs = reversed(sorted([x[0] for x in cfg[entry_addr]["reachdef_in"]]))
-    check_pass(cfg, "live_in", "This pass requires live variable information")
+    check_prop(cfg, "live_in", "This pass requires live variable information")
     used_regs = cfg[entry_addr]["live_in"]
     first_bblock = cfg[entry_addr]["val"]
     for i, r in enumerate(sorted(list(used_regs))):
@@ -465,7 +465,7 @@ def analyze_dom(cfg):
 def estimate_params(cfg):
     #ana = dataflow.LiveVarAnalysis(cfg, skip_calls=True)
     #ana.solve()
-    check_pass(cfg, "live_in", "This pass requires live variable information")
+    check_prop(cfg, "live_in", "This pass requires live variable information")
     func_addr = cfg.entry()
     assert func_addr == ".ENTRY", "cfg_preheader pass required"
     real_entry = cfg.succ(func_addr)
