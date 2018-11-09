@@ -6,7 +6,7 @@ void _xtos_set_interrupt_handler_arg()
   // $a4 = $a4_0; // {'uses': ['0000003b']} (dead);
   if ((i32)$a2_0 < 0) goto l00000034;
   // $a5 = 14; // {'uses': ['00000005']} (dead);
-  if (14 < (i32)$a2_0) goto l00000034;
+  if ((i32)$a2_0 > 14) goto l00000034;
   // $a6 = xtos_int_level_table; // {'uses': ['0000000e']} (dead);
   // $a8 = $a2_0 * 8; // {'uses': ['00000019']} (dead);
   // $a6 = $a2_0 + xtos_int_level_table; // {'uses': ['00000010']} (dead);

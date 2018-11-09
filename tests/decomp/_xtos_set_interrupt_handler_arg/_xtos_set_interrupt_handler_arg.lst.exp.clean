@@ -2,7 +2,7 @@
 void _xtos_set_interrupt_handler_arg()
 {
   if ((i32)$a2_0 < 0) goto l00000034;
-  if (14 < (i32)$a2_0) goto l00000034;
+  if ((i32)$a2_0 > 14) goto l00000034;
   if (*(u8*)($a2_0 + xtos_int_level_table) >= 0x3) goto l00000034;
   $a6 = *(u32*)(_xtos_interrupt_table + -($a2_0 * 8) + 0x70);
   if ($a3_0 == 0) {
