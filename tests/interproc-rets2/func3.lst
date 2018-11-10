@@ -1,4 +1,5 @@
 310 func3:
 310  call func1
 315  $a4 = $a3 + 1
+317  uses($a4)
 320  return
