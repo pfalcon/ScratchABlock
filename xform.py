@@ -525,14 +525,6 @@ def collect_call_live_out(cfg):
     progdb.update_cfg_prop(cfg, "calls_live_out", calls_live_out)
 
 
-def collect_returns():
-    import progdb
-    import arch
-    for addr, props in progdb.FUNC_DB.items():
-        if "modifieds" in props and "callsites_live_out" in props:
-            props["returns"] = arch.ret_filter(set(props["modifieds"]) & set(props["callsites_live_out"]))
-
-
 def repr_output(cfg):
     import core
     core.SimpleExpr.simple_repr = False
