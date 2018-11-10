@@ -17,4 +17,4 @@ def apply(cfg):
     collect_call_live_out(cfg)
 
     xform_inter.calc_callsites_live_out(cg, cfg.props["name"])
-    collect_returns()
+    xform_inter.collect_returns()

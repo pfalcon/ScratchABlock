@@ -67,3 +67,11 @@ def calc_callsites_live_out(cg, callee):
     progdb.FUNC_DB[callee]["callsites_live_out"] = call_lo_union
 
     return call_lo_union
+
+
+def collect_returns():
+    import progdb
+    import arch
+    for addr, props in progdb.FUNC_DB.items():
+        if "modifieds" in props and "callsites_live_out" in props:
+            props["returns"] = arch.ret_filter(set(props["modifieds"]) & set(props["callsites_live_out"]))
