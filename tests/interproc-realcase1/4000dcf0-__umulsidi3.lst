@@ -1,0 +1,32 @@
+4000dcf0 __umulsidi3:
+4000dcf0     $sp -= 0x20
+4000dcf3     *(u32*)($sp + 0x10) = $a12
+4000dcf5     *(u32*)($sp + 0x14) = $a13
+4000dcf7     *(u32*)($sp + 0x18) = $a14
+4000dcf9     *(u32*)($sp + 0x1c) = $a15
+4000dcfb     $a4 = bitfield($a2, /*lsb*/16, /*sz*/16)
+4000dcfe     $a5 = bitfield($a3, /*lsb*/16, /*sz*/16)
+4000dd01     $a6 = (u16)$a2 * (u16)$a5
+4000dd04     $a11 = (u16)$a4 * (u16)$a3
+4000dd07     $a9 = 0x0
+4000dd09     $a6 += $a11
+4000dd0b     if ($a6 >= $a11) goto loc_4000dd11
+4000dd0e     $a9 += 0x1
+4000dd11 loc_4000dd11:
+4000dd11     $SAR = 16
+4000dd14     $a9 = UINT64($a9, $a6) >> $SAR
+4000dd17     $a11 = (u16)$a2 * (u16)$a3
+4000dd1a     $a6 <<= 32 - $SAR
+4000dd1d     $a6 += $a11
+4000dd1f     if ($a6 >= $a11) goto loc_4000dd24
+4000dd22     $a9 += 0x1
+4000dd24 loc_4000dd24:
+4000dd24     $a3 = (u16)$a4 * (u16)$a5
+4000dd27     $a3 += $a9
+4000dd29     $a2 = $a6
+4000dd2b     $a12 = *(u32*)($sp + 0x10)
+4000dd2d     $a13 = *(u32*)($sp + 0x14)
+4000dd2f     $a14 = *(u32*)($sp + 0x18)
+4000dd31     $a15 = *(u32*)($sp + 0x1c)
+4000dd33     $sp += 0x20
+4000dd36     return

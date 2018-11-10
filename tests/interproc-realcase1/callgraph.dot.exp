@@ -1,0 +1,5 @@
+digraph G {
+main -> rand
+rand -> __muldi3
+__muldi3 -> __umulsidi3
+}
