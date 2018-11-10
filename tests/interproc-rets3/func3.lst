@@ -1,4 +1,5 @@
 310 func3:
 310  call func1
 315  $a2 = 10
+317  uses($a2)
 320  return
