@@ -2,26 +2,39 @@
   label: func1
   called_by: [func2, func3]
   calls: []
-  callsites_live_out: [a2, a3, a4]
+  calls_live_out: []
+  callsites_live_out: [a2, a3]
   estimated_params: []
   func_refs: []
   modifieds: [a2, a3, a4]
   preserveds: []
   reach_exit: [a2, a3, a4]
-  returns: [a2, a3, a4]
+  returns: [a2, a3]
 '210':
   label: func2
   calls: [func1]
+  calls_live_out:
+  - - '210'
+    - func1
+    - [a2]
+  callsites_live_out: []
   estimated_params: [a2, a3, a4, a5, a6, a7]
   func_refs: []
   modifieds: [a2, a3, a4]
   preserveds: [a5, a6, a7]
   reach_exit: [a2, a3, a4]
+  returns: []
 '310':
   label: func3
   calls: [func1]
+  calls_live_out:
+  - - '310'
+    - func1
+    - [a3]
+  callsites_live_out: []
   estimated_params: [a2, a3, a4, a5, a6, a7]
   func_refs: []
   modifieds: [a2, a3, a4]
   preserveds: [a5, a6, a7]
   reach_exit: [a2, a3, a4]
+  returns: []
