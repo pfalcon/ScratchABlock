@@ -18,7 +18,10 @@
 """Interprocedural transformation passes"""
 
 from graph import Graph
+from core import is_addr
 import progdb
+from utils import maybesorted
+import utils
 
 
 def build_callgraph():
@@ -37,3 +40,27 @@ def build_callgraph():
     callgraph.number_postorder_forest()
 
     return callgraph
+
+
+def calc_callsites_live_out(cg, callee):
+    """Calculate function's callsites_live_out property.
+
+    Go thru function's callers (using callgraph), and union their
+    calls_live_out information pertinent to this function.
+    """
+
+    callers = maybesorted(cg.pred(callee))
+    # If there're no callers, will return empty set, which
+    # is formally correct - if there're no callers, the
+    # function is dead. However, realistically that means
+    # that callers aren't known, and we should treat that
+    # specially.
+    call_lo_union = set()
+    for c in callers:
+        clo = progdb.FUNC_DB[c].get("calls_live_out", [])
+        #print("  %s: calls_live_out: %s" % (c, utils.repr_stable(clo)))
+        for bbaddr, callee_expr, live_out in clo:
+            if is_addr(callee_expr) and callee_expr.addr == callee:
+                print("  %s: calls_live_out[%s]: %s" % (c, callee, utils.repr_stable((bbaddr, callee_expr, live_out))))
+                call_lo_union.update(live_out)
+    return call_lo_union
