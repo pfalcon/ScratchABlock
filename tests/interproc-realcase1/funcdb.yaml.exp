@@ -1,0 +1,60 @@
+'10':
+  label: main
+  calls: [rand]
+  calls_live_out:
+  - - '10'
+    - rand
+    - [a2]
+  callsites_live_out: []
+  estimated_params: []
+  func_refs: []
+  modifieds: [SAR, a2, a3, a4, a5, a6, a9, a11]
+  params: []
+  preserveds: []
+  reach_exit: [SAR, a2, a3, a4, a5, a6, a9, a11]
+  returns: []
+'40000600':
+  label: rand
+  called_by: [main]
+  calls: [__muldi3]
+  calls_live_out:
+  - - '40000600'
+    - __muldi3
+    - [a2, a3]
+  callsites_live_out: [a2]
+  estimated_params: []
+  func_refs: []
+  modifieds: [SAR, a2, a3, a4, a5, a6, a9, a11]
+  params: []
+  preserveds: [a0, sp]
+  reach_exit: [SAR, a0, a2, a3, a4, a5, a6, a9, a11, sp]
+  returns: [a2]
+'40000650':
+  label: __muldi3
+  called_by: [rand]
+  calls: [__umulsidi3]
+  calls_live_out:
+  - - '40000650'
+    - __umulsidi3
+    - [a2, a3]
+  callsites_live_out: [a2, a3]
+  estimated_params: [a2, a3, a4, a5]
+  func_refs: []
+  modifieds: [SAR, a2, a3, a4, a5, a6, a9, a11]
+  params: [a2, a3, a4, a5]
+  preserveds: [a0, a12, a13, sp]
+  reach_exit: [SAR, a0, a2, a3, a4, a5, a6, a9, a11, a12, a13, sp]
+  returns: [a2, a3]
+4000dcf0:
+  label: __umulsidi3
+  called_by: [__muldi3]
+  calls: []
+  calls_live_out: []
+  callsites_live_out: [a2, a3]
+  estimated_params: [a2, a3]
+  func_refs: []
+  modifieds: [SAR, a2, a3, a4, a5, a6, a9, a11]
+  params: [a2, a3]
+  preserveds: [a12, a13, a14, a15, sp]
+  reach_exit: [SAR, a2, a3, a4, a5, a6, a9, a11, a12, a13, a14, a15, sp]
+  returns: [a2, a3]

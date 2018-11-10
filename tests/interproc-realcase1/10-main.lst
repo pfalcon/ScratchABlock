@@ -1,0 +1,4 @@
+10 main:
+10      call rand
+20      uses($a2)
+30      return
