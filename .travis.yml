@@ -7,4 +7,6 @@ addons:
       - python3-yaml
 
 # run tests
-script: bash run_tests
+script:
+  - bash run_tests
+  - bash ./run_tests_inter
