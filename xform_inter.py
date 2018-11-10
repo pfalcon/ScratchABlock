@@ -63,4 +63,7 @@ def calc_callsites_live_out(cg, callee):
             if is_addr(callee_expr) and callee_expr.addr == callee:
                 print("  %s: calls_live_out[%s]: %s" % (c, callee, utils.repr_stable((bbaddr, callee_expr, live_out))))
                 call_lo_union.update(live_out)
+
+    progdb.FUNC_DB[callee]["callsites_live_out"] = call_lo_union
+
     return call_lo_union
