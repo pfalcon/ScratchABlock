@@ -5,9 +5,9 @@ import collections
 import copy
 
 import core
-from graph import Graph
 from parser import Parser
 from core import CFGPrinter, is_addr
+import xform_inter
 import progdb
 import arch
 import dot
@@ -19,17 +19,8 @@ core.Inst.annotate_calls = True
 
 progdb.load_funcdb(sys.argv[1] + "/funcdb.yaml")
 
-callgraph = Graph()
+callgraph = xform_inter.build_callgraph()
 
-for addr, props in progdb.FUNC_DB_BY_ADDR.items():
-    callgraph.add_node(props["label"])
-
-for addr, props in progdb.FUNC_DB_BY_ADDR.items():
-    for callee in props.get("calls", []):
-        if callee in callgraph:
-            callgraph.add_edge(props["label"], callee)
-
-callgraph.number_postorder_forest()
 with open("cg-current.dot", "w") as out:
     dot.dot(callgraph, out, is_cfg=False)
 
