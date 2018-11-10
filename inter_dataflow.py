@@ -82,7 +82,6 @@ def process_one(cg, func, xform_pass):
         cfg = CFG_MAP["pre"][func].copy()
 
         call_lo_union = xform_inter.calc_callsites_live_out(cg, func)
-        progdb.FUNC_DB[func]["callsites_live_out"] = call_lo_union
         progdb.update_cfg_prop(cfg, "callsites_live_out", call_lo_union)
         print("%s: callsites_live_out set to %s" % (func, utils.repr_stable(call_lo_union)))
         if "modifieds" in progdb.FUNC_DB[func]:
