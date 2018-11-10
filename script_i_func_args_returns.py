@@ -18,3 +18,5 @@ def apply(cfg):
     analyze_live_vars(cfg)
     collect_params(cfg)
     collect_call_live_out(cfg)
+
+    annotate_params(cfg)
