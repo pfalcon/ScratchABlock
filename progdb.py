@@ -37,11 +37,20 @@ REG_PROPS = [
     "params", "estimated_params", "returns",
 ]
 
+
+def reglist2set(regs):
+    return set(core.REG(x) for x in regs)
+
+
 def preprocess_funcdb(FUNC_DB):
     for addr, props in FUNC_DB.items():
         for prop in REG_PROPS:
             if prop in props:
-                props[prop] = set(core.REG(x) for x in props[prop])
+                props[prop] = reglist2set(props[prop])
+
+        if "calls_live_out" in props:
+            new = [(x, core.ADDR(y), reglist2set(z)) for x, y, z in props["calls_live_out"]]
+            props["calls_live_out"] = new
 
 
 def postprocess_funcdb(FUNC_DB):
