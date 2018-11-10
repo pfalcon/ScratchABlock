@@ -36,6 +36,7 @@ for full_name in glob.glob(sys.argv[1] + "/*.lst"):
     p = Parser(full_name)
     cfg = p.parse()
     cfg.parser = p
+    #print("Loading:", cfg.props["name"])
     CFG_MAP["org"][cfg.props["name"]] = cfg
 
     cfg2 = cfg.copy()
@@ -93,7 +94,7 @@ def process_one(cg, func, xform_pass):
                 cur_queue = upward_queue
         func = cur_queue.pop(0)
 
-        print("Next to process:", func)
+        print("--- Next to process: %s ---" % func)
         progdb.clear_updated()
 
         cfg = CFG_MAP["pre"][func].copy()
@@ -123,8 +124,9 @@ def process_one(cg, func, xform_pass):
                 if "modifieds" in progdb.FUNC_DB[callee]:
                     progdb.FUNC_DB[callee]["returns"] = arch.ret_filter(progdb.FUNC_DB[callee]["modifieds"] & call_lo_union)
 
-            print("New up queue:", upward_queue)
-            print("New down queue:", downward_queue)
+            print("--- Finished processing: %s ---" % func)
+            print("# New up queue:", upward_queue)
+            print("# New down queue:", downward_queue)
         else:
             print("%s not updated" % func)
 
