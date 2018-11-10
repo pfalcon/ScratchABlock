@@ -11,6 +11,7 @@ import xform_inter
 import progdb
 import arch
 import dot
+import utils
 
 from utils import maybesorted
 
@@ -65,7 +66,7 @@ def calc_callsites_live_out(cg, callee):
     call_lo_union = set()
     for c in callers:
         clo = progdb.FUNC_DB[c].get("calls_live_out", [])
-        print("%s: calls_live_out: %s" % (c, clo))
+        print("%s: calls_live_out: %s" % (c, utils.repr_stable(clo)))
         for bbaddr, callee_expr, live_out in clo:
             if is_addr(callee_expr) and callee_expr.addr == callee:
                 call_lo_union.update(live_out)
