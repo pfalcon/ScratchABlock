@@ -100,6 +100,15 @@ def process_one(cg, func, xform_pass):
 
         cfg = CFG_MAP["pre"][func].copy()
 
+        call_lo_union = calc_callsites_live_out(cg, func)
+        progdb.FUNC_DB[func]["callsites_live_out"] = call_lo_union
+        progdb.update_cfg_prop(cfg, "callsites_live_out", call_lo_union)
+        print("%s: callsites_live_out set to %s" % (func, utils.repr_stable(call_lo_union)))
+        if "modifieds" in progdb.FUNC_DB[func]:
+            progdb.FUNC_DB[func]["returns"] = arch.ret_filter(progdb.FUNC_DB[func]["modifieds"] & call_lo_union)
+        else:
+            print("%s: doesn't yet have modifieds!" % func)
+
         xform_pass.apply(cfg)
 
         if progdb.UPDATED_FUNCS:
@@ -118,12 +127,6 @@ def process_one(cg, func, xform_pass):
                 print("! updating callee", callee)
                 if callee not in downward_queue:
                     downward_queue.insert(0, callee)
-
-                call_lo_union = calc_callsites_live_out(cg, callee)
-                progdb.FUNC_DB[callee]["callsites_live_out"] = call_lo_union
-                print("  %s: callsites_live_out set to %s" % (callee, utils.repr_stable(call_lo_union)))
-                if "modifieds" in progdb.FUNC_DB[callee]:
-                    progdb.FUNC_DB[callee]["returns"] = arch.ret_filter(progdb.FUNC_DB[callee]["modifieds"] & call_lo_union)
 
             print("--- Finished processing: %s ---" % func)
             print("# New up (caller) queue:", upward_queue)
