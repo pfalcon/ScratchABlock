@@ -67,9 +67,10 @@ def calc_callsites_live_out(cg, callee):
     call_lo_union = set()
     for c in callers:
         clo = progdb.FUNC_DB[c].get("calls_live_out", [])
-        print("%s: calls_live_out: %s" % (c, utils.repr_stable(clo)))
+        #print("  %s: calls_live_out: %s" % (c, utils.repr_stable(clo)))
         for bbaddr, callee_expr, live_out in clo:
             if is_addr(callee_expr) and callee_expr.addr == callee:
+                print("  %s: calls_live_out[%s]: %s" % (c, callee, utils.repr_stable((bbaddr, callee_expr, live_out))))
                 call_lo_union.update(live_out)
     return call_lo_union
 
@@ -120,13 +121,13 @@ def process_one(cg, func, xform_pass):
 
                 call_lo_union = calc_callsites_live_out(cg, callee)
                 progdb.FUNC_DB[callee]["callsites_live_out"] = call_lo_union
-                print("callsites_live_out for %s set to %s" % (callee, call_lo_union))
+                print("  %s: callsites_live_out set to %s" % (callee, utils.repr_stable(call_lo_union)))
                 if "modifieds" in progdb.FUNC_DB[callee]:
                     progdb.FUNC_DB[callee]["returns"] = arch.ret_filter(progdb.FUNC_DB[callee]["modifieds"] & call_lo_union)
 
             print("--- Finished processing: %s ---" % func)
-            print("# New up queue:", upward_queue)
-            print("# New down queue:", downward_queue)
+            print("# New up (caller) queue:", upward_queue)
+            print("# New down (callee) queue:", downward_queue)
         else:
             print("%s not updated" % func)
 
