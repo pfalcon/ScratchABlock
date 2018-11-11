@@ -235,6 +235,20 @@ def cfg_infloops_exit(cfg):
         return True
 
 
+def split_bblock(cfg, n):
+    # If a node is non-empty bblock, splits it in two, with 2nd one being
+    # empty, and having all out edges, and returns this 2nd one. If bblock
+    # is already empty, returns it directly.
+    if not cfg[n]["val"].items:
+        return n
+    addr = n + ".if"
+    pre = BBlock(addr)
+    cfg.add_node(addr, val=pre)
+    cfg.move_succ(n, addr)
+    cfg.add_edge(n, addr)
+    return addr
+
+
 def collect_state_in(cfg):
     # This is pretty backwards actually. It uses ReachDef information,
     # but post-processes it pretty heavily, and instead should be done
