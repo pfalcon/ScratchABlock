@@ -501,8 +501,9 @@ def annotate_params(cfg):
             res[reg] = "Param because modified only along some paths (and maybe param to some callee)"
         else:
             res[reg] = "Likely param passed down to some callee"
-    if res:
-        cfg.props["params_why"] = res
+
+    cfg.props["params_why"] = res
+    #progdb.update_cfg_prop(cfg, "params_why", res)
 
 
 # Collect regs which are live after each function call within current
