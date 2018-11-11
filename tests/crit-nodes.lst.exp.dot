@@ -1,0 +1,24 @@
+digraph G {
+node [shape=box]
+"ENTRY" -> "10"
+"10" [label="10: BBlock"]
+"20" [label="20: BBlock"]
+"30" [label="30: BBlock"]
+"30.critn" [label="30.critn: BBlock"]
+"40" [label="40: BBlock"]
+"50" [label="50: BBlock"]
+"50.critn" [label="50.critn: BBlock"]
+"65" [label="65: BBlock"]
+"70" [label="70: BBlock"]
+"10" -> "20" [label="else"]
+"10" -> "30" [label="($a1)"]
+"20" -> "30"
+"30" -> "30.critn"
+"30.critn" -> "40" [label="else"]
+"30.critn" -> "50" [label="($a3)"]
+"40" -> "50"
+"50" -> "50.critn"
+"50.critn" -> "65" [label="else"]
+"50.critn" -> "70" [label="($a3)"]
+"65" -> "70"
+}

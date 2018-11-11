@@ -1,0 +1,11 @@
+#xform: split_crit_nodes
+10      if ($a1) goto lab1
+20      $a2 = 1
+30 lab1:
+30      if ($a3) goto lab2
+40      $a4 = 2
+50 lab2:
+60      if ($a3) goto lab3
+65      $a4 = 3
+70 lab3:
+80      return
