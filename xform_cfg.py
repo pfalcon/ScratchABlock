@@ -235,18 +235,41 @@ def cfg_infloops_exit(cfg):
         return True
 
 
-def split_bblock(cfg, n):
+def split_bblock(cfg, n, suffix, only_non_empty=False, before=False):
     # If a node is non-empty bblock, splits it in two, with 2nd one being
     # empty, and having all out edges, and returns this 2nd one. If bblock
     # is already empty, returns it directly.
-    if not cfg[n]["val"].items:
+    if only_non_empty and not cfg[n]["val"].items:
         return n
-    addr = n + ".if"
-    pre = BBlock(addr)
-    cfg.add_node(addr, val=pre)
-    cfg.move_succ(n, addr)
-    cfg.add_edge(n, addr)
-    return addr
+
+    new_addr = n + suffix
+    new_bb = BBlock(new_addr)
+    cfg.add_node(new_addr, val=new_bb)
+
+    cfg.move_succ(n, new_addr)
+    cfg.add_edge(n, new_addr)
+
+    # Too keep addresses lexicographically sorted, we now just move insts
+    # to the new bblock, leaving original bblock empty.
+    if before:
+        new_bb.items = cfg[n]["val"].items
+        cfg[n]["val"].items = []
+
+    return new_addr
+
+
+def split_crit_nodes(g):
+    """Split "critical nodes".
+
+    Critical nodes are those which have more than one predecessor and more than
+    successor. We split them so original node becomes empty, and add new which
+    contains bblock content (this way it's compatible with trailing_jumps=True
+    CFGs).
+    """
+
+    crit_nodes = [n for n in g.nodes() if g.degree_in(n) > 1 and g.degree_out(n) > 1]
+    for n in crit_nodes:
+        split_bblock(g, n, ".critn", before=True)
 
 
 def collect_state_in(cfg):

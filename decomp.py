@@ -98,7 +98,7 @@ def match_if(cfg):
             c = cfg.succ(b)[0]
             if c == a:
                 _log.info("if: %s, %s, %s", v, b, c)
-                v = split_bblock(cfg, v)
+                v = split_bblock(cfg, v, ".if", only_non_empty=True)
                 if_header = cfg.node(v)["val"]
                 t_block = cfg.node(b)["val"]
                 if truth == False:
@@ -190,7 +190,7 @@ def match_ifelse(cfg):
                 f_v_s = common
 
                 _log.info("ifelse: %s, %s, %s, %s", v, t_v, f_v, f_v_s[0])
-                v = split_bblock(cfg, v)
+                v = split_bblock(cfg, v, ".if", only_non_empty=True)
                 if_header = cfg.node(v)["val"]
                 t_block = cfg.node(t_v)["val"]
                 f_block = cfg.node(f_v)["val"]
