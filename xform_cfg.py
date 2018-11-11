@@ -514,8 +514,3 @@ def collect_call_live_out(cfg):
 
     foreach_node(cfg, collect)
     progdb.update_cfg_prop(cfg, "calls_live_out", calls_live_out)
-
-
-def repr_output(cfg):
-    import core
-    core.SimpleExpr.simple_repr = False
