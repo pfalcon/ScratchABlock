@@ -3,7 +3,7 @@ import logging
 import core
 from core import is_expr, is_mem
 from utils import set_union, set_intersection
-from xform import foreach_bblock
+from cfgutils import foreach_bblock
 
 
 log = logging.getLogger(__name__)
