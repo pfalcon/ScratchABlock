@@ -33,14 +33,6 @@ import copy
 
 log = logging.getLogger(__name__)
 
-# Apply tranformation while it's possible
-def apply_iterative(func, args):
-    cnt = 0
-    while func(*args):
-        cnt += 1
-    log.info("Ran %s %d times" % (func, cnt))
-    return cnt
-
 
 def check_prop(cfg, prop_name, err_msg):
     entry_addr = cfg.entry()

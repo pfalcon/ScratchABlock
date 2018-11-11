@@ -2,6 +2,7 @@ from dom import *
 from dataflow import *
 from xform import *
 from decomp import *
+from xform_utils import apply_iterative
 
 
 def propagate(cfg):
