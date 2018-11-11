@@ -13,7 +13,7 @@ from parser import *
 import dot
 from dataflow import *
 from xform import *
-from xform_graph import *
+from xform_utils import *
 from decomp import *
 from asmprinter import AsmPrinter
 import cprinter

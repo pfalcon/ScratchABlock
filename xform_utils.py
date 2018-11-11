@@ -30,3 +30,12 @@ def apply_iterative(func, args):
         cnt += 1
     log.info("Ran %s %d times" % (func, cnt))
     return cnt
+
+
+def repr_output(cfg):
+    """Force detailed repr-style output for EXPRs.
+
+    Useful for "#xform:" pragmas in source files.
+    """
+    import core
+    core.SimpleExpr.simple_repr = False
