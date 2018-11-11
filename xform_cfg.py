@@ -13,12 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-"""Transformation passes"""
+"""Transformation passes on CFG"""
 
 import logging
 from collections import defaultdict
 
-from graph import Graph
 from core import *
 from cfgutils import *
 from dce import *
