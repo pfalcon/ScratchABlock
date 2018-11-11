@@ -22,7 +22,6 @@ from graph import Graph
 from core import *
 from cfgutils import *
 from dce import *
-from dom import compute_idom
 from xform_expr import *
 from xform_inst import *
 from xform_bblock import *
