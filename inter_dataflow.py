@@ -117,7 +117,7 @@ def process_one(cg, func, xform_pass):
     print("Subiters:", cnt)
 
 
-import script_i_func_args_returns
+import script_i_func_params_returns
 
 iter_cnt = 1
 
@@ -128,7 +128,7 @@ while True:
 
     for e in maybesorted(callgraph.exits()):
         print("Processing leaf", e)
-        process_one(callgraph, e, script_i_func_args_returns)
+        process_one(callgraph, e, script_i_func_params_returns)
 
     progdb.save_funcdb(sys.argv[1] + "/funcdb.yaml.out%d" % iter_cnt)
 
