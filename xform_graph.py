@@ -17,6 +17,7 @@
 
 """Transformation passes on generic graphs (not CFGs)"""
 
+from dom import compute_idom
 from utils import make_set
 import dot
 
