@@ -1,0 +1,6 @@
+#xform: split_crit_edges
+05      $a2 = 1
+10 loop:
+20      $a3 = 1
+30      if ($a1) goto loop
+80      return
