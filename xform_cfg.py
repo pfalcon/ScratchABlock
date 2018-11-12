@@ -272,6 +272,22 @@ def split_crit_nodes(g):
         split_bblock(g, n, ".critn", before=True)
 
 
+def split_crit_edges(g):
+    to_split = []
+
+    for from_n, to_n in g.edges():
+        if g.degree_out(from_n) > 1 and g.degree_in(to_n) > 1:
+            to_split.append((from_n, to_n))
+
+    for from_n, to_n in to_split:
+        new_addr = from_n + ".crite"
+        g.add_node(new_addr, val=BBlock(new_addr))
+        attrs = g[(from_n, to_n)]
+        g.remove_edge(from_n, to_n)
+        g.add_edge(from_n, new_addr, **attrs)
+        g.add_edge(new_addr, to_n)
+
+
 def collect_state_in(cfg):
     # This is pretty backwards actually. It uses ReachDef information,
     # but post-processes it pretty heavily, and instead should be done
