@@ -105,7 +105,11 @@ class Graph:
         return (from_node, to_node) in self._edges
 
     def is_back_edge(self, from_node, to_node):
-        return self[from_node]["dfsno"] < self[to_node]["dfsno"]
+        raise NotImplementedError
+        # This is not correct a test. And edge like that can be a cross edge
+        # too. To properly distinguish back edge from cross, combination of
+        # pre-order number and post-order number is required.
+        #return self[from_node]["dfsno"] < self[to_node]["dfsno"]
 
     def is_empty(self):
         return not self._nodes
