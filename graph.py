@@ -155,6 +155,9 @@ class Graph:
     def iter_sorted_nodes(self):
         return sorted(self._nodes.items(), key=lambda x: x[0])
 
+    def edges(self):
+        return self._edges.keys()
+
     def iter_edges(self):
         return self._edges.items()
 
