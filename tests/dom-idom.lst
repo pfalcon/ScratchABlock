@@ -12,6 +12,6 @@
 5   if ($r2) goto 8
 6   nop()
 7 7:
-7   if ($r3) goto 3
+7   goto 3
 8 8:
 8   goto 7

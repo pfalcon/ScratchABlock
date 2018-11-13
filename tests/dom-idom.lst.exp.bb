@@ -63,10 +63,10 @@ Exits: [(None, '7')]
 //  idom: 5
 //  postno: 3
 7:
-if ($r3) goto 3
-Exits: [(COND($r3), '3'), (None, '8')]
+goto 3
+Exits: [(None, '3')]
 
-// Predecessors: ['5', '7']
+// Predecessors: ['5']
 // Node props:
 //  idom: 5
 //  postno: 4
