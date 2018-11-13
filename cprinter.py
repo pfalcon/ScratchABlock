@@ -8,15 +8,16 @@ no_dead = False
 
 def find_used_labels(cfg):
     labels = set()
-    for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
+    for addr, nxt in pairwise(cfg.iter_rev_postorder()):
+        info = cfg[addr]
         bblock = info["val"]
         succs = cfg.sorted_succ(addr)
-        if len(succs) > 1 and nxt[0] == succs[0]:
+        if len(succs) > 1 and nxt == succs[0]:
             swap_if_branches(cfg, addr)
             succs = cfg.sorted_succ(addr)
         for succ in succs:
             cond = cfg.edge(addr, succ).get("cond")
-            if not cond and nxt and succ == nxt[0]:
+            if not cond and nxt and succ == nxt:
                 continue
             labels.add(succ)
     return labels
@@ -30,7 +31,8 @@ def print_inst(inst):
 def dump_c(cfg, stream=sys.stdout):
     labels = find_used_labels(cfg)
     func_start = True
-    for (addr, info), nxt in pairwise(cfg.iter_rev_postorder()):
+    for addr, nxt in pairwise(cfg.iter_rev_postorder()):
+        info = cfg[addr]
         bblock = info["val"]
         if func_start:
             label = cfg.props["name"]
@@ -56,7 +58,7 @@ def dump_c(cfg, stream=sys.stdout):
         if not cfg.props["trailing_jumps"]:
           for succ in cfg.succ(addr):
             cond = cfg.edge(addr, succ).get("cond")
-            if not cond and nxt and succ == nxt[0]:
+            if not cond and nxt and succ == nxt:
                 continue
             stream.write("  ")
             if cond:

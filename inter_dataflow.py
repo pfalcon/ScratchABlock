@@ -25,8 +25,8 @@ callgraph = xform_inter.build_callgraph()
 with open("cg-current.dot", "w") as out:
     dot.dot(callgraph, out, is_cfg=False)
 
-#for func, props in callgraph.iter_rev_postorder():
-#    print(func, props)
+#for func in callgraph.iter_rev_postorder():
+#    print(func, callgraph[func])
 
 CFG_MAP = collections.defaultdict(dict)
 
