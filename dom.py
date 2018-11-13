@@ -24,14 +24,14 @@ def compute_idom(g):
         it = iter(g.iter_rev_postorder())
         # Skip root
         next(it)
-        for n, data in it:
+        for n in it:
             preds_rpo = sorted([(-g[p]["postno"], p) for p in g.pred(n)])
             new_idom = preds_rpo[0][1]
             for _, p in preds_rpo[1:]:
                 if g[p]["idom"] is not None:
                     new_idom = intersect(g, p, new_idom)
-            if data["idom"] != new_idom:
-                data["idom"] = new_idom
+            if g[n]["idom"] != new_idom:
+                g[n]["idom"] = new_idom
                 changed = True
 
     g[entry]["idom"] = None

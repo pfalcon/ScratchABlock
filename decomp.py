@@ -448,7 +448,7 @@ def match_abnormal_sel(cfg):
     pattern. We try to find the top-most and split it, after which normal
     structured matches should be tried again.
     """
-    for v, _ in cfg.iter_rev_postorder():
+    for v in cfg.iter_rev_postorder():
         if cfg.degree_in(v) == 2 and cfg.degree_out(v) == 1:
             log.info("abnormal_sel: %s", v)
             split_node(cfg, v)

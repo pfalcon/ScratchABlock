@@ -217,6 +217,8 @@ class Graph:
             if not self.get_node_attr(n, prop_name, None):
                 num = self._number_postorder_bidi(n, num, prop_name, next_func)
         self.set_node_attr(node, prop_name, num)
+        if prop_name == "postno":
+            self._postorder[num - 1] = node
         #print("Setting %s to %s" % (node, num))
         num += 1
         return num
@@ -224,6 +226,7 @@ class Graph:
     def number_postorder(self, node=None, num=1):
         "Number nodes in depth-first search post-order order."
         self.reset_numbering()
+        self._postorder = [None] * len(self._nodes)
         if node is None:
             node = self.first_node
         return self._number_postorder_bidi(node, 1, "postno", self.succ)
@@ -242,10 +245,12 @@ class Graph:
             num = self.number_postorder(e, num)
 
     def iter_postorder(self):
-        return sorted(self._nodes.items(), key=lambda x: x[1]["postno"])
+        return iter(self._postorder)
+        #return sorted(self._nodes.items(), key=lambda x: x[1]["postno"])
 
     def iter_rev_postorder(self):
-        return sorted(self._nodes.items(), key=lambda x: -x[1]["postno"])
+        return reversed(self._postorder)
+        #return sorted(self._nodes.items(), key=lambda x: -x[1]["postno"])
 
     def copy(self):
         # TODO: not optimal
