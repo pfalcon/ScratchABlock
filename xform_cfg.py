@@ -84,10 +84,10 @@ def remove_unreachable_entries(cfg):
 
 def remove_unreachable_nodes(cfg):
     "Remove CFG nodes not reachable from entry."
-    assert "dfsno" in cfg[cfg.first_node], "Need number_postorder"
+    assert "postno" in cfg[cfg.first_node], "Need number_postorder"
 
     for node, info in list(cfg.iter_nodes()):
-        if info["dfsno"] is None:
+        if info["postno"] is None:
             cfg.remove_node(node)
 
 
@@ -202,16 +202,16 @@ def cfg_infloops_exit(cfg):
 
     for addr, info in cfg.iter_nodes():
         # We're interested only in nodes unreachable from exit
-        if info["dfsno_exit"]:
+        if info["postno_exit"]:
             continue
 
         succ = cfg.succ(addr)
         if not succ:
             continue
-        my_dfs = info["dfsno"]
+        my_postno = info["postno"]
         deadend = True
         for s in succ:
-            if cfg[s]["dfsno"] < my_dfs:
+            if cfg[s]["postno"] < my_postno:
                 deadend = False
                 break
         if deadend:

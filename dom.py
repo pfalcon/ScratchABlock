@@ -4,9 +4,9 @@ def intersect(g, i, j):
     finger1 = i
     finger2 = j
     while finger1 != finger2:
-        while -g[finger1]["dfsno"] > -g[finger2]["dfsno"]:
+        while -g[finger1]["postno"] > -g[finger2]["postno"]:
             finger1 = g[finger1]["idom"]
-        while -g[finger2]["dfsno"] > -g[finger1]["dfsno"]:
+        while -g[finger2]["postno"] > -g[finger1]["postno"]:
             finger2 = g[finger2]["idom"]
     return finger1
 
@@ -25,7 +25,7 @@ def compute_idom(g):
         # Skip root
         next(it)
         for n, data in it:
-            preds_rpo = sorted([(-g[p]["dfsno"], p) for p in g.pred(n)])
+            preds_rpo = sorted([(-g[p]["postno"], p) for p in g.pred(n)])
             new_idom = preds_rpo[0][1]
             for _, p in preds_rpo[1:]:
                 if g[p]["idom"] is not None:
