@@ -109,7 +109,7 @@ class Graph:
         # This is not correct a test. And edge like that can be a cross edge
         # too. To properly distinguish back edge from cross, combination of
         # pre-order number and post-order number is required.
-        #return self[from_node]["dfsno"] < self[to_node]["dfsno"]
+        #return self[from_node]["postno"] < self[to_node]["postno"]
 
     def is_empty(self):
         return not self._nodes
@@ -203,7 +203,7 @@ class Graph:
         for i, info in self.iter_sorted_nodes():
             print("%s\t%s" % (i, info))
 
-    def reset_numbering(self, prop="dfsno"):
+    def reset_numbering(self, prop="postno"):
         for n, info in self._nodes.items():
             info[prop] = None
 
@@ -226,12 +226,12 @@ class Graph:
         self.reset_numbering()
         if node is None:
             node = self.first_node
-        return self._number_postorder_bidi(node, 1, "dfsno", self.succ)
+        return self._number_postorder_bidi(node, 1, "postno", self.succ)
 
     def number_postorder_from_exit(self, node):
         "Number nodes in depth-first search post-order, from exit."
-        self.reset_numbering("dfsno_exit")
-        return self._number_postorder_bidi(node, 1, "dfsno_exit", self.pred)
+        self.reset_numbering("postno_exit")
+        return self._number_postorder_bidi(node, 1, "postno_exit", self.pred)
 
     def number_postorder_forest(self):
         "Number nodes in depth-first search post-order order."
@@ -242,10 +242,10 @@ class Graph:
             num = self.number_postorder(e, num)
 
     def iter_postorder(self):
-        return sorted(self._nodes.items(), key=lambda x: x[1]["dfsno"])
+        return sorted(self._nodes.items(), key=lambda x: x[1]["postno"])
 
     def iter_rev_postorder(self):
-        return sorted(self._nodes.items(), key=lambda x: -x[1]["dfsno"])
+        return sorted(self._nodes.items(), key=lambda x: -x[1]["postno"])
 
     def copy(self):
         # TODO: not optimal
@@ -271,9 +271,9 @@ def find_all_nodes_on_path(cfg, from_n, to_n):
     while stack:
         cur_n, path = stack.pop()
         succ = cfg.succ(cur_n)
-        dfsno = cfg.get_node_attr(cur_n, "dfsno")
-        assert dfsno is not None
-        print("Considering %s, dfsno: %s, succ: %s, cur path: %s" % (cur_n, dfsno, succ, path))
+        postno = cfg.get_node_attr(cur_n, "postno")
+        assert postno is not None
+        print("Considering %s, postno: %s, succ: %s, cur path: %s" % (cur_n, postno, succ, path))
 
         if not succ:
             print("Found sink path, pruning")
@@ -283,11 +283,11 @@ def find_all_nodes_on_path(cfg, from_n, to_n):
                 on_path.update(path)
                 print("Found full path, joining all path nodes")
             else:
-                no = cfg.get_node_attr(s, "dfsno", None)
+                no = cfg.get_node_attr(s, "postno", None)
                 if no is None:
                     print("Unmarked node detected (edge %s->%s)" % (cur_n, s))
                     assert False
-                if no < dfsno:
+                if no < postno:
                     stack.append((s, path + [s]))
                 else:
                     # prune path

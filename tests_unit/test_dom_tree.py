@@ -12,15 +12,15 @@ def test_idom():
     #g.print_nodes()
 
     RES = [
-        {'dfsno': 9, 'idom': None},
-        {'dfsno': 8, 'idom': 0},
-        {'dfsno': 7, 'idom': 1},
-        {'dfsno': 2, 'idom': 1},
-        {'dfsno': 1, 'idom': 3},
-        {'dfsno': 6, 'idom': 1},
-        {'dfsno': 5, 'idom': 5},
-        {'dfsno': 3, 'idom': 5},
-        {'dfsno': 4, 'idom': 5},
+        {"postno": 9, "idom": None},
+        {"postno": 8, "idom": 0},
+        {"postno": 7, "idom": 1},
+        {"postno": 2, "idom": 1},
+        {"postno": 1, "idom": 3},
+        {"postno": 6, "idom": 1},
+        {"postno": 5, "idom": 5},
+        {"postno": 3, "idom": 5},
+        {"postno": 4, "idom": 5},
     ]
 
     assert [d[1] for d in g.iter_sorted_nodes()] == RES
