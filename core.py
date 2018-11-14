@@ -95,6 +95,9 @@ def is_expr(e):
 def is_cond(e):
     return isinstance(e, COND)
 
+def is_sfunc(e, name):
+    return is_expr(e) and e.args[0] == SFUNC(name)
+
 
 class SimpleExpr:
     # Something which is a simple expression
