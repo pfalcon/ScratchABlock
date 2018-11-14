@@ -22,3 +22,4 @@ from xform_inst import *
 from xform_bblock import *
 from xform_graph import *
 from xform_cfg import *
+from xform_ssa import *
