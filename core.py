@@ -471,7 +471,10 @@ class EXPR:
 
     def side_effect(self):
         if self.op == "SFUNC":
-            return self.args[0].name not in ("BIT", "abs", "bitfield", "count_leading_zeroes")
+            return self.args[0].name not in {
+                "BIT", "abs", "bitfield", "count_leading_zeroes",
+                "phi",
+            }
         return False
 
     def foreach_subexpr(self, func):
