@@ -458,6 +458,22 @@ def collect_mem_refs(cfg, pred, prop_name="mem_refs"):
         cfg.props[prop_name] = sorted(list(set(refs)))
 
 
+def local_defines(cfg):
+    """Locations defined by function's own instructions, disregarding
+    calls to other functions. This may be useful e.g. to assess
+    preserveds."""
+
+    defs = set()
+
+    def func(inst):
+        if inst.op != "call":
+            defs.update(inst.defs())
+
+    foreach_inst(cfg, func)
+    cfg.props["local_defines"] = defs
+    return defs
+
+
 def collect_reach_exit(cfg):
     all_defs1 = foreach_bblock(cfg, lambda b: b.defs(True), set_union)
     exit = cfg.exit()
