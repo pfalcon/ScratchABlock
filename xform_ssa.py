@@ -32,7 +32,12 @@ def insert_phi_maximal(cfg):
     boundary, and put φ-functions for every variable in every block"
 
     The algorithm below already contains an obvious optimization - phi
-    functions are inserted only to blocks with multiple predecessors.
+    functions are inserted only to blocks with multiple predecessors. Note
+    that this requires rename function to process basic block from successors
+    to predecessors, to correctly propagate renamings thru such phi-less
+    blocks. (If on the other hand we inserted phi's to each block, we could
+    process their renaming in arbitrary order, because each basic block would
+    have its local definition for every variable).
     """
 
     all_vars = sorted(xform_cfg.local_defines(cfg))
