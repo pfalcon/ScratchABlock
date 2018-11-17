@@ -349,9 +349,16 @@ class Parser:
         if lex.match("call"):
             return Inst(None, "call", [self.parse_expr()])
         if lex.match("if"):
-            c = self.parse_cond(lex)
-            lex.expect("goto")
-            return Inst(None, "if", [c, ADDR(self.get_label(lex.rest()))])
+            args = []
+            while True:
+                c = self.parse_cond(lex)
+                lex.expect("goto")
+                label = lex.match_till(",").strip()
+                addr = ADDR(self.get_label(label))
+                args.extend([c, addr])
+                if not lex.match(","):
+                    break
+            return Inst(None, "if", args)
         if lex.match("return"):
             args = []
             while True:
@@ -505,18 +512,23 @@ class Parser:
                     inst.addr = addr
 
                     if inst.op in ("goto", "if", "call"):
-                        cond = None
                         if inst.op != "if":
-                            addr = inst.args[0]
+                            pairs = [None, inst.args[0]]
                         else:
-                            cond, addr = inst.args
-                        #print("!", (cond, addr))
-                        # Skip adding bblocks for indirect jumps
-                        if isinstance(addr, ADDR):
-                            addr = addr.addr
-                            if addr not in self.cfg:
-                                self.cfg.add_node(addr)
-                            self.cfg.add_edge(block.addr, addr, cond=cond)
+                            pairs = inst.args
+
+                        # Add out edge to each successor block, which can be
+                        # many for generalized "if".
+                        for i in range(0, len(pairs), 2):
+                            cond = pairs[i]
+                            addr = pairs[i + 1]
+                            # Skip adding bblocks for indirect jumps
+                            if isinstance(addr, ADDR):
+                                addr = addr.addr
+                                if addr not in self.cfg:
+                                    self.cfg.add_node(addr)
+                                self.cfg.add_edge(block.addr, addr, cond=cond)
+
                         if cond or inst.op == "call":
                             last_block = block
                         else:
