@@ -261,15 +261,15 @@ is equivalent to:
 
 ### Jumps
 
-Unconditional jumps are represented by:
+Unconditional direct jumps are represented by:
 
 ```c
 goto label
 ```
 
-Where `label` is address symbol.
+Where `label` is an address symbol.
 
-Conditional jumps:
+Conditional direct jumps:
 
 ```c
 if (condition) goto label
@@ -285,6 +285,14 @@ Note that a comparison is another case when signed casts may be required:
 
 ```c
 if ((i32)$a1 > (i32)$a2) goto less
+```
+
+Indirect jumps use expression instead of static label:
+
+```c
+goto $eax
+
+if ($val < 10) goto *(u32*)(jtable + $val * 4)
 ```
 
 
