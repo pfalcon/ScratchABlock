@@ -25,7 +25,9 @@ class AsmPrinter(CFGPrinter):
         def collect_labels(inst):
             assert isinstance(inst, Inst), "Perhaps, this is structured CFG? Use --format=c for output."
             addr = inst.jump_addr()
-            if addr is not None:
+            if isinstance(addr, list):
+                self.referenced_labels.update(addr)
+            elif addr is not None:
                 self.referenced_labels.add(addr)
         foreach_inst(self.cfg, collect_labels)
 
