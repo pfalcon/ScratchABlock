@@ -507,13 +507,18 @@ class Inst:
         self.comments = {}
 
     def jump_addr(self):
-        "If instruction may transfer control, return jump address, otherwise return None."
+        "If instruction may transfer control, return jump address(es), otherwise return None."
         if self.op in ("call", "goto"):
             if isinstance(self.args[0], ADDR):
                 return self.args[0].addr
         if self.op == "if":
-            if isinstance(self.args[1], ADDR):
-                return self.args[1].addr
+            res = []
+            for i in range(0, len(self.args), 2):
+                if isinstance(self.args[i + 1], ADDR):
+                    res.append(self.args[i + 1].addr)
+            if len(res) == 1:
+                return res[0]
+            return res
         return None
 
     def side_effect(self):
