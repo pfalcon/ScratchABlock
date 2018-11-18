@@ -139,6 +139,9 @@ Algorithms and transformations implemented by ScratchABlock:
   * Dominator tree/dominance frontiers
   * Node splitting
 
+* Static Single Assignment form (SSA):
+  * Construction
+
 * Data flow analysis:
   * Generic iterative dataflow algorithm framework
   * Dominator tree
