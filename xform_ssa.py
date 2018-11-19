@@ -19,6 +19,7 @@
 
 from collections import defaultdict
 from core import *
+from cfgutils import foreach_inst
 import xform_expr
 import xform_cfg
 
@@ -190,3 +191,68 @@ def rename_ssa_vars_subscripts(cfg):
 
 def rename_ssa_vars_addrs(cfg):
     rename_ssa_vars(cfg, True)
+
+
+def verify_ssa(cfg):
+    "Verify that structural properties of SSA hold."
+
+    # Step 1: Verify that each var is assigned only once.
+
+    all_defs = set()
+
+    def check_single_assign(inst):
+        for d in inst.defs():
+            assert d not in all_defs
+            all_defs.add(d)
+
+    foreach_inst(cfg, check_single_assign)
+
+    # Step 2: Verify that each use is dominated by definition.
+
+    def check_doms(inst_addr, node, reg):
+        # All "_0" regs are assumed to be implicitly defined on entry
+        # (e.g. func params).
+        if reg.name.endswith("_0"):
+            return
+
+        dom_list = []
+
+        while True:
+            # We start with testing current passed node to handle the
+            # case of this func being called for phi statement, where
+            # its predecessor node is passed here. For normal statement,
+            # this will check its own node in vain, but that's fine.
+            defs = cfg[node]["val"].defs()
+            if reg in defs:
+                return
+
+            dom_list.append(node)
+            node = cfg[node]["idom"]
+            if not node:
+                assert False, "@%s: Use of %s is not dominated by definition, " \
+                    "expected to be in one of bblocks: %s, instead in: %s" % (
+                        inst_addr, reg, dom_list, xform_cfg.find_1st_def(cfg, reg, in_bblock=True)
+                    )
+
+    for n, info in cfg.iter_nodes():
+        bb = info["val"]
+
+        inst_map = {}
+        for i, inst in enumerate(bb.items):
+            for d in inst.defs():
+                inst_map[d] = i
+
+        for i in range(len(bb.items) - 1, -1, -1):
+            inst = bb.items[i]
+
+            if is_phi(inst):
+                preds = cfg.pred(n)
+                for i, u in enumerate(inst.args[0].args[1:]):
+                    check_doms(inst.addr, preds[i], u)
+                continue
+
+            for u in inst.uses():
+                if u in inst_map:
+                    assert inst_map[u] < i
+                else:
+                    check_doms(inst.addr, n, u)
