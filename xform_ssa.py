@@ -27,7 +27,7 @@ def is_phi(inst):
     return inst.op == "=" and is_sfunc(inst.args[0], "phi")
 
 
-def insert_phi_maximal(cfg):
+def insert_phi_maximal(cfg, fully_maximal=False):
     """Insert phi functions to produce maximal SSA form.
 
     Described e.g. in Appel 1998 "SSA is Functional Programming" (not named
@@ -46,10 +46,15 @@ def insert_phi_maximal(cfg):
     have its local definition for every variable).
     """
 
+    if fully_maximal:
+        min_preds = 1
+    else:
+        min_preds = 2
+
     all_vars = sorted(xform_cfg.local_defines(cfg))
 
     for n, nprops in cfg.iter_nodes():
-        if cfg.degree_in(n) > 1:
+        if cfg.degree_in(n) >= min_preds:
             bb = cfg[n]["val"]
             preds = cfg.pred(n)
             phi_no = 0
@@ -57,6 +62,10 @@ def insert_phi_maximal(cfg):
                 inst = Inst(v, "=", [EXPR("SFUNC", [SFUNC("phi")] + [v] * len(preds))], addr=bb.addr + ".phi_%s" % v.name)
                 bb.items.insert(phi_no, inst)
                 phi_no += 1
+
+
+def insert_phi_fully_maximal(cfg):
+    insert_phi_maximal(cfg, fully_maximal=True)
 
 
 def rename_ssa_vars(cfg, use_addrs=False):
