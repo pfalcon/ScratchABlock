@@ -40,6 +40,15 @@ def check_prop(cfg, prop_name, err_msg):
         assert 0, err_msg
 
 
+def find_1st_def(cfg, reg, in_bblock=False):
+    if in_bblock:
+        for n, info in cfg.iter_nodes():
+            if reg in info["val"].defs():
+                return info["val"].addr
+    else:
+        raise NotImplementedError
+
+
 def number_postorder(cfg):
     cfg.number_postorder()
 
