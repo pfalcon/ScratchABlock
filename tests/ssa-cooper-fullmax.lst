@@ -1,0 +1,35 @@
+#xform: number_postorder
+#xform: insert_phi_fully_maximal
+#xform: rename_ssa_vars_fully_maximal
+# Each var's version is define in every block, so we never follow dominator tree
+##xform: compute_idom
+#xform: verify_ssa
+00 B0:
+00      $i = 1
+10 B1:
+10      $a = func()
+11      $c = func()
+12      if (!($a < $c)) goto B5
+20 B2:
+20      $b = func()
+21      $c = func()
+22      $d = func()
+30 B3:
+30      $y = $a + $b
+31      $z = $c + $d
+32      $i = $i + 1
+33      if ($i <= 100) goto B1
+40 B4:
+40      return
+50 B5:
+50      $a = func()
+51      $d = func()
+52      if (!($a <= $d)) goto B8
+60 B6:
+60      $d = func()
+70 B7:
+70      $b = func()
+71      goto B3
+80 B8:
+80      $c = func()
+81      goto B7
