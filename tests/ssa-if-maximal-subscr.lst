@@ -1,6 +1,7 @@
 #xform: number_postorder
 #xform: insert_phi_maximal
 #xform: rename_ssa_vars_subscripts
+#xform: verify_ssa
 10      if ($a0 + 1) goto 30
 20      $a1 = 2
 30 30:
