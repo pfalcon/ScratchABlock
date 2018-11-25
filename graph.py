@@ -169,7 +169,7 @@ class Graph:
 
     def entry(self):
         e = self.entries()
-        assert len(e) == 1, "Entries: %r" % e
+        assert len(e) == 1, "Expected single entry, instead multiple: %r" % e
         return e[0]
 
     def exits(self):
