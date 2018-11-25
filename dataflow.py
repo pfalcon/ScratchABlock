@@ -91,9 +91,7 @@ class DominatorAnalysis(AnalysisBase):
 
     def init(self):
         "Entry node is set to itself, the rest - to graph's all nodes."
-        entry = self.g.entries()
-        assert len(entry) == 1
-        entry = entry[0]
+        entry = self.g.entry()
         all_nodes = set(self.g.nodes())
         for node, info in self.g.iter_nodes():
             if node == entry:
@@ -143,9 +141,7 @@ class ReachDefAnalysis(GenKillAnalysis):
         """In and out sets of all nodes are initialized to empty sets, but
         entry's in set is initialized to a set of all defined locations with
         None address, representing non-initialized location."""
-        entry = self.g.entries()
-        assert len(entry) == 1, len(entry)
-        entry = entry[0]
+        entry = self.g.entry()
         if self.inst_level:
             all_defs = foreach_bblock(self.g, lambda b: b.def_addrs(self.regs_only), set.union)
         else:
