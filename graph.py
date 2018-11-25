@@ -178,7 +178,7 @@ class Graph:
 
     def exit(self):
         e = self.exits()
-        assert len(e) == 1
+        assert len(e) == 1, "Expected single exit, instead multiple: %r" % e
         return e[0]
 
     def move_pred(self, from_node, to_node):
