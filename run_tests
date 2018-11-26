@@ -33,7 +33,13 @@ test_dump_c() {
 
 test_xform() {
     echo "=== test_xform ==="
-    for f in tests/*.lst; do
+
+    pat='*'
+    if [ ! -z "$1" ]; then
+        pat="$1"
+    fi
+
+    for f in tests/$pat.lst; do
         echo $f
         ./apply_xform.py --debug --annotate-calls --funcdb=none --format=none $f || failed
         diff -u $f.exp.bb $f.out.bb || failed
@@ -71,7 +77,7 @@ if [ -z "$1" -o "$1" == "dump_c" ]; then
     test_dump_c
 fi
 if [ -z "$1" -o "$1" == "xform" ]; then
-    test_xform
+    test_xform $2
 fi
 if [ -z "$1" -o "$1" == "decomp" ]; then
     test_decomp
