@@ -237,8 +237,10 @@ if __name__ == "__main__":
     iter_no = 0
     while True:
         changed = one_iter(input, output, iter_no)
-        if not changed or not args.iter:
+        if not args.iter:
             break
         if args.debug:
             print("=== Done iteration %d ===" % iter_no)
+        if not changed:
+            break
         iter_no += 1
