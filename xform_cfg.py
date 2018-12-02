@@ -331,6 +331,71 @@ def collect_state_in(cfg):
     return changed
 
 
+def collect_cond_out(cfg):
+    """Collect known conditions (constraints) on registers at the
+    exit (and entry) of basic blocks."""
+
+    # Just as collect_state_in, this implements adhoc partial dataflow
+    # analysis as needed for trivial cases of jumptable analysis.
+    # Rewrite to use real dataflow framework.
+
+    for bblock_addr, node_props in cfg.iter_nodes():
+        succ = cfg.succ(bblock_addr)
+        if len(succ) < 2:
+            continue
+        last_cond = None
+        for s in succ:
+            cond = cfg.edge(bblock_addr, s).get("cond")
+            if cond is None:
+                cond = last_cond.neg()
+            # As cond's are updated in-place (later), make a copy
+            cond = copy.copy(cond)
+
+            succ_bblock = cfg[s]["val"]
+            succ_bblock.props.setdefault("cond_in", set()).add((bblock_addr, cond))
+
+            last_cond = cond
+
+    for bblock_addr, node_props in cfg.iter_nodes():
+        bblock = node_props["val"]
+        cond_in = bblock.props.get("cond_in")
+        if not cond_in:
+            continue
+
+        # Less conditions than input edges, we definitely don't meet
+        # over all paths.
+        if len(cond_in) != len(cfg.pred(bblock_addr)):
+            del bblock.props["cond_in"]
+            continue
+
+        # This assumes each predecessor contributes only one condition (i.e.
+        # conditions are compounded in complex conditions if needed).
+        met_conds = {cond[1] for cond in cond_in}
+        if len(met_conds) != 1:
+            del bblock.props["cond_in"]
+            continue
+
+        bblock.props["cond_in"] = met_conds
+
+    for bblock_addr, node_props in cfg.iter_nodes():
+        bblock = node_props["val"]
+        cond_in = bblock.props.get("cond_in")
+        if not cond_in:
+            continue
+
+        reachdef_gen_regs = {r[0] for r in node_props["reachdef_gen"]}
+        cond_out = set()
+        for c in cond_in:
+            killed = False
+            for r in c.regs():
+                if r in reachdef_gen_regs:
+                    killed = True
+            if not killed:
+                cond_out.add(c)
+
+        bblock.props["cond_out"] = cond_out
+
+
 def propagate(cfg, bblock_propagator):
     check_prop(cfg, "reachdef_in", "This pass requires reaching defs information")
     while True:
