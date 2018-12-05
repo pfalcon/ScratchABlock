@@ -1,0 +1,6 @@
+#xform: analyze_reach_defs
+#xform: collect_cond_out
+10      if ($a0 < 5) goto out
+20      $a1 = 3
+30 out:
+30      return
