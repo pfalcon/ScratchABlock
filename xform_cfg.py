@@ -42,7 +42,7 @@ def check_prop(cfg, prop_name, err_msg):
 
 def find_1st_def(cfg, reg, in_bblock=False):
     if in_bblock:
-        for n, info in cfg.iter_nodes():
+        for n, info in cfg.nodes_props():
             if reg in info["val"].defs():
                 return info["val"].addr
     else:
@@ -95,7 +95,7 @@ def remove_unreachable_nodes(cfg):
     "Remove CFG nodes not reachable from entry."
     assert "postno" in cfg[cfg.first_node], "Need number_postorder"
 
-    for node, info in list(cfg.iter_nodes()):
+    for node, info in list(cfg.nodes_props()):
         if info["postno"] is None:
             cfg.remove_node(node)
 
@@ -209,7 +209,7 @@ def cfg_infloops_exit(cfg):
 
     deadend_nodes = []
 
-    for addr, info in cfg.iter_nodes():
+    for addr, info in cfg.nodes_props():
         # We're interested only in nodes unreachable from exit
         if info["postno_exit"]:
             continue
@@ -339,7 +339,7 @@ def collect_cond_out(cfg):
     # analysis as needed for trivial cases of jumptable analysis.
     # Rewrite to use real dataflow framework.
 
-    for bblock_addr, node_props in cfg.iter_nodes():
+    for bblock_addr, node_props in cfg.nodes_props():
         succ = cfg.succ(bblock_addr)
         if len(succ) < 2:
             continue
@@ -356,7 +356,7 @@ def collect_cond_out(cfg):
 
             last_cond = cond
 
-    for bblock_addr, node_props in cfg.iter_nodes():
+    for bblock_addr, node_props in cfg.nodes_props():
         bblock = node_props["val"]
         cond_in = bblock.props.get("cond_in")
         if not cond_in:
@@ -377,7 +377,7 @@ def collect_cond_out(cfg):
 
         bblock.props["cond_in"] = met_conds
 
-    for bblock_addr, node_props in cfg.iter_nodes():
+    for bblock_addr, node_props in cfg.nodes_props():
         bblock = node_props["val"]
         cond_in = bblock.props.get("cond_in")
         if not cond_in:

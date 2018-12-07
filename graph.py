@@ -149,7 +149,8 @@ class Graph:
         "Return set of all nodes"
         return self._nodes.keys()
 
-    def iter_nodes(self):
+    def nodes_props(self):
+        "Iterate over pairs of (node, node_properties)."
         return self._nodes.items()
 
     def iter_sorted_nodes(self):
