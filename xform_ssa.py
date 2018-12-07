@@ -56,7 +56,7 @@ def insert_phi_maximal(cfg, fully_maximal=False):
 
     for n, nprops in cfg.iter_nodes():
         if cfg.degree_in(n) >= min_preds:
-            bb = cfg[n]["val"]
+            bb = nprops["val"]
             preds = cfg.pred(n)
             phi_no = 0
             for v in all_vars:
