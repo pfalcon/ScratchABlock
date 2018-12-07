@@ -91,7 +91,7 @@ def transitive_closure(g, in_prop, out_prop):
               of the relation.
     """
 
-    for n, info in g.iter_nodes():
+    for n in g.nodes():
         recursive_relation(g, n, in_prop, out_prop, False)
 
 
@@ -104,7 +104,7 @@ def reflexive_transitive_closure(g, in_prop, out_prop):
               of the relation.
     """
 
-    for n, info in g.iter_nodes():
+    for n in g.nodes():
         recursive_relation(g, n, in_prop, out_prop, True)
 
 
