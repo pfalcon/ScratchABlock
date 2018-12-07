@@ -236,7 +236,7 @@ def match_if_else_inv_ladder_recursive(block):
         match_if_else_inv_ladder_recursive(else_block)
 
 def match_if_else_inv_ladder(cfg):
-    for v, node_props in cfg.iter_nodes():
+    for v, node_props in cfg.nodes_props():
         block = node_props["val"]
         match_if_else_inv_ladder_recursive(block)
 
@@ -259,7 +259,7 @@ def match_if_else_inv_ladder(cfg):
 #
 # And transforming it to such may enable match_if_else_ladder
 def match_if_else_unjumped(cfg):
-    for v, node_props in cfg.iter_nodes():
+    for v, node_props in cfg.nodes_props():
         #print((v, node_props))
         block = node_props["val"]
         if type(block) is BBlock and cfg.degree_out(v) == 1:
@@ -292,7 +292,7 @@ def match_if_else_unjumped(cfg):
 
 
 def match_if_else_ladder(cfg):
-    for v, node_props in cfg.iter_nodes():
+    for v, node_props in cfg.nodes_props():
         block = node_props["val"]
         if isinstance(block, IfElse):
             else_block = block.branches[-1][1]
@@ -406,7 +406,7 @@ def match_while(cfg):
 # while (cond) {...}
 #
 def match_if_dowhile(cfg):
-    for addr, info in cfg.iter_nodes():
+    for addr, info in cfg.nodes_props():
         bblock = info["val"]
         if type(bblock) is IfElse:
             subs = bblock.subblocks()

@@ -54,7 +54,7 @@ def insert_phi_maximal(cfg, fully_maximal=False):
 
     all_vars = sorted(xform_cfg.local_defines(cfg))
 
-    for n, nprops in cfg.iter_nodes():
+    for n, nprops in cfg.nodes_props():
         if cfg.degree_in(n) >= min_preds:
             bb = nprops["val"]
             preds = cfg.pred(n)
@@ -234,7 +234,7 @@ def verify_ssa(cfg):
                         inst_addr, reg, dom_list, xform_cfg.find_1st_def(cfg, reg, in_bblock=True)
                     )
 
-    for n, info in cfg.iter_nodes():
+    for n, info in cfg.nodes_props():
         bb = info["val"]
 
         inst_map = {}

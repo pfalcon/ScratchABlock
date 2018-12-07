@@ -123,7 +123,7 @@ def idom_children(g, node):
     """
 
     res = []
-    for n, info in g.iter_nodes():
+    for n, info in g.nodes_props():
         if info["idom"] == node:
             res.append(n)
     return res
@@ -174,10 +174,10 @@ def compute_dom_frontier_cooper(g):
 
     Ref: A Simple, Fast Dominance Algorithm, Cooper, Harvey, Kennedy
     """
-    for n, info in g.iter_nodes():
+    for n, info in g.nodes_props():
         info["dom_front"] = set()
 
-    for n, info in g.iter_nodes():
+    for n, info in g.nodes_props():
         preds = g.pred(n)
         if len(preds) > 1:
             for p in preds:

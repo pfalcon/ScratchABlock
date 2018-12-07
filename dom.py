@@ -13,7 +13,7 @@ def intersect(g, i, j):
 
 # Cooper 9.5.2
 def compute_idom(g):
-    for n, info in g.iter_nodes():
+    for n, info in g.nodes_props():
         info["idom"] = None
 
     entry = g.entry()

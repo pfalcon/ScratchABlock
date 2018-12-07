@@ -93,7 +93,7 @@ class DominatorAnalysis(AnalysisBase):
         "Entry node is set to itself, the rest - to graph's all nodes."
         entry = self.g.entry()
         all_nodes = set(self.g.nodes())
-        for node, info in self.g.iter_nodes():
+        for node, info in self.g.nodes_props():
             if node == entry:
                 info[self.node_prop_in] = {node}
             else:
@@ -147,7 +147,7 @@ class ReachDefAnalysis(GenKillAnalysis):
         else:
             all_defs = foreach_bblock(self.g, lambda b: set((v, b.addr) for v in b.defs(self.regs_only)), set.union)
 
-        for node, info in self.g.iter_nodes():
+        for node, info in self.g.nodes_props():
             if node == entry:
                 # Entry's in set to all vars, with "undefined" definition location (None).
                 info[self.node_prop_in] = set(((v[0], None) for v in all_defs))
@@ -191,7 +191,7 @@ class LiveVarAnalysis(GenKillAnalysis):
         assert len(exits) == 1
         exit = exits[0]
 
-        for node, info in self.g.iter_nodes():
+        for node, info in self.g.nodes_props():
             info[self.node_prop_in] = set()
             if node == exit:
                 if self.underestimate:
