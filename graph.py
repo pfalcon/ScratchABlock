@@ -146,7 +146,7 @@ class Graph:
             return val in self._nodes
 
     def nodes(self):
-        "Return set of all nodes"
+        "Iterate over nodes."
         return self._nodes.keys()
 
     def nodes_props(self):
@@ -157,6 +157,7 @@ class Graph:
         return sorted(self._nodes.items(), key=lambda x: x[0])
 
     def edges(self):
+        "Iterate over edges."
         return self._edges.keys()
 
     def edges_props(self):
