@@ -68,7 +68,7 @@ class Seq(RecursiveBlock):
 
 
 def match_seq(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 1:
             succ = cfg.succ(v)[0]
             if cfg.degree_in(succ) == 1:
@@ -81,7 +81,7 @@ def match_seq(cfg):
 
 
 def match_if(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 2:
             a, b = cfg.sorted_succ(v)
 
@@ -164,7 +164,7 @@ class IfElse(RecursiveBlock):
 # out:
 
 def match_ifelse(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 2:
             succ = cfg.sorted_succ(v)
             cond = cfg.edge(v, succ[0]).get("cond")
@@ -320,7 +320,7 @@ class Loop(RecursiveBlock):
 
 
 def match_infloop(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 1:
             for s in cfg.succ(v):
                 if s == v:
@@ -352,7 +352,7 @@ class DoWhile(RecursiveBlock):
 
 
 def match_dowhile(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 2:
             for s in cfg.succ(v):
                 if s == v:
@@ -384,7 +384,7 @@ class While(RecursiveBlock):
 
 
 def match_while(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 2:
             succ = cfg.sorted_succ(v)
             back_cand = cfg.succ(succ[0])
@@ -422,7 +422,7 @@ def match_if_dowhile(cfg):
 
 
 def match_control_and(cfg):
-    for v, _ in cfg.iter_nodes():
+    for v in cfg.nodes():
         if cfg.degree_out(v) == 2:
             succ1 = cfg.sorted_succ(v)
             v2 = succ1[1]
