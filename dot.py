@@ -129,7 +129,7 @@ def dot(graph, out=sys.stdout, directed=None, is_cfg=True):
             first, last = subgraph(obj, out)
             block_end_map[addr] = last
 
-    for (fr, to), data in sorted(graph.iter_edges()):
+    for (fr, to), data in sorted(graph.edges_props()):
         label = data.get("cond")
         succ = graph.succ(fr)
         if is_cfg and label is None and len(succ) == 2:

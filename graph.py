@@ -159,7 +159,8 @@ class Graph:
     def edges(self):
         return self._edges.keys()
 
-    def iter_edges(self):
+    def edges_props(self):
+        "Iterate over pairs of (edge, edge_properties)."
         return self._edges.items()
 
     def entries(self):
