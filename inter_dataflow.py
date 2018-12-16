@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+#
+# This script requires a callgraph, which should be constructed
+# e.g. with make_callgraph.sh.
+#
 import sys
 import glob
 import collections
