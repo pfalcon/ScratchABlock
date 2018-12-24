@@ -4,6 +4,7 @@
 # e.g. with make_callgraph.sh.
 #
 import sys
+import os
 import glob
 import collections
 import copy
@@ -23,6 +24,12 @@ from utils import maybesorted
 core.Inst.annotate_calls = True
 
 progdb.load_funcdb(sys.argv[1] + "/funcdb.yaml")
+# Load binary data
+import bindata
+bindata.init(sys.argv[1])
+# Load symtab
+if os.path.exists(sys.argv[1] + "/symtab.txt"):
+    progdb.load_symtab(sys.argv[1] + "/symtab.txt")
 
 callgraph = xform_inter.build_callgraph()
 
