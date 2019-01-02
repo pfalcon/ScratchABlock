@@ -124,6 +124,8 @@ def process_one(cg, func, xform_pass):
             print("# New down (callee) queue:", downward_queue)
         else:
             print("%s not updated" % func)
+            # Maybe funcdb properties not updated, but bblocks props can very well be
+            save_cfg(cfg, ".1")
 
     print("Subiters:", cnt)
 
