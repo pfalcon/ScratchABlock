@@ -23,6 +23,18 @@ from utils import maybesorted
 
 core.Inst.annotate_calls = True
 
+
+def save_cfg(cfg, suffix):
+    with open(cfg.filename + suffix, "w") as out:
+        p = CFGPrinter(cfg, out)
+        p.print()
+
+
+def save_cfg_layer(cfg_layer, suffix):
+    for name, cfg in cfg_layer.items():
+        save_cfg(cfg, suffix)
+
+
 progdb.load_funcdb(sys.argv[1] + "/funcdb.yaml")
 # Load binary data
 import bindata
@@ -54,16 +66,10 @@ for full_name in glob.glob(sys.argv[1] + "/*.lst"):
     script_i_prepare.apply(cfg2)
     CFG_MAP["pre"][cfg2.props["name"]] = cfg2
 
+    save_cfg(cfg2, ".pre")
+
+
 #print(CFG_MAP)
-
-def save_cfg(cfg, suffix):
-    with open(cfg.filename + suffix, "w") as out:
-        p = CFGPrinter(cfg, out)
-        p.print()
-
-def save_cfg_layer(cfg_layer, suffix):
-    for name, cfg in cfg_layer.items():
-        save_cfg(cfg, suffix)
 
 #save_cfg_layer(CFG_MAP["pre"], ".1")
 
@@ -110,6 +116,7 @@ def process_one(cg, func, xform_pass):
 
             progdb.update_funcdb(cfg)
             save_cfg(cfg, ".1")
+            dot.save_dot(cfg, ".1")
             CFG_MAP["pre"][func].props = cfg.props
 
             upward_queue.extend(maybesorted(cg.pred(func)))
@@ -126,6 +133,7 @@ def process_one(cg, func, xform_pass):
             print("%s not updated" % func)
             # Maybe funcdb properties not updated, but bblocks props can very well be
             save_cfg(cfg, ".1")
+            dot.save_dot(cfg, ".1")
 
     print("Subiters:", cnt)
 
