@@ -4,8 +4,10 @@ from dataflow import *
 def apply(cfg):
     # script_i_prepare was run before this
 
+    analyze_reach_defs(cfg)
     # Need to do before DCE and even before insert_initial_regs
     collect_reach_exit(cfg)
+    collect_reach_exit_maybe(cfg)
 
     analyze_live_vars(cfg)
     insert_initial_regs(cfg)

@@ -15,9 +15,3 @@ def apply(cfg):
     cfg_single_exit(cfg)
 
     foreach_inst(cfg, sub_const_to_add)
-
-    # This can be done once, no need to refine afterwards,
-    # as we're interested in the "maybe" aspect which depends
-    # only on the control flow of a particular function.
-    analyze_reach_defs(cfg)
-    collect_reach_exit_maybe(cfg)
