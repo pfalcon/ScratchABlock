@@ -9,6 +9,13 @@ def apply(cfg):
     collect_reach_exit(cfg)
     collect_reach_exit_maybe(cfg)
 
+    # analyze_live_vars uses modifieds, so if preserveds is available, we need
+    # to update modifieds for possible update in reach_exit, otherwise we'll
+    # have positive feedback in propagation and bad flip-flop effect for preserveds
+    # value.
+    if "preserveds" in cfg.props:
+        cfg.props["modifieds"] = cfg.props["reach_exit"] - cfg.props["preserveds"]
+
     analyze_live_vars(cfg)
     insert_initial_regs(cfg)
 
