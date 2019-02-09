@@ -14,7 +14,8 @@ def apply(cfg):
     # have positive feedback in propagation and bad flip-flop effect for preserveds
     # value.
     if "preserveds" in cfg.props:
-        cfg.props["modifieds"] = cfg.props["reach_exit"] - cfg.props["preserveds"]
+        modifieds = cfg.props["reach_exit"] - cfg.props["preserveds"]
+        progdb.update_cfg_prop(cfg, "modifieds", modifieds)
 
     analyze_live_vars(cfg)
     insert_initial_regs(cfg)
@@ -37,7 +38,8 @@ def apply(cfg):
     # Analyze and record preserved registers
     collect_preserveds(cfg)
 
-    cfg.props["modifieds"] = cfg.props["reach_exit"] - cfg.props["preserveds"]
+    modifieds = cfg.props["reach_exit"] - cfg.props["preserveds"]
+    progdb.update_cfg_prop(cfg, "modifieds", modifieds)
 
     #
     # Argument estimation part
