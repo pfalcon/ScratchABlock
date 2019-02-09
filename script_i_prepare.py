@@ -13,5 +13,8 @@ def apply(cfg):
 
     # Also don't work unless there's a single exit
     cfg_single_exit(cfg)
+    number_postorder_from_exit(cfg)
+    number_postorder(cfg)
+    cfg_infloops_exit(cfg)
 
     foreach_inst(cfg, sub_const_to_add)
