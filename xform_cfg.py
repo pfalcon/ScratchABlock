@@ -549,13 +549,14 @@ def local_defines(cfg):
 
 
 def collect_reach_exit(cfg):
-    all_defs1 = foreach_bblock(cfg, lambda b: b.defs(True), set_union)
+    all_defs = foreach_bblock(cfg, lambda b: b.defs(True), set_union)
     exit = cfg.exit()
     if "reachdef_out" in cfg.node(exit):
-        all_defs2 = set(x[0] for x in cfg.node(exit)["reachdef_out"])
-        assert all_defs1 == all_defs2, "%r vs %r" % (all_defs1, all_defs2)
-    progdb.update_cfg_prop(cfg, "reach_exit", all_defs1)
-    return all_defs1
+        all_defs2 = set(x[0] for x in cfg.node(exit)["reachdef_out"] if x[1] is not None)
+        if "_DEADEND_" not in cfg:
+            assert all_defs == all_defs2, "%r vs %r" % (all_defs, all_defs2)
+        all_defs = all_defs2
+    progdb.update_cfg_prop(cfg, "reach_exit", all_defs)
 
 
 # Collect registers which may be either defined or not on the exit.
