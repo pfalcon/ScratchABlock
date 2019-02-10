@@ -1,0 +1,17 @@
+digraph G {
+node [shape=box]
+"ENTRY" -> "10"
+"10" [label="10: BBlock(#5)(e#1)"]
+"20" [label="20: BBlock(#4)(e#2)"]
+"30" [label="30: BBlock(#1)"]
+"40" [label="40: BBlock(#3)(e#3)"]
+"_DEADEND_" [label="_DEADEND_: BBlock"]
+"_EXIT_" [label="_EXIT_: BBlock(#2)(e#4)"]
+"10" -> "20" [label="else"]
+"10" -> "30" [label="($a1 == 0)"]
+"20" -> "40"
+"30" -> "30" [label="else"]
+"30" -> "_DEADEND_" [label="0"]
+"40" -> "_EXIT_"
+"_DEADEND_" -> "_EXIT_" [label="0"]
+}
