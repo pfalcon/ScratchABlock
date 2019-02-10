@@ -1,0 +1,18 @@
+# Variables defined in infinite loops should not be recorded as reaching
+# function exit.
+#xform_inst: booleanize_cond
+#xform: cfg_single_exit
+#xform: number_postorder_from_exit
+#xform: number_postorder
+#xform: cfg_infloops_exit
+#xform: analyze_reach_defs
+#xform: collect_reach_exit
+10  if (!$a1) goto 30
+20  $a2 = 1
+21  goto 40
+30 30:
+30  $a3 = 2
+35  goto 30
+40 40:
+40  $a4 = 0
+50  return
