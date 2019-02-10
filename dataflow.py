@@ -115,6 +115,9 @@ class GenKillAnalysis(AnalysisBase):
         return (src_state - self.g.get_node_attr(node, self.node_prop_kill)) | self.g.get_node_attr(node, self.node_prop_gen)
 
     def join(self, node, source_nodes):
+        if node == "_DEADEND_":
+            log.debug("%s: joining from %s to _DEADEND_" % (self.__class__.__name__, source_nodes))
+            return set()
         # node_prop_dst is named from the point of view of intra-node transfer function.
         # inter-node join function takes source nodes dst set to compute current node
         # src set
