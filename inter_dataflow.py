@@ -16,18 +16,13 @@ import xform_inter
 import progdb
 import arch
 import dot
+from cfgutils import save_cfg
 import utils
 
 from utils import maybesorted
 
 
 core.Inst.annotate_calls = True
-
-
-def save_cfg(cfg, suffix):
-    with open(cfg.filename + suffix, "w") as out:
-        p = CFGPrinter(cfg, out)
-        p.print()
 
 
 def save_cfg_layer(cfg_layer, suffix):
