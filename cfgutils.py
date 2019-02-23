@@ -5,6 +5,12 @@ def dump(cfg):
     CFGPrinter(cfg).print()
 
 
+def save_cfg(cfg, suffix):
+    with open(cfg.filename + suffix, "w") as out:
+        p = CFGPrinter(cfg, out)
+        p.print()
+
+
 def swap_if_branches(cfg, node):
     "Assuming `node` is 'if' node, swap its branches and invert condition."
     succ = cfg.sorted_succ(node)
