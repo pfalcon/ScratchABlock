@@ -142,6 +142,14 @@ while True:
     old_funcdb = copy.deepcopy(progdb.FUNC_DB)
     progdb.clear_updated()
 
+    # We start with some leaf node (then eventually with all the rest of
+    # leafs). With leaf (call-less) function, we can know everything about
+    # its parameters. So, we learn that, and then propagate this information
+    # to all its callers, then to callers of its callers. We go in this
+    # upward fashion (propagating parameter information) until we can, and
+    # then we start downward motion, hoping to collect as much information
+    # as possible about function live-outs, i.e. returns. We go in this
+    # zig-zag fashion, until there's something to update.
     for e in maybesorted(callgraph.exits()):
         print("Processing leaf", e)
         process_one(callgraph, e, script_i_func_params_returns)
