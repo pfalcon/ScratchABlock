@@ -1,2 +1,2 @@
-pyyaml
+pyyaml==3.12
 nose
