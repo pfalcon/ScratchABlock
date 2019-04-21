@@ -114,7 +114,9 @@ def process_one(cg, func, xform_pass):
             dot.save_dot(cfg, ".1")
             CFG_MAP["pre"][func].props = cfg.props
 
-            upward_queue.extend(maybesorted(cg.pred(func)))
+            for x in maybesorted(cg.pred(func)):
+                if x not in upward_queue:
+                    upward_queue.append(x)
 
             for callee in maybesorted(cg.succ(func)):
                 print("! updating callee", callee)
