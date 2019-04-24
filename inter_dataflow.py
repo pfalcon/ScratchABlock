@@ -121,7 +121,7 @@ def process_one(cg, func, xform_pass):
             for callee in maybesorted(cg.succ(func)):
                 print("! updating callee", callee)
                 if callee not in downward_queue:
-                    downward_queue.insert(0, callee)
+                    downward_queue.append(callee)
 
             print("--- Finished processing: %s ---" % func)
             print("# New up (caller) queue:", upward_queue)
