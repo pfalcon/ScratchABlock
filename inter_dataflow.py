@@ -161,6 +161,8 @@ while True:
     if progdb.FUNC_DB == old_funcdb:
         break
 
+    print("So far: %d iterations, %d sub-iterations, %d updates" % (iter_cnt, subiter_cnt, update_cnt))
+
     iter_cnt += 1
 #    if iter_cnt > 3:
 #        break
