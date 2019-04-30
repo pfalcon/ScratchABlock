@@ -8,6 +8,7 @@ import os
 import glob
 import collections
 import copy
+from pprint import pprint
 
 import core
 from parser import Parser
@@ -71,6 +72,8 @@ for full_name in glob.glob(sys.argv[1] + "/*.lst"):
 subiter_cnt = 0
 update_cnt = 0
 
+func_stats = collections.defaultdict(lambda: [0, 0])
+
 def process_one(cg, func, xform_pass):
     global subiter_cnt, update_cnt
     upward_queue = [func]
@@ -104,6 +107,7 @@ def process_one(cg, func, xform_pass):
         xform_pass.apply(cfg)
 
         if progdb.UPDATED_FUNCS:
+            func_stats[func][0] += 1
             assert len(progdb.UPDATED_FUNCS) == 1, repr(progdb.UPDATED_FUNCS)
             func2 = progdb.UPDATED_FUNCS.pop()
             assert func2 == func
@@ -127,6 +131,7 @@ def process_one(cg, func, xform_pass):
             print("# New up (caller) queue:", upward_queue)
             print("# New down (callee) queue:", downward_queue)
         else:
+            func_stats[func][1] += 1
             print("%s not updated" % func)
             # Maybe funcdb properties not updated, but bblocks props can very well be
             save_cfg(cfg, ".1")
@@ -169,3 +174,11 @@ while True:
 
 
 print("Done in %d iterations, %d sub-iterations, %d updates" % (iter_cnt, subiter_cnt, update_cnt))
+
+pprint(func_stats)
+HITS = MISSES = 0
+for func, (hits, misses) in func_stats.items():
+    HITS += hits
+    MISSES += misses
+
+print("Hits: %d, misses: %d, ratio: %.2f" % (HITS, MISSES, HITS / (HITS + MISSES)))
