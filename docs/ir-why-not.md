@@ -59,7 +59,7 @@ possible, and otherwise trying to stick to "real" C syntax. For example, B3 IR's
 
     Int32 @2 = Add(@0, @1)
 
-corresponds to PseudoC's (assuming implicit size of regsiters to be 32):
+corresponds to PseudoC's (assuming implicit size of registers to be 32):
 
     $r2 = $r0 + $r1
 
