@@ -9,6 +9,16 @@ by Radare2.
 This documents why other existing compiler/decompiler IRs were not
 chosen instead.
 
+UNCOL
+-----
+
+This entry may serve as an epigraph (and was added later than the majority
+of content below). The problem of common intermediate representation is
+as old as the computing itself, with "UNCOL" (universal computer-oriented
+language) being proposed as early as 1958:
+
+* https://en.wikipedia.org/wiki/UNCOL
+
 LLVM IR
 -------
 
