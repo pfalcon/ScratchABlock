@@ -500,7 +500,7 @@ Examples of PseudoC programs
 40  $a3 = 0
 ```
 
-Footonotes
+Footnotes
 ----------
 
 RFC - Request for comments from interested parties. Most of RFCs marked
