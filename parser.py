@@ -351,7 +351,10 @@ class Parser:
         if lex.match("if"):
             args = []
             while True:
-                c = self.parse_cond(lex)
+                if lex.match("else"):
+                    c = None
+                else:
+                    c = self.parse_cond(lex)
                 lex.expect("goto")
                 label = lex.match_till(",").strip()
                 addr = ADDR(self.get_label(label))

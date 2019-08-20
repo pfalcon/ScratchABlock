@@ -659,7 +659,7 @@ class Inst:
         if self.op in ("goto", "call"):
             return s + "%s %s" % (self.op, self.args[0]) + tail
         if self.op == "if":
-            joined = ", ".join(["%s goto %s" % (self.args[i], self.args[i + 1]) for i in range(0, len(self.args), 2)])
+            joined = ", ".join(["%s goto %s" % (self.args[i] or "else", self.args[i + 1]) for i in range(0, len(self.args), 2)])
             return s + "if " + joined + tail
 
         if self.op == "DEAD":
