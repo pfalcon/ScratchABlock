@@ -64,7 +64,7 @@ def load_funcdb(*fnames):
     FUNC_DB = {}
     for fname in fnames:
         with open(fname) as f:
-            db = yaml.load(f)
+            db = yaml.safe_load(f)
             FUNC_DB.update(db)
 
     preprocess_funcdb(FUNC_DB)
