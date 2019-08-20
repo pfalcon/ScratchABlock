@@ -1,0 +1,15 @@
+digraph G {
+node [shape=box]
+"ENTRY" -> "10"
+"10" [label="10: BBlock"]
+"15" [label="15: BBlock"]
+"20" [label="20: BBlock"]
+"30" [label="30: BBlock"]
+"99" [label="99: BBlock"]
+"10" -> "15"
+"10" -> "20" [label="($a1 == 0)"]
+"10" -> "30" [label="($a1 == 1)"]
+"15" -> "20"
+"20" -> "99"
+"30" -> "99"
+}
