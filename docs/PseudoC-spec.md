@@ -287,7 +287,20 @@ Note that a comparison is another case when signed casts may be required:
 if ((i32)$a1 > (i32)$a2) goto less
 ```
 
-Indirect jumps use expression instead of static label:
+`if` statement can be generalized to accept multiple conditions and optional
+"else" label:
+
+```c
+if ($a0 < 2) goto label1, ($a1 + $a2) goto label2, else goto label3
+```
+
+This form can be used to represent C's `switch` statement, and in general
+to faithfully represent CFGs with multiple successors. Note that there is
+no requirement that conditions were comparisons of the same variable with
+a constant (like for C `switch`).
+
+Indirect jumps use an expression which computes address instead of a static
+label:
 
 ```c
 goto $eax
