@@ -7,14 +7,15 @@ import re
 maybesorted = sorted
 
 
-def pairwise(iterable):
+def pairwise(iterable, trailing=True):
     "For sequence of (a, b, c) yield pairs of (a, b), (b, c), (c, None)."
     prev = Ellipsis
     for it in iterable:
         if prev is not Ellipsis:
             yield (prev, it)
         prev = it
-    yield (it, None)
+    if trailing:
+        yield (it, None)
 
 
 def make_set(v):
