@@ -1,0 +1,14 @@
+A:
+  nop()
+  if ($cond) goto C, ($cond) goto D
+B:
+  nop()
+  goto E
+C:
+  nop()
+  goto E
+D:
+  nop()
+E:
+  nop()
+  return
