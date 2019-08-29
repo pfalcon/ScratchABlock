@@ -160,11 +160,11 @@ class Parser:
                         self.script.append(l.split(None, 1))
                     elif l.startswith("struct: "):
                         import progdb
-                        data = yaml.load(l.split(None, 1)[1])
+                        data = yaml.safe_load(l.split(None, 1)[1])
                         progdb.set_struct_types(data)
                     elif l.startswith("struct_addr: "):
                         import progdb
-                        data = yaml.load(l.split(None, 1)[1])
+                        data = yaml.safe_load(l.split(None, 1)[1])
                         data = {(start, start + max(progdb.get_struct_types()[name].keys()) + 4): name for start, name in data.items()}
                         progdb.set_struct_instances(data)
                 continue
