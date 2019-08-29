@@ -3,11 +3,11 @@
 //  trailing_jumps: True
 
 // Predecessors: []
-2:
+10:
 return
 Exits: []
 
 // Predecessors: []
-6:
+20:
 return $b, 10
 Exits: []
