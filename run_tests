@@ -68,6 +68,19 @@ test_decomp() {
     done
 }
 
+test_cfg2pseudoc() {
+    echo "=== test_cfg2pseudoc ==="
+    for f in tests/cfg2pseudoc/*.dot; do
+        if echo $f | grep -q -E '(0|out)\.dot'; then
+            continue
+        fi
+        echo $f
+        ./sabl_cfg2pseudoc.py $f > $f.lst || failed
+        diff -u $f.lst.exp $f.lst || failed
+        ./apply_xform.py --debug --funcdb=none $f.lst >/dev/null
+    done
+}
+
 # Be sure to remove any older test output, to miss a case when no new output
 # is produced.
 find tests -name '*.out*' -exec rm {} \;
@@ -83,6 +96,9 @@ if [ -z "$1" -o "$1" == "xform" ]; then
 fi
 if [ -z "$1" -o "$1" == "decomp" ]; then
     test_decomp
+fi
+if [ -z "$1" -o "$1" == "cfg2pseudoc" ]; then
+    test_cfg2pseudoc
 fi
 
 echo "TESTS PASSED"
