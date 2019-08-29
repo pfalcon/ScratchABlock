@@ -87,6 +87,8 @@ class Graph:
         if (from_node, to_node) in self._edges:
             self._edges[(from_node, to_node)].update(attrs)
         else:
+            self.add_node(from_node)
+            self.add_node(to_node)
             self._edges[(from_node, to_node)] = attrs
             self._succ[from_node].append(to_node)
             self._pred[to_node].append(from_node)
