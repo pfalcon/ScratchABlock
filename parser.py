@@ -175,7 +175,7 @@ class Parser:
             if self.expect_line_addr:
                 addr, l = l.split(" ", 1)
             else:
-                addr = str(self.curline)
+                addr = "%04d" % self.curline
             l = l.lstrip()
 
             if l.startswith("if "):
