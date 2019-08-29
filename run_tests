@@ -68,6 +68,8 @@ test_decomp() {
     done
 }
 
+# Be sure to remove any older test output, to miss a case when no new output
+# is produced.
 find tests -name '*.out*' -exec rm {} \;
 
 if [ -z "$1" -o "$1" == "roundtrip" ]; then
