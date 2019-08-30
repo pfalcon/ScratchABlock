@@ -1,0 +1,17 @@
+1:
+  nop()
+  if ($cond) goto 3
+2:
+  nop()
+  if ($cond) goto 4, else goto 5
+3:
+  nop()
+  goto 6
+4:
+  nop()
+  return
+5:
+  nop()
+6:
+  nop()
+  return
