@@ -1,6 +1,5 @@
 import sys
 import string
-from itertools import permutations
 from graph import Graph
 from core import *
 import yaml
