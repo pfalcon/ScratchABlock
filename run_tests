@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if [ -z "$PYTHON" ]; then
+    PYTHON=python3
+fi
+
 failed() {
     echo "TESTS FAILED!"
     exit 1
@@ -7,9 +11,9 @@ failed() {
 
 if [ -z "$1" -o "$1" == "unit" ]; then
     echo "=== test_unit ==="
-    python3 -m nose --version || nose_missing=1
+    $PYTHON -m nose --version || nose_missing=1
     if [ -z "$nose_missing" ]; then
-        python3 -m nose -v || failed
+        $PYTHON -m nose -v || failed
     fi
 fi
 
@@ -17,7 +21,7 @@ test_roundtrip() {
     echo "=== test_roundtrip ==="
     for f in tests/pseudoc-roundtrip/*.lst; do
         echo $f
-        ./parse_asm.py --roundtrip --addr-width=2 --inst-indent=1 $f > $f.out || failed
+        $PYTHON ./parse_asm.py --roundtrip --addr-width=2 --inst-indent=1 $f > $f.out || failed
         diff -u $f.exp $f.out || failed
     done
 }
@@ -26,7 +30,7 @@ test_dump_c() {
     echo "=== test_dump_c ==="
     for f in tests/dump-c/*.lst; do
         echo $f
-        ./dump_c.py $f > $f.out || failed
+        $PYTHON ./dump_c.py $f > $f.out || failed
         diff -u $f.exp $f.out || failed
     done
 }
@@ -41,7 +45,7 @@ test_xform() {
 
     for f in tests/$pat.lst; do
         echo $f
-        ./apply_xform.py --debug --annotate-calls --funcdb=none --format=none $f || failed
+        $PYTHON ./apply_xform.py --debug --annotate-calls --funcdb=none --format=none $f || failed
         diff -u $f.exp.bb $f.out.bb || failed
         if [ -f $f.exp.dot ]; then
             diff -u $f.exp.dot $f.out.dot || failed
@@ -56,9 +60,9 @@ test_decomp() {
             echo $dir
             #dir=$(dirname $f)
             rm -f $dir/funcdb.yaml
-            ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $dir || failed
+            $PYTHON ./apply_xform.py --log-level=WARNING --script script_decompile --format=c $dir || failed
             rm -f $dir/funcdb.yaml
-            ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
+            $PYTHON ./apply_xform.py --log-level=ERROR --script script_decompile --format=c \
                 --no-dead --no-comments --output-suffix=.out.clean $dir || failed
             for f in $dir/*.lst; do
                 diff -u $f.exp $f.out || failed
@@ -75,9 +79,9 @@ test_cfg2pseudoc() {
             continue
         fi
         echo $f
-        ./sabl_cfg2pseudoc.py $f > $f.lst || failed
+        $PYTHON ./sabl_cfg2pseudoc.py $f > $f.lst || failed
         diff -u $f.lst.exp $f.lst || failed
-        ./apply_xform.py --debug --funcdb=none $f.lst >/dev/null
+        $PYTHON ./apply_xform.py --debug --funcdb=none $f.lst >/dev/null
     done
 }
 
