@@ -21,6 +21,7 @@ import logging
 
 from core import *
 from xform_expr_basic import *
+import xform_expr_infer
 import arch
 
 
@@ -200,7 +201,6 @@ def simplify_expr(expr):
     new_expr = expr_xform(new_expr, unsignize_logical_ops)
 
     expr_commutative_normalize(new_expr)
-    import xform_expr_infer
     new_expr = expr_xform(new_expr, xform_expr_infer.simplify)
     return new_expr
 

@@ -18,7 +18,7 @@
 """Expression transformations using Prolog-style inferences"""
 
 from core import *
-from xform_expr import expr_neg
+from xform_expr_basic import expr_neg
 
 
 # Capturing var
