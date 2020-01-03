@@ -20,6 +20,7 @@
 import logging
 
 from core import *
+from xform_expr_basic import *
 import arch
 
 
@@ -70,25 +71,6 @@ def add_vals(a, b):
     val = a.val + b.val
     base = max(a.base, b.base)
     return VALUE(val, base)
-
-
-def expr_neg_if_possible(expr):
-    if is_value(expr):
-        return VALUE(-expr.val, expr.base)
-    if is_expr(expr):
-        if expr.op == "NEG":
-            return expr.args[0]
-        if expr.op == "+":
-            new_args = [expr_neg(x) for x in expr.args]
-            return EXPR("+", new_args)
-
-
-def expr_neg(expr):
-    new = expr_neg_if_possible(expr)
-    if new:
-        return new
-
-    return EXPR("NEG", expr)
 
 
 def expr_sub_const_to_add(e):
