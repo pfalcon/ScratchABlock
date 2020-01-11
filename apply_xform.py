@@ -201,15 +201,7 @@ def one_iter(input, output, iter_no):
     return changed
 
 
-if __name__ == "__main__":
-    args = parse_args()
-
-    if args.log_level:
-        logging.basicConfig(level=getattr(logging, args.log_level))
-
-    import arch
-    arch.load_arch(args.arch)
-
+def __main__():
     if args.annotate_calls:
         core.Inst.annotate_calls = True
 
@@ -244,3 +236,19 @@ if __name__ == "__main__":
         if not changed:
             break
         iter_no += 1
+
+
+# Module-level code
+
+# As arch.load_arch() performs dynamic import, do it outside of __main__(),
+# i.e. at load-time, to work with Python "strict mode" semantics.
+args = parse_args()
+
+if args.log_level:
+    logging.basicConfig(level=getattr(logging, args.log_level))
+
+import arch
+arch.load_arch(args.arch)
+
+if __name__ == "__main__":
+    __main__()
