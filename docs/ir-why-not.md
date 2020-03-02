@@ -33,7 +33,7 @@ BinNavi REIL, Valgrind VEX
 --------------------------
 
 All these decompiler IRs are designed with CISC X86 architecture in
-mind, and take for granted that a single machine instructions will be
+mind, and take for granted that a single machine instruction will be
 converted to several IR instructions. That alone makes them not
 human-friendly, but they also feature over-explicit, verbose syntax.
 
