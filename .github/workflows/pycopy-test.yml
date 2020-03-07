@@ -1,0 +1,24 @@
+name: pycopy-test
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v1
+    - name: Install pycopy
+      run: |
+        mkdir -p ~/bin
+        echo "::add-path::~/bin"
+        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.0.5/pycopy-v3.0.5.tar.gz
+        tar -xzf pycopy-v3.0.5.tar.gz -C ~/bin/
+    - name: Install requirements
+      run: |
+        pycopy-dev -m upip install -r requirements-pycopy.txt
+    - name: Run testsuite
+      run: |
+        PYTHON=pycopy-dev ./run_tests
