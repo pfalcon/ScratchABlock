@@ -1,0 +1,5 @@
+# Requirements for Pycopy, https://github.com/pfalcon/pycopy
+# pycopy-dev executable should be used for running
+pycopy-lib
+pycopy-nose
+pycopy-yaml
