@@ -14,8 +14,8 @@ jobs:
       run: |
         mkdir -p ~/bin
         echo "::add-path::~/bin"
-        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.0.5/pycopy-v3.0.5.tar.gz
-        tar -xzf pycopy-v3.0.5.tar.gz -C ~/bin/
+        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.0.8/pycopy-v3.0.8-bin.tar.gz
+        tar -xzf pycopy-v3.0.8-bin.tar.gz -C ~/bin/
     - name: Install requirements
       run: |
         pycopy-dev -m upip install -r requirements-pycopy.txt
