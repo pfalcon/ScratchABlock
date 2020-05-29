@@ -102,10 +102,10 @@ def remove_unreachable_nodes(cfg):
 
 # Remove any jumps to jumps, replacing destination of first jump
 # to be destination of 2nd.
-# This "simplifies" graph, but makes it irregular. This is useful
+# This "simplifies" graph, but may make it less structured. This is useful
 # transformation for generating machine code, but for decompilation,
-# it actually makes sense to add extra jump landing sites to make
-# loops irregular.
+# it actually makes sense to add some extra jump landing sites to make
+# loops more structured.
 #
 # http://en.wikipedia.org/wiki/Jump_threading
 #
