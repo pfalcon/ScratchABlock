@@ -491,6 +491,12 @@ class Parser:
                         block.cfg = self.cfg
                         block.label = l[:-1]
                         self.cfg.add_node(addr, val=block)
+
+                        # Link empty blocks consisting of just 1 label
+                        if last_block is not None:
+                            self.cfg.add_edge(last_block.addr, block.addr)
+                            last_block = None
+
                         continue
                     elif block is None:
                         block = BBlock(addr)
