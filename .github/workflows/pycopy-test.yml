@@ -13,7 +13,7 @@ jobs:
     - name: Install pycopy
       run: |
         mkdir -p ~/bin
-        echo "::add-path::~/bin"
+        echo "~/bin" >> $GITHUB_PATH
         wget -q https://github.com/pfalcon/pycopy/releases/download/v3.3.0/pycopy-v3.3.0-bin.tar.gz
         tar -xzf pycopy-v3.3.0-bin.tar.gz -C ~/bin/
     - name: Install requirements
