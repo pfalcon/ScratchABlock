@@ -18,6 +18,7 @@ from decomp import *
 from asmprinter import AsmPrinter
 import cprinter
 import progdb
+import bindata
 
 # TODO: something above shadows "copy" otherwise
 import copy
@@ -216,7 +217,6 @@ def __main__():
         args.funcdb = proj_dir + "/funcdb.yaml"
         _log.info("Using funcdb: %s", args.funcdb)
         # Load binary data
-        import bindata
         bindata.init(proj_dir)
         # Load symtab
         if os.path.exists(proj_dir + "/symtab.txt"):
