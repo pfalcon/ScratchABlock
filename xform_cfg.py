@@ -31,7 +31,7 @@ import progdb
 import copy
 
 
-log = logging.getLogger(__name__)
+_log = logging.getLogger(__name__)
 
 
 def check_prop(cfg, prop_name, err_msg):
@@ -115,7 +115,7 @@ def remove_jump_over_jump(cfg):
         if cfg.degree_in(v) > 0 and cfg.degree_out(v) == 1 and not cfg.node(v)["val"].items:
             cfg.move_pred(v, cfg.succ(v)[0])
             cfg.remove_node(v)
-            log.info("jump_over_jump: removed node: %s", v)
+            _log.info("jump_over_jump: removed node: %s", v)
             return True
 
 # If possible, make a single back-edge to a loop header, by introducing
@@ -127,10 +127,10 @@ def loop_single_entry(cfg):
             back_preds = list(filter(lambda x: v <= x, preds))
             if len(back_preds) < 2:
                 continue
-            log.info("loop_single_entry: node: %s", v)
-            log.info("back_preds: %s", back_preds)
+            _log.info("loop_single_entry: node: %s", v)
+            _log.info("back_preds: %s", back_preds)
             back_jumps = list(filter(lambda x: cfg.degree_out(x) == 1, back_preds))
-            log.info("back_jumps: %s", back_jumps)
+            _log.info("back_jumps: %s", back_jumps)
             # find existing landing site
             landing_site = None
             for p in back_jumps:
@@ -139,12 +139,12 @@ def loop_single_entry(cfg):
                     landing_site = p
             if not landing_site:
                 farthest = max(back_preds)
-                log.info("farthest: %s", farthest)
+                _log.info("farthest: %s", farthest)
                 newb = BBlock(farthest + "_1")
                 cfg.add_node(newb.addr, val=newb)
                 cfg.add_edge(newb.addr, v)
                 landing_site = newb.addr
-            log.info("landing_site: %s", landing_site)
+            _log.info("landing_site: %s", landing_site)
             for p in back_preds:
                 if p != landing_site:
                     e = cfg.edge(p, v).get("cond")
@@ -322,9 +322,9 @@ def collect_state_in(cfg):
             if len(val_set) == 1:
                 state[var] = val_set.pop()
             elif len(val_set) > 1:
-                log.debug("%s: in value set for %s are: %s" % (bblock_addr, var, val_set))
+                _log.debug("%s: in value set for %s are: %s" % (bblock_addr, var, val_set))
         if state != org_state:
-            log.debug("CHANGED: %s: %r ==VS== %r" % (node_props["val"], org_state, state))
+            _log.debug("CHANGED: %s: %r ==VS== %r" % (node_props["val"], org_state, state))
             node_props["val"].props["state_in"] = state
             changed = True
 
