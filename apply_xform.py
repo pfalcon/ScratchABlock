@@ -250,5 +250,34 @@ if args.log_level:
 import arch
 arch.load_arch(args.arch)
 
+
+def preparse_scripts(input):
+    files = []
+    scripts = []
+
+    if os.path.isdir(input):
+        for full_name in glob.glob(input + "/*"):
+            if full_name.endswith(".lst") and os.path.isfile(full_name):
+                files.append(full_name)
+    else:
+        files = [input]
+
+    for fname in files:
+        with open(fname) as f:
+            for l in f:
+                if l.startswith("#script: "):
+                    l = l.rstrip()
+                    scripts.append(l.split(None, 1)[1])
+    return scripts
+
+
+# Preload scripts.
+if args.script:
+    for s in args.script:
+        __import__(s)
+for s in preparse_scripts(args.file):
+    __import__(s)
+
+
 if __name__ == "__main__":
     __main__()
