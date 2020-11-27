@@ -34,7 +34,7 @@ def parse_dot(f):
     return cfg
 
 
-def main():
+def __main__():
     with open(sys.argv[1]) as f:
         cfg = parse_dot(f)
 
@@ -64,4 +64,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    __main__()
