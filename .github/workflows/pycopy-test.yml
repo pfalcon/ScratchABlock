@@ -21,4 +21,4 @@ jobs:
         pycopy-dev -m upip install -r requirements-pycopy.txt
     - name: Run testsuite
       run: |
-        PYTHON=pycopy-dev ./run_tests
+        PYTHON="pycopy-dev -X strict" ./run_tests
