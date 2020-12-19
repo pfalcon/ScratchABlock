@@ -5,7 +5,7 @@ from decomp import *
 from xform_utils import apply_iterative
 
 
-def propagate(cfg):
+def do_propagate(cfg):
     analyze_reach_defs(cfg)
     make_du_chains(cfg)
 
@@ -71,7 +71,7 @@ def apply(cfg):
     analyze_live_vars(cfg)
     insert_initial_regs(cfg)
 
-    propagate(cfg)
+    do_propagate(cfg)
 
     # Estimate args only at the beginning of processing
     analyze_live_vars(cfg)
@@ -102,7 +102,7 @@ def apply(cfg):
     # but splitting node changes data flow, so need to recompute it
     if match_abnormal_sel(cfg):
 
-        propagate(cfg)
+        do_propagate(cfg)
         dce(cfg)
 
         cfg.number_postorder()
