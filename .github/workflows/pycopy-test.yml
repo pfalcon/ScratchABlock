@@ -14,8 +14,8 @@ jobs:
       run: |
         mkdir -p ~/bin
         echo "~/bin" >> $GITHUB_PATH
-        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.4.0/pycopy-v3.4.0-bin.tar.gz
-        tar -xzf pycopy-v3.4.0-bin.tar.gz -C ~/bin/
+        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.4.3/pycopy-v3.4.3-bin.tar.gz
+        tar -xzf pycopy-v3.4.3-bin.tar.gz -C ~/bin/
     - name: Install requirements
       run: |
         pycopy-dev -m upip install -r requirements-pycopy.txt
