@@ -1,0 +1,18 @@
+name: cpython-test
+
+on:
+  push:
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone
+      uses: actions/checkout@v1
+    - name: Install requirements
+      run: |
+        python3 -m pip install -r requirements.txt
+    - name: Run testsuite
+      run: |
+        PYTHON="python3" ./run_tests
