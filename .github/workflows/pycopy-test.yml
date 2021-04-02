@@ -16,6 +16,9 @@ jobs:
         echo "~/bin" >> $GITHUB_PATH
         wget -q https://github.com/pfalcon/pycopy/releases/download/v3.5.4/pycopy-v3.5.4-bin.tar.gz
         tar -xzf pycopy-v3.5.4-bin.tar.gz -C ~/bin/
+    - name: Pycopy version
+      run: |
+        pycopy-dev -c 'import sys; print(sys.implementation)'
     - name: Install requirements
       run: |
         pycopy-dev -m upip install -r requirements-pycopy.txt
