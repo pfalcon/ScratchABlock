@@ -1,4 +1,4 @@
-name: pycopy-test
+name: Tests (pycopy)
 
 on:
   push:
