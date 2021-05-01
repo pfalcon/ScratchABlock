@@ -14,8 +14,8 @@ jobs:
       run: |
         mkdir -p ~/bin
         echo "~/bin" >> $GITHUB_PATH
-        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.5.5/pycopy-v3.5.5-bin.tar.gz
-        tar -xzf pycopy-v3.5.5-bin.tar.gz -C ~/bin/
+        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.5.6/pycopy-v3.5.6-bin.tar.gz
+        tar -xzf pycopy-v3.5.6-bin.tar.gz -C ~/bin/
     - name: Pycopy version
       run: |
         pycopy-dev -c 'import sys; print(sys.implementation)'
