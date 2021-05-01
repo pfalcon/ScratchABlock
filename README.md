@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/pfalcon/ScratchABlock.png?branch=master)](https://travis-ci.org/pfalcon/ScratchABlock)
+[![Build Status](https://github.com/pfalcon/ScratchABlock/actions/workflows/pycopy-test.yml/badge.svg)](https://github.com/pfalcon/ScratchABlock/actions/)
 
 **Q**: Why is there a need for yet another decompiler, especially a
 crippled one?
