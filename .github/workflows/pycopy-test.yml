@@ -2,6 +2,8 @@ name: Tests (pycopy)
 
 on:
   push:
+  # Manual trigger from UI, https://github.blog/changelog/2020-07-06-github-actions-manual-triggers-with-workflow_dispatch/
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,8 +16,8 @@ jobs:
       run: |
         mkdir -p ~/bin
         echo "~/bin" >> $GITHUB_PATH
-        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.6.0/pycopy-v3.6.0-bin.tar.gz
-        tar -xzf pycopy-v3.6.0-bin.tar.gz -C ~/bin/
+        wget -q https://github.com/pfalcon/pycopy/releases/download/v3.6.1/pycopy-v3.6.1-bin.tar.gz
+        tar -xzf pycopy-v3.6.1-bin.tar.gz -C ~/bin/
     - name: Pycopy version
       run: |
         pycopy-dev -c 'import sys; print(sys.implementation)'
